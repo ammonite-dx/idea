@@ -1,7 +1,7 @@
 import getDloisById from "@/utils/getDloisById";
 import CategoryCard from "@/components/CategoryCard";
 import DloisSummaryCard from "./DloisSummaryCard";
-import { Power, Dlois } from "@/types/types";
+import { Dlois } from "@/types/types";
 
 export default async function RelDloises ({ rel_dlois_id }: { rel_dlois_id: string }) {
     const relDloises = (await Promise.all(rel_dlois_id.split(" ").map(async (id) => getDloisById(id)))).filter((dlois) => dlois !== null) as Dlois[];

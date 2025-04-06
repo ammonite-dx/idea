@@ -2,8 +2,7 @@ import prisma from '@/lib/prisma';
 import getDloisById from './getDloisById';
 import { toArray, toString } from '@/utils/utils';
 import { DLOIS_TYPES, DLOIS_RESTRICTS, DLOIS_SUPPLEMENTS } from '@/consts/dlois';
-import { Dlois, Power, Faq, Info } from '@/types/types';
-import { get } from 'http';
+import { Dlois } from '@/types/types';
 
 export default async function searchDloises(currSearchParams: { [key: string]: string | string[] | undefined }) {
   const whereConndition = {

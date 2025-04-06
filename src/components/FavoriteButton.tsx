@@ -20,7 +20,7 @@ export default function FavoriteButton({ dataKind, dataId }: FavoriteButtonProps
         setLoading(false);
         return;
       }
-      const res = await fetch(`/api/favorites/check?dataKind=${dataKind}&dataId=${dataId}`);
+      const res = await fetch(`/api/favorites?dataKind=${dataKind}&dataId=${dataId}`);
       const json = await res.json();
       setIsFavorite(json.isFavorite);
       setLoading(false);
