@@ -7,21 +7,315 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model power {
-  id         String @id
-  category   String
-  supplement String
-  name       String
-  ruby       String
-  maxlv      String
-  timing     String
-  skill      String
-  dfclty     String
-  target     String
-  rng        String
-  encroach   String
-  restrict   String
-  flavor     String
-  effect     String
+  id                  String  @id
+  supplement          String
+  category            String
+  type                String
+  name                String
+  ruby                String
+  maxlv               String
+  maxlv_int           Int?
+  timing              String
+  skill               String
+  dfclty              String
+  target              String
+  rng                 String
+  encroach            String
+  encroach_int        Int?
+  restrict            String
+  premise             String?
+  flavor              String?
+  effect              String?
+  ref_weapon_id       String?
+  ref_armor_id        String?
+  ref_faq_id       String?
+  ref_info_id      String?
+  update              String?
+  other_ver_id        String?
+  rel_power_id        String?
+  rel_weapon_id       String?
+  rel_armor_id        String?
+  rel_vehicle_id      String?
+  rel_connection_id   String?
+  rel_general_id      String?
+  rel_dlois_id        String?
+  type_restrict_order Int
+}
+
+model weapon {
+  id               String  @id
+  supplement       String
+  category         String
+  name             String
+  ruby             String
+  type             String
+  skill            String
+  acc              String
+  acc_int          Int?
+  atk              String
+  atk_int          Int?
+  guard            String
+  guard_int        Int?
+  rng              String
+  rng_int          Int?
+  procure          String?
+  procure_int      Int?
+  stock            String?
+  stock_int        Int?
+  exp              String?
+  exp_int          Int?
+  rec              String?
+  flavor           String?
+  effect           String?
+  price            String?
+  rec_effect       String?
+  ref_faq_id       String?
+  ref_info_id      String?
+  refed_power_id   String?
+  refed_armor_id   String?
+  refed_general_id String?
+  update           String?
+  other_ver_id     String?
+  rel_power_id     String?
+  rel_weapon_id    String?
+  rel_armor_id     String?
+  rel_vehicle_id   String?
+  rel_connection_id String?
+  rel_general_id   String?
+  rel_dlois_id     String?
+  type_order       Int
+  cost_order       Int
+}
+
+model armor {
+  id             String  @id
+  supplement     String
+  category       String
+  name           String
+  ruby           String
+  type           String
+  dodge          String
+  dodge_int      Int?
+  initiative     String
+  initiative_int Int?
+  armor          String
+  armor_int      Int?
+  procure        String?
+  procure_int    Int?
+  stock          String?
+  stock_int      Int?
+  exp            String?
+  exp_int        Int?
+  rec            String?
+  flavor         String?
+  effect         String?
+  price          String?
+  rec_effect     String?
+  ref_weapon_id  String?
+  ref_faq_id       String?
+  ref_info_id      String?
+  refed_power_id String?
+  update         String?
+  other_ver_id   String?
+  rel_power_id   String?
+  rel_weapon_id  String?
+  rel_armor_id   String?
+  rel_vehicle_id String?
+  rel_connection_id String?
+  rel_general_id String?
+  rel_dlois_id   String?
+  type_order     Int
+  cost_order     Int
+}
+
+model connection {
+  id          String  @id
+  supplement  String
+  category    String
+  name        String
+  ruby        String
+  type        String
+  skill       String
+  procure     String?
+  procure_int Int?
+  stock       String?
+  stock_int   Int?
+  exp         String?
+  exp_int     Int?
+  rec         String?
+  flavor      String?
+  effect      String?
+  price       String?
+  rec_effect  String?
+  ref_faq_id       String?
+  ref_info_id      String?
+  update      String?
+  other_ver_id String?
+  rel_power_id String?
+  rel_weapon_id String?
+  rel_armor_id String?
+  rel_vehicle_id String?
+  rel_connection_id String?
+  rel_general_id String?
+  rel_dlois_id String?
+  cost_order  Int
+}
+
+model general {
+  id            String  @id
+  supplement    String
+  category      String
+  name          String
+  ruby          String
+  type          String
+  procure       String?
+  procure_int   Int?
+  stock         String?
+  stock_int     Int?
+  exp           String?
+  exp_int       Int?
+  rec           String?
+  flavor        String?
+  effect        String?
+  price         String?
+  rec_effect    String?
+  ref_weapon_id String?
+  ref_faq_id       String?
+  ref_info_id      String?
+  update        String?
+  other_ver_id  String?
+  rel_power_id  String?
+  rel_weapon_id String?
+  rel_armor_id  String?
+  rel_vehicle_id String?
+  rel_connection_id String?
+  rel_general_id String?
+  rel_dlois_id  String?
+  type_order    Int
+  cost_order    Int
+}
+
+model vehicle {
+  id             String  @id
+  supplement     String
+  category       String
+  name           String
+  ruby           String
+  type           String
+  skill          String
+  atk            String
+  atk_int        Int?
+  initiative     String
+  initiative_int Int?
+  armor          String
+  armor_int      Int?
+  dash           String
+  dash_int       Int?
+  procure        String?
+  procure_int    Int?
+  stock          String?
+  stock_int      Int?
+  exp            String?
+  exp_int        Int?
+  rec            String?
+  flavor         String?
+  effect         String?
+  price          String?
+  rec_effect     String?
+  ref_faq_id       String?
+  ref_info_id      String?
+  update         String?
+  other_ver_id   String?
+  rel_power_id   String?
+  rel_weapon_id  String?
+  rel_armor_id   String?
+  rel_vehicle_id String?
+  rel_connection_id String?
+  rel_general_id String?
+  rel_dlois_id   String?
+  cost_order     Int
+}
+
+model dlois {
+  id                  String @id
+  supplement          String
+  no                  String
+  type                String
+  name                String
+  ruby                String
+  restrict            String
+  flavor              String
+  description         String
+  rec                 String?
+  effect              String
+  rec_effect          String?
+  ref_power_id        String?
+  ref_faq_id       String?
+  ref_info_id      String?
+  update              String?
+  other_ver_id        String?
+  rel_power_id        String?
+  rel_weapon_id       String?
+  rel_armor_id        String?
+  rel_vehicle_id      String?
+  rel_connection_id   String?
+  rel_general_id      String?
+  rel_dlois_id        String?
+  flavor_summary      String
+  effect_summary      String
+  rec_effect_summary  String?
+  type_order          Int
+  restrict_order      Int
+}
+
+model elois {
+  id                  String @id
+  supplement          String
+  type                String
+  name                String
+  ruby                String
+  timing              String
+  skill               String
+  dfclty              String
+  target              String
+  rng                 String
+  urge                String
+  flavor              String
+  effect              String
+  ref_faq_id       String?
+  ref_info_id      String?
+  update              String?
+  other_ver_id        String?
+  rel_elois_id        String?
+  type_order          Int
+  urge_order          Int
+}
+
+model faq {
+  id                  String @id
+  q                   String
+  a                   String
+  refed_power_id        String?
+  refed_weapon_id       String?
+  refed_armor_id        String?
+  refed_vehicle_id      String?
+  refed_connection_id   String?
+  refed_general_id      String?
+  refed_dlois_id        String?
+  refed_elois_id        String?
+}
+
+model info {
+  id                  String @id
+  title               String
+  content             String
+  refed_power_id        String?
+  refed_weapon_id       String?
+  refed_armor_id        String?
+  refed_vehicle_id      String?
+  refed_connection_id   String?
+  refed_general_id      String?
+  refed_dlois_id        String?
+  refed_elois_id        String?
 }

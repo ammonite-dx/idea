@@ -1,4 +1,5 @@
-import PowerSearchResults from "@/features/effect-archive/components/PowerSearchResults";
+import PowerSearchForm from "@/features/effect-archive/PowerSearchForm";
+import PowerSearchResults from "@/features/effect-archive/PowerSearchResults";
 
 export default async function Page({
     searchParams,
@@ -10,7 +11,7 @@ export default async function Page({
 
     return (
         <main>
-            <h1>エフェクトアーカイブ</h1>
+            <PowerSearchForm searchParams={ currSearchParams } />
             <PowerSearchResults searchParams={ currSearchParams } />
         </main>
     );
