@@ -319,3 +319,10 @@ model info {
   refed_dlois_id        String?
   refed_elois_id        String?
 }
+
+model favorite {
+  id                  String @id @default(cuid())
+  user_id             String
+  data_kind          String
+  data_id             String
+}

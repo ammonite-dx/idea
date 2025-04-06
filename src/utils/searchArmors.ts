@@ -39,8 +39,8 @@ export default async function searchArmors(currSearchParams: { [key: string]: st
     // 検索結果を整形
     const armorsInCategory = await Promise.all(searchResultsInCategory.map(async searchResult => {
       const ref_weapon: Weapon|null = searchResult.ref_weapon_id ? await getWeaponById(searchResult.ref_weapon_id) : null;
-    const ref_faqs: Faq[]|null = (searchResult && searchResult.ref_faq_id) ? (await Promise.all(searchResult.ref_faq_id.split(" ").map(async (id) => getFaqById(id)))).filter((faq) => faq !== null) as Faq[] : null;
-    const ref_infos: Info[]|null = (searchResult && searchResult.ref_info_id) ? (await Promise.all(searchResult.ref_info_id.split(" ").map(async (id) => getInfoById(id)))).filter((info) => info !== null) as Info[] : null;
+      const ref_faqs: Faq[]|null = (searchResult && searchResult.ref_faq_id) ? (await Promise.all(searchResult.ref_faq_id.split(" ").map(async (id) => getFaqById(id)))).filter((faq) => faq !== null) as Faq[] : null;
+      const ref_infos: Info[]|null = (searchResult && searchResult.ref_info_id) ? (await Promise.all(searchResult.ref_info_id.split(" ").map(async (id) => getInfoById(id)))).filter((info) => info !== null) as Info[] : null;
       const armor:Armor = {
         kind: "armor",
         id: searchResult.id,
