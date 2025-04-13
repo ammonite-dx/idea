@@ -1,3 +1,8 @@
+/* 実行方法
+node scripts/import-csv.js
+*/
+
+
 const { PrismaClient } = require("@prisma/client");
 const { getDMMF } = require("@prisma/sdk");
 const fs = require("fs");
@@ -17,6 +22,7 @@ const FILES = [
   "power",
   "vehicle",
   "weapon",
+  "works",
 ];
 
 // DMMF キャッシュ用

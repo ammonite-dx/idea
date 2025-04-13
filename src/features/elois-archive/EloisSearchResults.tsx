@@ -1,5 +1,5 @@
-import searchEloises from "@/utils/searchEloises";
-import EloisCard from "@/components/EloisCard";
+import searchRecords from "@/utils/searchRecords";
+import CardList from "@/components/CardList";
 import { Elois } from "@/types/types";
 
 export default async function PowerSearchResults ({
@@ -8,15 +8,12 @@ export default async function PowerSearchResults ({
     searchParams: { [key:string]: string | string[] | undefined },
   }) {
 
-    const eloises: Elois[] = await searchEloises(searchParams);
+    const eloises: { [key: string]: Elois[] } | null = await searchRecords("elois", searchParams);
+    if (!eloises) return <div className="m-4">Error: EloisSearchResultsで、Eロイスの検索結果がnullでした。</div>;
 
     return (
-        <div className="m-4">
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                {eloises.map((elois:Elois) => (
-                    <EloisCard key={elois.id} elois={elois} />
-                ))}
-            </div>
-        </div>
+      <div className="m-4">
+        <CardList title="検索結果" records={eloises["Eロイス"]}/>
+      </div>
     );
   }

@@ -1,5 +1,5 @@
-import searchDloises from "@/utils/searchDloises";
-import DloisSummaryCard from "@/components/DloisSummaryCard";
+import searchRecords from "@/utils/searchRecords";
+import CardList from "@/components/CardList";
 import { Dlois } from "@/types/types";
 
 export default async function PowerSearchResults ({
@@ -8,15 +8,12 @@ export default async function PowerSearchResults ({
     searchParams: { [key:string]: string | string[] | undefined },
   }) {
 
-    const dloises: Dlois[] = await searchDloises(searchParams);
+    const dloises: { [key: string]: Dlois[] } | null = await searchRecords("dlois", searchParams);
+    if (!dloises) return <div className="m-4">Error: DloisSearchResultsで、Dロイスの検索結果がnullでした。</div>;
 
     return (
-        <div className="m-4">
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                {dloises.map((dlois:Dlois) => (
-                    <DloisSummaryCard key={dlois.id} dlois={dlois} />
-                ))}
-            </div>
-        </div>
+      <div className="m-4">
+        <CardList title="検索結果" records={dloises["Dロイス"]}/>
+      </div>
     );
   }

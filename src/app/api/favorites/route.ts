@@ -11,16 +11,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { dataKind, dataId } = await req.json();
-  if (!dataKind || !dataId) {
+  const { recordKind, recordId } = await req.json();
+  if (!recordKind || !recordId) {
     return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
   }
 
   const result = await prisma.favorite.create({
     data: {
       user_id: session.user.id,
-      data_kind: dataKind,
-      data_id: dataId,
+      record_kind: recordKind,
+      record_id: recordId,
     },
   });
 
@@ -33,16 +33,16 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { dataKind, dataId } = await req.json();
-  if (!dataKind || !dataId) {
+  const { recordKind, recordId } = await req.json();
+  if (!recordKind || !recordId) {
     return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
   }
 
   await prisma.favorite.deleteMany({
     where: {
       user_id: session.user.id,
-      data_kind: dataKind,
-      data_id: dataId,
+      record_kind: recordKind,
+      record_id: recordId,
     },
   });
 
@@ -56,18 +56,18 @@ export async function GET(req: NextRequest) {
   }
 
   const { searchParams } = new URL(req.url);
-  const dataKind = searchParams.get("dataKind");
-  const dataId = searchParams.get("dataId");
+  const recordKind = searchParams.get("recordKind");
+  const recordId = searchParams.get("recordId");
 
-  if (!dataKind || !dataId) {
+  if (!recordKind || !recordId) {
     return NextResponse.json({ error: "Missing query parameters" }, { status: 400 });
   }
 
   const exists = await prisma.favorite.findFirst({
     where: {
       user_id: session.user.id,
-      data_kind: dataKind,
-      data_id: dataId,
+      record_kind: recordKind,
+      record_id: recordId,
     },
   });
 

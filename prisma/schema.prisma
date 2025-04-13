@@ -22,7 +22,6 @@ model power {
   target              String
   rng                 String
   encroach            String
-  encroach_int        Int?
   restrict            String
   premise             String?
   flavor              String?
@@ -323,6 +322,15 @@ model info {
 model favorite {
   id                  String @id @default(cuid())
   user_id             String
-  data_kind          String
-  data_id             String
+  record_kind         String
+  record_id           String
+}
+
+model works {
+  id                  String @id
+  supplement          String
+  name                String
+  stat                String
+  skills              String
+  emblems             String?
 }

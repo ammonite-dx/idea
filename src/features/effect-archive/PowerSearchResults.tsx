@@ -1,6 +1,5 @@
-import searchPowers from "@/utils/searchPowers"
-import CategoryCard from "@/components/CategoryCard";
-import PowerCard from "@/components/PowerCard";
+import searchRecords from "@/utils/searchRecords";
+import CardList from "@/components/CardList";
 import { Power } from "@/types/types";
 import { Fragment } from "react";
 
@@ -10,19 +9,15 @@ export default async function PowerSearchResults ({
     searchParams: { [key:string]: string | string[] | undefined },
   }) {
 
-    const powers: { [key: string]: Power[] } = await searchPowers(searchParams);
+    const powers: { [key: string]: Power[] } | null = await searchRecords("power", searchParams);
+    if (!powers) return <div className="m-4">Error: PowerSearchResultsで、エフェクトの検索結果がnullでした。</div>;
 
     return (
       <div className="m-4">
         {Object.keys(powers).map((category) => (
           <Fragment key={category}>
             {powers[category].length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                <CategoryCard categoryName={category} hitNumber={powers[category].length} />
-                {powers[category].map((power:Power) => (
-                  <PowerCard key={power.id} power={power} />
-                ))}
-              </div>
+              <CardList title={category} records={powers[category]} />
             )}
           </Fragment>
         ))}

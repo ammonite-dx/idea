@@ -1,3 +1,27 @@
+export type Kind = PrimaryKind | AdditionalKind;
+export type PrimaryKind = "power" | "weapon" | "armor" | "vehicle" | "connection" | "general" | "dlois" | "elois";
+export type AdditionalKind = "faq" | "info";
+
+export type Record = PrimaryRecord | AdditionalRecord;
+export type PrimaryRecord = Power | Item | Dlois | Elois;
+export type Item = Weapon | Armor | Vehicle | Connection | General;
+export type AdditionalRecord = Faq | Info | Work;
+
+export type TypeMap = {
+    power: Power;
+    item: Item;
+    weapon: Weapon;
+    armor: Armor;
+    vehicle: Vehicle;
+    connection: Connection;
+    general: General;
+    dlois: Dlois;
+    elois: Elois;
+    faq: Faq;
+    info: Info;
+    work: Work;
+};
+
 export type Power = {
     kind: "power",
     id: string,
@@ -246,3 +270,13 @@ export type Info = {
     title: string,
     content: string,
 };
+
+export type Work = {
+    kind: "work",
+    id: string,
+    supplement: string,
+    name: string,
+    stat: string,
+    skills: string[],
+    emblems: string[] | null,
+}

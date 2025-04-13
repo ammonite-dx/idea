@@ -124,6 +124,25 @@ export const POWER_RNGS: string[] = [
     "効果参照",
 ]
 
+export const POWER_ENCROACHES: string[] = [
+    "—",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "1D10",
+    "2D10",
+    "4D10",
+    "6D10",
+]
+
 export const POWER_RESTRICTS: string[] = [
     "—",
     "80%",

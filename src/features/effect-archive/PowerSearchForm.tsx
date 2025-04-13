@@ -8,7 +8,7 @@ import TextBox from '@/components/TextInput';
 import SelectBox from '@/components/SelectBox'
 import SubmitButton from '@/components/SubmitButton';
 import { toArray,toString,strToSelectObj } from '@/utils/utils';
-import { POWER_TYPES, POWER_CATEGORIES, POWER_SUPPLEMENTS, POWER_TIMINGS, POWER_SKILLS, POWER_DFCLTIES, POWER_TARGETS, POWER_RNGS, POWER_RESTRICTS } from '@/consts/power';
+import { POWER_TYPES, POWER_CATEGORIES, POWER_SUPPLEMENTS, POWER_TIMINGS, POWER_SKILLS, POWER_DFCLTIES, POWER_TARGETS, POWER_RNGS, POWER_RESTRICTS, POWER_ENCROACHES } from '@/consts/power';
 
 export default function PowerSearchForm({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
 
@@ -68,7 +68,7 @@ export default function PowerSearchForm({ searchParams }: { searchParams: { [key
           <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="難易度" name="dfclty" control={control} options={POWER_DFCLTIES.map((s)=>({value:s,label:s}))} isMulti/></div>
           <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="対象" name="target" control={control} options={POWER_TARGETS.map((s)=>({value:s,label:s}))} isMulti/></div>
           <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="射程" name="rng" control={control} options={POWER_RNGS.map((s)=>({value:s,label:s}))} isMulti/></div>
-          <div className="grid-item col-span-2 lg:col-span-1"><TextBox label="侵蝕値" name="encroach" control={control} isNumber suffix='以下'/></div>
+          <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="侵蝕値" name="encroach" control={control} options={POWER_ENCROACHES.map((s)=>({value:s,label:s}))} isMulti/></div>
           <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="制限" name="restrict" control={control} options={POWER_RESTRICTS.map((s)=>({value:s,label:s}))} isMulti/></div>
           <div className="grid-item col-span-4 lg:col-span-2"><TextBox label="効果" name="effect" control={control}/></div>
         </div>

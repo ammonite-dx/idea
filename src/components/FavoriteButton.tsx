@@ -3,12 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 
-type FavoriteButtonProps = {
-  dataKind: string;
-  dataId: string;
-};
-
-export default function FavoriteButton({ dataKind, dataId }: FavoriteButtonProps) {
+export default function FavoriteButton({ recordKind, recordId }: { recordKind:string, recordId:string }) {
   const { data: session } = useSession();
   const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -20,14 +15,14 @@ export default function FavoriteButton({ dataKind, dataId }: FavoriteButtonProps
         setLoading(false);
         return;
       }
-      const res = await fetch(`/api/favorites?dataKind=${dataKind}&dataId=${dataId}`);
+      const res = await fetch(`/api/favorites?recordKind=${recordKind}&recordId=${recordId}`);
       const json = await res.json();
       setIsFavorite(json.isFavorite);
       setLoading(false);
     };
 
     fetchFavorite();
-  }, [session, dataKind, dataId]);
+  }, [session, recordKind, recordId]);
 
   // 登録 or 解除処理
   const toggleFavorite = async () => {
@@ -39,7 +34,7 @@ export default function FavoriteButton({ dataKind, dataId }: FavoriteButtonProps
     await fetch("/api/favorites", {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ dataKind, dataId }),
+      body: JSON.stringify({ recordKind, recordId }),
     });
 
     setIsFavorite(!isFavorite);
