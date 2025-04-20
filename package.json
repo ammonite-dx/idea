@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "dev:fast": "tsc --noEmit & next dev",
     "typecheck": "tsc --noEmit",
-    "build": "cross-env NEXT_DISABLE_APP_PATHS_TYPE_CHECK=true next build",
+    "build": "next build",
+    "pages:build": "npm run build && npx @cloudflare/next-on-pages --experimental-minify",
     "start": "next start",
     "lint": "next lint"
   },
@@ -25,6 +26,7 @@
     "react-select": "^5.10.0"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.12",
     "@eslint/eslintrc": "^3",
     "@prisma/sdk": "^3.15.2",
     "@types/node": "^20",
