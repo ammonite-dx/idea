@@ -4,6 +4,8 @@ import CardList from "@/components/CardList";
 import getRecordById from "@/utils/getRecordById";
 import { CardRecord, CardRecordKind } from "@/types/types";
 
+export const runtime = 'edge';
+
 type PageProps = {
     params: Promise<{
         kind: string;

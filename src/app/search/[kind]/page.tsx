@@ -3,6 +3,8 @@ import SearchForm from "@/features/search/SearchForm";
 import SearchResults from "@/features/search/SearchResults";
 import { SearchKind } from "@/types/types";
 
+export const runtime = 'edge';
+
 type PageProps = {
     params: Promise<{
         kind: string;

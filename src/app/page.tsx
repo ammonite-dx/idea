@@ -1,6 +1,8 @@
 import Link from "next/link"
 import FavoriteRecords from "@/features/main/FavoriteRecords"
 
+export const runtime = 'edge';
+
 export default function Home() {
   return (
     <div className="p-0 mx-auto">
