@@ -23,9 +23,9 @@ export default async function SearchResults<K extends keyof TypeMap> ({
         <h2 className="headline-text font-bold">検索結果</h2>
         <hr className="border-neutral-900 dark:border-neutral-200 mb-4"/>
         { (totalCount > 0) && (["power", "item", "dlois", "elois"].includes(kind)) 
-          ? <SearchResultsCardList _kind={kind} records={records} />
+          ? <SearchResultsCardList kind={kind} records={records} />
           : (kind==="work") 
-          ? <SearchResultsTable _kind={kind} records={records} />
+          ? <SearchResultsTable kind={kind} records={records} />
           : <div className="m-4">条件に一致するデータがありません。</div>
         }
       </section> 
@@ -34,10 +34,11 @@ export default async function SearchResults<K extends keyof TypeMap> ({
 
 // エフェクト・Dロイス・Eロイスの検索結果を表示するコンポーネント
 function SearchResultsCardList<K extends keyof TypeMap> ({
-    _kind,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    kind,
     records,
   }: {
-    _kind: K,
+    kind: K,
     records: { [key: string]: TypeMap[K][] },
   }) {
     return (
@@ -58,10 +59,11 @@ function SearchResultsCardList<K extends keyof TypeMap> ({
 
 // ワークスの検索結果を表示するコンポーネント
 function SearchResultsTable<K extends keyof TypeMap> ({
-    _kind,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    kind,
     records,
   }: {
-    _kind: K,
+    kind: K,
     records: { [key: string]: TypeMap[K][] },
   }) {
     const works = records["ワークス"] as Work[];

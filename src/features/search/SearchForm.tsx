@@ -19,10 +19,14 @@ import { ELOIS_SUPPLEMENTS, ELOIS_TYPES, ELOIS_TIMINGS, ELOIS_SKILLS, ELOIS_DFCL
 import { WORK_SUPPLEMENTS, WORK_STATS, WORK_SKILLS } from '@/consts/work';
 import { SearchKind } from '@/types/types';
 
+type SearchFormValues = Record<string, any>;
+
 export default function SearchForm({ kind, searchParams }: { kind: SearchKind, searchParams: { [key: string]: string | string[] | undefined } }) {
     
     // フォームのcontrol, wachの設定
-    const { control, watch } = useControlAndWatch(kind, searchParams);
+    const defaultValues = getDefaultValues(kind, searchParams);
+    if (!defaultValues) return null; // defaultValuesがnullの場合は何も表示しない
+    const { control, watch } = useForm<SearchFormValues>({defaultValues: defaultValues});
 
     // submitの処理
     const router = useRouter()
@@ -51,108 +55,93 @@ export default function SearchForm({ kind, searchParams }: { kind: SearchKind, s
     )
 }
 
-function useControlAndWatch(kind: SearchKind, searchParams: { [key: string]: string | string[] | undefined }) {
+function getDefaultValues(kind: SearchKind, searchParams: { [key: string]: string | string[] | undefined }) {
     switch (kind) {
         case "power": {
-            const { control, watch } = useForm({
-                defaultValues: {
-                    "name": toString(searchParams["name"], ""),
-                    "type": toArray(searchParams["type"], []).map(strToSelectObj),
-                    "category": toArray(searchParams["category"], []).map(strToSelectObj),
-                    "supplement": toArray(searchParams["supplement"], []).map(strToSelectObj),
-                    "maxlv": toString(searchParams["maxlv"], ""),
-                    "timing": toArray(searchParams["timing"], []).map(strToSelectObj),
-                    "skill": toArray(searchParams["skill"], []).map(strToSelectObj),
-                    "dfclty": toArray(searchParams["dfclty"], []).map(strToSelectObj),
-                    "target": toArray(searchParams["target"], []).map(strToSelectObj),
-                    "rng": toArray(searchParams["rng"], []).map(strToSelectObj),
-                    "encroach": toString(searchParams["encroach"], ""),
-                    "restrict": toArray(searchParams["restrict"], []).map(strToSelectObj),
-                    "effect": toString(searchParams["effect"], ""),
-                }
-            });
-            return { control, watch };
+            return {
+                "name": toString(searchParams["name"], ""),
+                "type": toArray(searchParams["type"], []).map(strToSelectObj),
+                "category": toArray(searchParams["category"], []).map(strToSelectObj),
+                "supplement": toArray(searchParams["supplement"], []).map(strToSelectObj),
+                "maxlv": toString(searchParams["maxlv"], ""),
+                "timing": toArray(searchParams["timing"], []).map(strToSelectObj),
+                "skill": toArray(searchParams["skill"], []).map(strToSelectObj),
+                "dfclty": toArray(searchParams["dfclty"], []).map(strToSelectObj),
+                "target": toArray(searchParams["target"], []).map(strToSelectObj),
+                "rng": toArray(searchParams["rng"], []).map(strToSelectObj),
+                "encroach": toString(searchParams["encroach"], ""),
+                "restrict": toArray(searchParams["restrict"], []).map(strToSelectObj),
+                "effect": toString(searchParams["effect"], ""),
+            };
         }
         case "item": {
-            // フォームのcontrol, wachの設定
-            const { control, watch } = useForm({
-                defaultValues: {
-                    // 共通
-                    "name": toString(searchParams["name"], ""),
-                    "category": toArray(searchParams["category"], []).map(strToSelectObj),
-                    "supplement": toArray(searchParams["supplement"], []).map(strToSelectObj),
-                    "item-type": strToSelectObj(toString(searchParams["item-type"], "指定なし")),
-                    "procure": toString(searchParams["procure"], ""),
-                    "stock": toString(searchParams["stock"], ""),
-                    "exp": toString(searchParams["exp"], ""),
-                    "effect": toString(searchParams["effect"], ""),
-                    // 武器
-                    "weapon-type": toArray(searchParams["weapon-type"], []).map(strToSelectObj),
-                    "weapon-skill": toArray(searchParams["weapon-skill"], []).map(strToSelectObj),
-                    "weapon-acc": toString(searchParams["weapon-acc"], ""),
-                    "weapon-atk": toString(searchParams["weapon-atk"], ""),
-                    "weapon-rng": toString(searchParams["weapon-rng"], ""),
-                    // 防具
-                    "armor-type": toArray(searchParams["armor-type"], []).map(strToSelectObj),
-                    "armor-dodge": toString(searchParams["armor-dodge"], ""),
-                    "armor-initiative": toString(searchParams["armor-initiative"], ""),
-                    "armor-armor": toString(searchParams["armor-armor"], ""),
-                    // ヴィークル
-                    "vehicle-skill": toArray(searchParams["vehicle-skill"], []).map(strToSelectObj),
-                    "vehicle-atk": toString(searchParams["vehicle-atk"], ""),
-                    "vehicle-initiative": toString(searchParams["vehicle-initiative"], ""),
-                    "vehicle-armor": toString(searchParams["vehicle-armor"], ""),
-                    "vehicle-dash": toString(searchParams["vehicle-dash"], ""),
-                    // コネ
-                    "connection-skill": toArray(searchParams["connection-skill"], []).map(strToSelectObj),
-                    // 一般アイテム
-                    "general-type": toArray(searchParams["general-type"], []).map(strToSelectObj),
-                }
-            });
-            return { control, watch };
+            return {
+                // 共通
+                "name": toString(searchParams["name"], ""),
+                "category": toArray(searchParams["category"], []).map(strToSelectObj),
+                "supplement": toArray(searchParams["supplement"], []).map(strToSelectObj),
+                "item-type": strToSelectObj(toString(searchParams["item-type"], "指定なし")),
+                "procure": toString(searchParams["procure"], ""),
+                "stock": toString(searchParams["stock"], ""),
+                "exp": toString(searchParams["exp"], ""),
+                "effect": toString(searchParams["effect"], ""),
+                // 武器
+                "weapon-type": toArray(searchParams["weapon-type"], []).map(strToSelectObj),
+                "weapon-skill": toArray(searchParams["weapon-skill"], []).map(strToSelectObj),
+                "weapon-acc": toString(searchParams["weapon-acc"], ""),
+                "weapon-atk": toString(searchParams["weapon-atk"], ""),
+                "weapon-rng": toString(searchParams["weapon-rng"], ""),
+                // 防具
+                "armor-type": toArray(searchParams["armor-type"], []).map(strToSelectObj),
+                "armor-dodge": toString(searchParams["armor-dodge"], ""),
+                "armor-initiative": toString(searchParams["armor-initiative"], ""),
+                "armor-armor": toString(searchParams["armor-armor"], ""),
+                // ヴィークル
+                "vehicle-skill": toArray(searchParams["vehicle-skill"], []).map(strToSelectObj),
+                "vehicle-atk": toString(searchParams["vehicle-atk"], ""),
+                "vehicle-initiative": toString(searchParams["vehicle-initiative"], ""),
+                "vehicle-armor": toString(searchParams["vehicle-armor"], ""),
+                "vehicle-dash": toString(searchParams["vehicle-dash"], ""),
+                // コネ
+                "connection-skill": toArray(searchParams["connection-skill"], []).map(strToSelectObj),
+                // 一般アイテム
+                "general-type": toArray(searchParams["general-type"], []).map(strToSelectObj),
+            };
         }
         case "dlois": {
-            const { control, watch } = useForm({
-                defaultValues: {
-                    "name": toString(searchParams["name"], ""),
-                    "supplement": toArray(searchParams["supplement"], []).map(strToSelectObj),
-                    "type": toArray(searchParams["type"], []).map(strToSelectObj),
-                    "restrict": toArray(searchParams["restrict"], []).map(strToSelectObj),
-                    "effect": toString(searchParams["effect"], ""),
-                }
-            });
-            return { control, watch };
+            return {
+                "name": toString(searchParams["name"], ""),
+                "supplement": toArray(searchParams["supplement"], []).map(strToSelectObj),
+                "type": toArray(searchParams["type"], []).map(strToSelectObj),
+                "restrict": toArray(searchParams["restrict"], []).map(strToSelectObj),
+                "effect": toString(searchParams["effect"], ""),
+            };
         }
         case "elois": {
-            const { control, watch } = useForm({
-                defaultValues: {
-                    "name": toString(searchParams["name"], ""),
-                    "supplement": toArray(searchParams["supplement"], []).map(strToSelectObj),
-                    "type": toArray(searchParams["type"], []).map(strToSelectObj),
-                    "timing": toArray(searchParams["timing"], []).map(strToSelectObj),
-                    "skill": toArray(searchParams["skill"], []).map(strToSelectObj),
-                    "dfclty": toArray(searchParams["dfclty"], []).map(strToSelectObj),
-                    "target": toArray(searchParams["target"], []).map(strToSelectObj),
-                    "rng": toArray(searchParams["rng"], []).map(strToSelectObj),
-                    "urge": toArray(searchParams["urge"], []).map(strToSelectObj),
-                    "effect": toString(searchParams["effect"], ""),
-                }
-            });
-            return { control, watch };
+            return {
+                "name": toString(searchParams["name"], ""),
+                "supplement": toArray(searchParams["supplement"], []).map(strToSelectObj),
+                "type": toArray(searchParams["type"], []).map(strToSelectObj),
+                "timing": toArray(searchParams["timing"], []).map(strToSelectObj),
+                "skill": toArray(searchParams["skill"], []).map(strToSelectObj),
+                "dfclty": toArray(searchParams["dfclty"], []).map(strToSelectObj),
+                "target": toArray(searchParams["target"], []).map(strToSelectObj),
+                "rng": toArray(searchParams["rng"], []).map(strToSelectObj),
+                "urge": toArray(searchParams["urge"], []).map(strToSelectObj),
+                "effect": toString(searchParams["effect"], ""),
+            };
         }
         case "work": {
-            const { control, watch } = useForm({
-                defaultValues: {
-                    "name": toString(searchParams["name"], ""),
-                    "supplement": toArray(searchParams["supplement"], []).map(strToSelectObj),
-                    "stat": toArray(searchParams["stat"], []).map(strToSelectObj),
-                    "skill": toArray(searchParams["skill"], []).map(strToSelectObj),
-                }
-            });
-            return { control, watch };
+            return {
+                "name": toString(searchParams["name"], ""),
+                "supplement": toArray(searchParams["supplement"], []).map(strToSelectObj),
+                "stat": toArray(searchParams["stat"], []).map(strToSelectObj),
+                "skill": toArray(searchParams["skill"], []).map(strToSelectObj),
+            };
         }
-        default:
-            return { control: null, watch: null };
+        default: {
+            return null;
+        }
     }
 }
 
