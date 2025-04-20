@@ -1,7 +1,7 @@
 import Link from "next/link"
 import FavoriteRecords from "@/features/main/FavoriteRecords"
 
-export const runtime = 'edge';
+export const runtime = 'edge'
 
 export default function Home() {
   return (
