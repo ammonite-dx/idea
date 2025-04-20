@@ -19,13 +19,13 @@ import { ELOIS_SUPPLEMENTS, ELOIS_TYPES, ELOIS_TIMINGS, ELOIS_SKILLS, ELOIS_DFCL
 import { WORK_SUPPLEMENTS, WORK_STATS, WORK_SKILLS } from '@/consts/work';
 import { SearchKind } from '@/types/types';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SearchFormValues = Record<string, any>;
 
 export default function SearchForm({ kind, searchParams }: { kind: SearchKind, searchParams: { [key: string]: string | string[] | undefined } }) {
     
     // フォームのcontrol, wachの設定
     const defaultValues = getDefaultValues(kind, searchParams);
-    if (!defaultValues) return null; // defaultValuesがnullの場合は何も表示しない
     const { control, watch } = useForm<SearchFormValues>({defaultValues: defaultValues});
 
     // submitの処理
@@ -140,7 +140,7 @@ function getDefaultValues(kind: SearchKind, searchParams: { [key: string]: strin
             };
         }
         default: {
-            return null;
+            return {};
         }
     }
 }
