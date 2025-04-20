@@ -16,7 +16,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
     const { kind } = params;
     if (!isSearchKind(kind)) return notFound();
-    const currSearchParams = await searchParams;
+    const currSearchParams = searchParams;
 
     return (
         <main>
