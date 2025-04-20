@@ -45,7 +45,7 @@ export default function FavoriteButton({ recordKind, recordId }: { recordKind:st
   if (loading) return <span>...</span>;
 
   return (
-    <button onClick={toggleFavorite} className="text-md p-0">
+    <button onClick={toggleFavorite} className="base-text p-0">
       {isFavorite ? <div className="w-[2ch] text-right">★</div> : <div className="w-[2ch] text-right">☆</div>}
     </button>
   );

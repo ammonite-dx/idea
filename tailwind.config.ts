@@ -16,6 +16,13 @@ export default {
       fontSize: {
         '2xs': '0.625rem', // 10px相当
       },
+      fontFamily: {
+        // Noto Sans JP
+        sans: ['Noto Sans JP', 'ui-sans-serif', 'system-ui'],
+      },
+      maxWidth: {
+        '9xl': '96rem', // 例：96rem = 1536px
+      },
     },
   },
   plugins: [],

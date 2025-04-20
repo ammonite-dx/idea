@@ -20,11 +20,6 @@ export default async function searchRecords<K extends keyof TypeMap>(
   switch (kind) {
     case "power": return searchPowers(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
     case "item": return searchItems(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
-    case "weapon": return searchWeapons(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
-    case "armor": return searchArmors(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
-    case "vehicle": return searchVehicles(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
-    case "connection": return searchConnections(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
-    case "general": return searchGenerals(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
     case "dlois": return searchDloises(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
     case "elois": return searchEloises(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
     case "work": return searchWorks(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
@@ -60,21 +55,29 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
 
 // アイテム
 async function searchItems(searchParams: { [key: string]: string | string[] | undefined }) {
-  const weapons = await searchWeapons(searchParams);
-  const armors = await searchArmors(searchParams);
-  const vehicles = await searchVehicles(searchParams);
-  const connections = await searchConnections(searchParams);
-  const generals = await searchGenerals(searchParams);
-  const items = Object.fromEntries(toArray(searchParams["category"], ITEM_CATEGORIES).map(category => {
-      const weaponsInCategory: Item[] = weapons[category] || [];
-      const armorsInCategory: Item[] = armors[category] || [];
-      const vehiclesInCategory: Item[] = vehicles[category] || [];
-      const connectionsInCategory: Item[] = connections[category] || [];
-      const generalsInCategory: Item[] = generals[category] || [];
-      const itemsInCategory: Item[] = weaponsInCategory.concat(armorsInCategory).concat(vehiclesInCategory).concat(connectionsInCategory).concat(generalsInCategory);
-      return [category, itemsInCategory]
-  }));
-  return items;
+  switch (toString(searchParams["item-type"], "指定なし")) {
+    case "武器": return searchWeapons(searchParams) as Promise<{ [key: string]: Item[] }>;
+    case "防具": return searchArmors(searchParams) as Promise<{ [key: string]: Item[] }> ;
+    case "ヴィークル": return searchVehicles(searchParams) as Promise<{ [key: string]: Item[] }>;
+    case "コネ": return searchConnections(searchParams) as Promise<{ [key: string]: Item[] }>;
+    case "一般アイテム": return searchGenerals(searchParams) as Promise<{ [key: string]: Item[] }>;
+    default:
+      const weapons = await searchWeapons(searchParams);
+      const armors = await searchArmors(searchParams);
+      const vehicles = await searchVehicles(searchParams);
+      const connections = await searchConnections(searchParams);
+      const generals = await searchGenerals(searchParams);
+      const items = Object.fromEntries(toArray(searchParams["category"], ITEM_CATEGORIES).map(category => {
+          const weaponsInCategory: Item[] = weapons[category] || [];
+          const armorsInCategory: Item[] = armors[category] || [];
+          const vehiclesInCategory: Item[] = vehicles[category] || [];
+          const connectionsInCategory: Item[] = connections[category] || [];
+          const generalsInCategory: Item[] = generals[category] || [];
+          const itemsInCategory: Item[] = weaponsInCategory.concat(armorsInCategory).concat(vehiclesInCategory).concat(connectionsInCategory).concat(generalsInCategory);
+          return [category, itemsInCategory]
+      }));
+      return items;
+  }
 }
 
 // 武器
@@ -293,7 +296,7 @@ function itemWhereCondition(searchParams: { [key: string]: string | string[] | u
 // 武器
 function weaponWhereCondition(searchParams: { [key: string]: string | string[] | undefined }) {
   return [
-    { OR: toArray(searchParams["weapon-type"], WEAPON_TYPES).map(type => ({ type: type })) },
+    { OR: toArray(searchParams["weapon-type"], WEAPON_TYPES).map(type => ({ type: { contains: type }})) },
     { OR: toArray(searchParams["weapon-skill"], WEAPON_SKILLS).map(skill => ({ skill: { contains: skill.replace("〈","").replace("〉","").replace(":","") } })) },
     { OR: [{ acc_int: null }, { acc_int: { gte: parseInt(toString(searchParams["weapon-acc"], "-999")) } }] },
     { OR: [{ atk_int: null }, { atk_int: { gte: parseInt(toString(searchParams["weapon-atk"], "-999")) } }] },

@@ -15,14 +15,14 @@ export default function TextInput ({control, name, label, isNumber=false, suffix
             name={name}
             control={control}
             render={({ field }) => (
-                <label className='text-xs lg:text-sm'>
+                <label className='base-text'>
                     {label}
                     <div className="relative">
                         <input
                             {...field}
                             onChange={(e) => field.onChange(e.target.value)}
                             type={isNumber ? 'number' : 'text'}
-                            className='w-full min-h-[38px] rounded-md bg-white dark:bg-neutral-900 border border-neutral-500 dark:border-neutral-200 p-1 pl-2 text-left text-xs lg:text-sm'
+                            className='w-full min-h-7 input-box rounded-sm bg-white dark:bg-neutral-900 border border-neutral-500 dark:border-neutral-200 p-1 pl-2 text-left base-text text-neutral-900'
                         />
                         <span className="absolute right-9 top-1/2 -translate-y-1/2 pointer-events-none">
                             {suffix}

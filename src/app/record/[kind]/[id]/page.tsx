@@ -2,12 +2,22 @@ import { notFound } from "next/navigation";
 import RecordCard from "@/components/RecordCard";
 import CardList from "@/components/CardList";
 import getRecordById from "@/utils/getRecordById";
-import { PrimaryKind, PrimaryRecord } from "@/types/types";
+import { CardRecord, CardRecordKind } from "@/types/types";
 
-export default async function Page({ kind, id }: { kind: PrimaryKind, id: string }) {
+type PageProps = {
+    params: {
+        kind: CardRecordKind;
+        id: string;
+    };
+};
+
+export default async function Page({ params }: PageProps) {
 
     // 詳細を表示したいデータを取得
-    const record = await getRecordById(kind, id);
+    const { kind, id } = await params;
+    const decodedKind = decodeURIComponent(kind) as CardRecordKind;
+    const decodedId = decodeURIComponent(id);
+    const record = await getRecordById(decodedKind, decodedId);
     if (!record) return notFound();
 
     // 別バージョン
@@ -27,17 +37,17 @@ export default async function Page({ kind, id }: { kind: PrimaryKind, id: string
 
     return (
         <div>
-            <RecordCard record={record} category details/>
-            {otherVers && <CardList title="別バージョン" records={otherVers} category />}
-            {relPowers && <CardList title="関連エフェクト" records={relPowers} category />}
-            {relItems && <CardList title="関連アイテム" records={relItems} category />}
-            {relDlois && <CardList title="関連Dロイス" records={relDlois} category />}
-            {relElois && <CardList title="関連Eロイス" records={relElois} category />}
+            <div className="mb-4 lg:mb-8"><RecordCard record={record} category details/></div>
+            {otherVers && otherVers.length>0 && <CardList title="別バージョン" records={otherVers} category />}
+            {relPowers && relPowers.length>0 && <CardList title="関連エフェクト" records={relPowers} category />}
+            {relItems && relItems.length>0 && <CardList title="関連アイテム" records={relItems} category />}
+            {relDlois && relDlois.length>0 && <CardList title="関連Dロイス" records={relDlois} category />}
+            {relElois && relElois.length>0 && <CardList title="関連Eロイス" records={relElois} category />}
         </div>
     );
 }
 
-async function getRelRecord(kind: PrimaryKind, ids?: string): Promise<PrimaryRecord[]> {
+async function getRelRecord(kind: CardRecordKind, ids?: string): Promise<CardRecord[]> {
     if (!ids) return [];
     return (await Promise.all(
         ids.split(" ").map(id => getRecordById(kind, id))

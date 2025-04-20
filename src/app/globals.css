@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
+  --background: #f5f5f5;
   --foreground: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #171717;
+    --background: #262626;
     --foreground: #ededed;
   }
 }
@@ -25,5 +25,41 @@ body {
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
+  }
+}
+
+@layer components {
+  .base-text {
+    @apply text-2xs sm:text-xs md:text-sm lg:text-base;
+  }
+  .title-text {
+    @apply text-xs sm:text-sm md:text-base lg:text-lg;
+  }
+  .headline-text {
+    @apply text-base sm:text-lg md:text-xl lg:text-2xl;
+  }
+  .input-box {
+    @apply h-7 sm:h-8 lg:h-9;
+  }
+  .card {
+    @apply border rounded-lg px-1 lg:px-2 py-2 m-0;
+  }
+  .button {
+    @apply border transition text-center title-text;
+  }
+  .button-light {
+    @apply button bg-light hover:bg-neutral-200 dark:hover:bg-neutral-600 border border-neutral-400 dark:border-neutral-600;
+  }
+  .button-dark {
+    @apply button bg-dark hover:bg-neutral-600 dark:hover:bg-neutral-400 border border-neutral-400 dark:border-neutral-600;
+  }
+  .bg-light {
+    @apply bg-white dark:bg-neutral-900 border-neutral-900 dark:border-neutral-400 text-neutral-900 dark:text-neutral-100;
+  }
+  .bg-dark {
+    @apply bg-neutral-800 dark:bg-neutral-300 border-neutral-800 dark:border-neutral-300 text-neutral-100 dark:text-neutral-900;
+  }
+  .bg-light-dark {
+    @apply bg-neutral-200 dark:bg-neutral-600 text-neutral-600 dark:text-neutral-300;
   }
 }

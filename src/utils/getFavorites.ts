@@ -2,9 +2,9 @@ import prisma from '@/lib/prisma';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import getRecordById from './getRecordById';
-import { PrimaryKind } from '@/types/types';
+import { CardRecordKind } from '@/types/types';
 
-export default async function getFavorites( kind: PrimaryKind ) {
+export default async function getFavorites( kind: CardRecordKind ) {
   
   // セッションを取得
   const session = await getServerSession(authOptions);

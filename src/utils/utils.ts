@@ -6,4 +6,4 @@ export const toString = (value: string | string[] | undefined, defaultValue: str
 
 export const strToSelectObj = (s:string) => ({value:s, label:s})
 
-export function is<T extends Power|Weapon|Armor|Vehicle|Connection|General, U extends T["kind"]>(kind:U, item:T): item is Extract<T,{kind:U}> {return item.kind === kind;}
+//export function is<T extends Power|Weapon|Armor|Vehicle|Connection|General, U extends T["kind"]>(kind:U, item:T): item is Extract<T,{kind:U}> {return item.kind === kind;}

@@ -1,11 +1,14 @@
-export type Kind = PrimaryKind | AdditionalKind;
-export type PrimaryKind = "power" | "weapon" | "armor" | "vehicle" | "connection" | "general" | "dlois" | "elois";
-export type AdditionalKind = "faq" | "info";
-
-export type Record = PrimaryRecord | AdditionalRecord;
-export type PrimaryRecord = Power | Item | Dlois | Elois;
+export type Record = CardRecord | TableRecord | TextRecord;
+export type CardRecord = Power | Item | Dlois | Elois;
 export type Item = Weapon | Armor | Vehicle | Connection | General;
-export type AdditionalRecord = Faq | Info | Work;
+export type TableRecord = Work;
+export type TextRecord = Faq | Info ;
+
+export type RecordKind = CardRecordKind | TableRecordKind | TextRecordKind;
+export type CardRecordKind = "power" | "weapon" | "armor" | "vehicle" | "connection" | "general" | "dlois" | "elois";
+export type TableRecordKind = "works"
+export type TextRecordKind = "faq" | "info";
+export type SearchKind = "power" | "item" | "dlois" | "elois" | "work";
 
 export type TypeMap = {
     power: Power;
@@ -17,9 +20,9 @@ export type TypeMap = {
     general: General;
     dlois: Dlois;
     elois: Elois;
+    work: Work;
     faq: Faq;
     info: Info;
-    work: Work;
 };
 
 export type Power = {

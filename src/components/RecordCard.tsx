@@ -3,10 +3,11 @@ import Link from "next/link";
 import ScaledText from "./ScaledText";
 import FavoriteButton from "./FavoriteButton";
 import getDataById from "@/utils/getRecordById";
-import { PrimaryRecord, Power, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Faq, Info } from "@/types/types";
+import { Card, CardHeader, CardBody, CardBodyRow, CardDivider } from "./Card";
+import { CardRecord, Power, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Faq, Info } from "@/types/types";
 
 // データカード
-export default function RecordCard ({ record, category=false, details=false }: { record:PrimaryRecord, category?:boolean , details?:boolean }) {
+export default function RecordCard ({ record, category=false, details=false }: { record:CardRecord, category?:boolean , details?:boolean }) {
   switch (record.kind) {
     case "power":
       return <PowerCard power={record} category={category} details={details} />;
@@ -37,7 +38,7 @@ export default function RecordCard ({ record, category=false, details=false }: {
 async function PowerCard ({ power, category, details }: { power:Power, category:boolean , details:boolean }) {
   return (
     <Card>
-      <CardHeader title={power.name} record={power} subtitle={power.type === "一般" ? "" : power.type} />
+      <RecordCardHeader title={power.name} record={power} subtitle={power.type === "一般" ? "" : power.type} />
       <CardDivider />
       <CardBody>
         {category && <CardBodyRow><PropDict name="カテゴリ" value={power.category} /></CardBodyRow>}
@@ -94,7 +95,7 @@ async function WeaponCard ({ weapon, category, details }: { weapon:Weapon, categ
   }
   return (
     <Card>
-      <CardHeader title={weapon.name} record={weapon} subtitle={""} />
+      <RecordCardHeader title={weapon.name} record={weapon} subtitle={""} />
       <CardDivider />
       <CardBody>
         {category && <CardBodyRow><PropDict name="カテゴリ" value={weapon.category} /></CardBodyRow>}
@@ -127,7 +128,7 @@ async function ArmorCard ({ armor, category, details }: { armor:Armor, category:
   }
   return (
     <Card>
-      <CardHeader title={armor.name} record={armor} subtitle={""} />
+      <RecordCardHeader title={armor.name} record={armor} subtitle={""} />
       <CardDivider />
       <CardBody>
         {category && <CardBodyRow><PropDict name="カテゴリ" value={armor.category} /></CardBodyRow>}
@@ -161,7 +162,7 @@ async function ArmorCard ({ armor, category, details }: { armor:Armor, category:
 async function VehicleCard ({ vehicle, category, details }: { vehicle:Vehicle, category:boolean, details:boolean }) {
   return (
     <Card>
-      <CardHeader title={vehicle.name} record={vehicle} subtitle={""} />
+      <RecordCardHeader title={vehicle.name} record={vehicle} subtitle={""} />
       <CardDivider />
       <CardBody>
         {category && <CardBodyRow><PropDict name="カテゴリ" value={vehicle.category} /></CardBodyRow>}
@@ -188,7 +189,7 @@ async function VehicleCard ({ vehicle, category, details }: { vehicle:Vehicle, c
 async function ConnectionCard ({ connection, category, details }: { connection:Connection, category:boolean, details:boolean }) {
   return (
     <Card>
-      <CardHeader title={connection.name} record={connection} subtitle={""} />
+      <RecordCardHeader title={connection.name} record={connection} subtitle={""} />
       <CardDivider />
       <CardBody>
         {category && <CardBodyRow><PropDict name="カテゴリ" value={connection.category} /></CardBodyRow>}
@@ -212,7 +213,7 @@ async function ConnectionCard ({ connection, category, details }: { connection:C
 async function GeneralCard ({ general, category, details }: { general:General, category:boolean, details:boolean }) {
   return (
     <Card>
-      <CardHeader title={general.name} record={general} subtitle={""} />
+      <RecordCardHeader title={general.name} record={general} subtitle={""} />
       <CardDivider />
       <CardBody>
         {category && <CardBodyRow><PropDict name="カテゴリ" value={general.category} /></CardBodyRow>}
@@ -244,7 +245,7 @@ async function GeneralCard ({ general, category, details }: { general:General, c
 async function DloisCard ({ dlois, details }: { dlois:Dlois, details:boolean }) {
   return (
     <Card>
-      <CardHeader title={dlois.name} record={dlois}/>
+      <RecordCardHeader title={dlois.name} record={dlois}/>
       <CardDivider />
       <CardBody>
         <CardBodyRow><PropDict name="出典" value={dlois.supplement} /></CardBodyRow>
@@ -294,7 +295,7 @@ async function DloisCard ({ dlois, details }: { dlois:Dlois, details:boolean }) 
 async function EloisCard ({ elois, details }: { elois:Elois, details:boolean }) {
   return (
     <Card>
-      <CardHeader title={elois.name} record={elois} />
+      <RecordCardHeader title={elois.name} record={elois} />
       <CardDivider />
       <CardBody>
         <CardBodyRow><PropDict name="出典" value={elois.supplement} /></CardBodyRow>
@@ -314,6 +315,22 @@ async function EloisCard ({ elois, details }: { elois:Elois, details:boolean }) 
 ////////////////////////////////
 // カード内で使う要素
 ////////////////////////////////
+
+// カードのヘッダー
+function RecordCardHeader ({ title, record, subtitle="" }: { title:string, record:CardRecord, subtitle?:string }) {
+  const link = `/record/${record.kind}/${record.id}`;
+  return (
+      <CardHeader>
+        <div className="flex items-center justify-between">
+            <div className="title-text font-black"><Link href={link}><ScaledText text={title}/></Link></div>  
+            <div className="flex items-center justify-end space-x-1">
+              <div className="base-text text-right font-black"><ScaledText text={subtitle}/></div>
+              <FavoriteButton recordKind={record.kind} recordId={record.id} />
+            </div>  
+        </div>
+      </CardHeader>
+  )
+}
 
 // FAQ
 function FaqBody ({ faqs }: { faqs:Faq[] }) {
@@ -354,16 +371,24 @@ function InfoBody ({ infos }: { infos:Info[] }) {
 
 // 起源種用侵蝕率効果表(上級)
 function OriginalRenegadeAd() {
+  const originalRenegadeAd = [
+    {"encroachment": "0～79", "lv": "±0"},
+    {"encroachment": "80～99", "lv": "+1"},
+    {"encroachment": "100～149", "lv": "+2"},
+    {"encroachment": "150～", "lv": "+3"},
+  ]
   return (
-    <table className="table-auto w-full border-collapse">
+    <table className="table-auto w-full border-collapse mt-2">
         <thead className="border-b border-neutral-900 dark:border-neutral-200">
             <tr><th className="text-center py-1">侵蝕率</th><th className="text-center py-1">エフェクトLV</th></tr>
         </thead>
         <tbody>
-            <tr><td className="text-center py-1">0～79</td><td className="text-center py-1">±0</td></tr>
-            <tr><td className="text-center py-1">80～99</td><td className="text-center py-1">+1</td></tr>
-            <tr><td className="text-center py-1">100～149</td><td className="text-center py-1">+2</td></tr>
-            <tr><td className="text-center py-1">150～</td><td className="text-center py-1">+3</td></tr>
+            {originalRenegadeAd.map((item, index) => (
+              <tr key={index}>
+                <td className="text-center py-1">{item["encroachment"]}</td>
+                <td className="text-center py-1">{item["lv"]}</td>
+              </tr>
+            ))}
         </tbody>
     </table>
   );
@@ -371,82 +396,29 @@ function OriginalRenegadeAd() {
 
 // 起源種用侵蝕率効果表(LM)
 function OriginalRenegadeLM() {
+  const originalRenegadeLM = [
+    {"encroachment": "0～79", "lv": "±0"},
+    {"encroachment": "80～99", "lv": "+1"},
+    {"encroachment": "100～149", "lv": "+2"},
+    {"encroachment": "150～199", "lv": "+3"},
+    {"encroachment": "200～", "lv": "+4"},
+  ]
   return (
-    <table className="table-auto w-full border-collapse">
+    <table className="table-auto w-full border-collapse mt-2">
         <thead className="border-b border-neutral-900 dark:border-neutral-200">
             <tr><th className="text-center py-1">侵蝕率</th><th className="text-center py-1">エフェクトLV</th></tr>
         </thead>
         <tbody>
-            <tr><td className="text-center py-1">0～79</td><td className="text-center py-1">±0</td></tr>
-            <tr><td className="text-center py-1">80～99</td><td className="text-center py-1">+1</td></tr>
-            <tr><td className="text-center py-1">100～149</td><td className="text-center py-1">+2</td></tr>
-            <tr><td className="text-center py-1">150～199</td><td className="text-center py-1">+3</td></tr>
-            <tr><td className="text-center py-1">200～</td><td className="text-center py-1">+4</td></tr>
+            {originalRenegadeLM.map((item, index) => (
+              <tr key={index}>
+                <td className="text-center py-1">{item["encroachment"]}</td>
+                <td className="text-center py-1">{item["lv"]}</td>
+              </tr>
+            ))}
         </tbody>
     </table>
   );
 }
-
-////////////////////////////////
-// カードを構成する基本要素
-////////////////////////////////
-
-// カード本体
-function Card ({ children }: { children:React.ReactNode }) {
-  return (
-    <div className="border border-neutral-900 dark:border-neutral-200 rounded-lg p-1 lg:p-2 m-1 lg:m-2">
-      { children }
-    </div>
-  )
-}
-
-// カードのボディ
-function CardBody ({ children }: { children:React.ReactNode }) {
-  return (
-    <div className="text-2xs lg:text-base px-1 lg:px-2">
-      { children }
-    </div>
-  )
-}
-
-// カードボディ内の行
-function CardBodyRow ({ children }: { children:React.ReactNode }) {
-  // 子要素の数が1の場合は1列、2以上の場合はそれに応じた列数を指定する
-  if (React.Children.count(children) === 1) {
-    return(
-      <div className={`grid grid-cols-none pb-1`}>
-        { children }
-      </div>
-    )
-  } else {
-    return(
-      <div className={`grid grid-cols-${React.Children.count(children)} pb-1`}>
-        { children }
-      </div>
-    )
-  }
-}
-
-// カードの区切り線
-function CardDivider () {
-  return (
-      <div className="py-1 lg:py-2"><hr className="border-neutral-900 dark:border-neutral-200"/></div>
-  )
-}
-
-// カードのヘッダー
-function CardHeader ({ title, record, subtitle="" }: { title:string, record:PrimaryRecord, subtitle?:string }) {
-  const link = `/record/${record.kind}/${record.id}`;
-  return (
-      <div className="flex items-center justify-between px-1 lg:px-2 py-0">
-          <div className="flex-1 text-left text-sm lg:text-lg font-black overflow-hidden"><Link href={link}><ScaledText text={title}/></Link></div>
-          <div className="text-right mx-1 lg:mx-2 text-xs lg:text-base font-black">{subtitle}</div>
-          <FavoriteButton recordKind={record.kind} recordId={record.id} />
-      </div>
-  )
-}
-
-
 
 ////////////////////////////////
 // テキスト系の補助コンポーネント
