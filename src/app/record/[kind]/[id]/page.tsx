@@ -4,14 +4,7 @@ import CardList from "@/components/CardList";
 import getRecordById from "@/utils/getRecordById";
 import { CardRecord, CardRecordKind } from "@/types/types";
 
-type PageProps = {
-    params: {
-        kind: CardRecordKind;
-        id: string;
-    };
-};
-
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: { params: { kind: string; id: string } }) {
 
     // 詳細を表示したいデータを取得
     const { kind, id } = params;

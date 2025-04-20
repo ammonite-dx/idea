@@ -3,16 +3,7 @@ import SearchForm from "@/features/search/SearchForm";
 import SearchResults from "@/features/search/SearchResults";
 import { SearchKind } from "@/types/types";
 
-type PageProps = {
-    params: {
-        kind: SearchKind;
-    };
-    searchParams: {
-        [key: string]: string | string[] | undefined;
-    };
-};
-
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page({ params, searchParams }: { params: { kind: SearchKind }; searchParams: { [key: string]: string | string[] | undefined } }) {
 
     const { kind } = params;
     if (!isSearchKind(kind)) return notFound();
