@@ -10,6 +10,7 @@ interface Option {
     label: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function SelectBox ({control, name, label, options, isMulti=false}: {control:any, name:string, label:string, options:(Option|{label:string,options:Option[]})[], isMulti?:boolean}) {
     return (
         <Controller 

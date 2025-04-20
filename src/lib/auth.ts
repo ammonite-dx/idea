@@ -23,6 +23,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         const guilds = await res.json();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const isInGuild = guilds.some((guild: any) => guild.id === REQUIRED_GUILD_ID);
         return isInGuild;
       } catch (error) {

@@ -22,7 +22,7 @@ import { SearchKind } from '@/types/types';
 export default function SearchForm({ kind, searchParams }: { kind: SearchKind, searchParams: { [key: string]: string | string[] | undefined } }) {
     
     // フォームのcontrol, wachの設定
-    const { control, watch } = getControlAndWatch(kind, searchParams);
+    const { control, watch } = useControlAndWatch(kind, searchParams);
 
     // submitの処理
     const router = useRouter()
@@ -51,7 +51,7 @@ export default function SearchForm({ kind, searchParams }: { kind: SearchKind, s
     )
 }
 
-function getControlAndWatch(kind: SearchKind, searchParams: { [key: string]: string | string[] | undefined }) {
+function useControlAndWatch(kind: SearchKind, searchParams: { [key: string]: string | string[] | undefined }) {
     switch (kind) {
         case "power": {
             const { control, watch } = useForm({
@@ -160,6 +160,7 @@ function getControlAndWatch(kind: SearchKind, searchParams: { [key: string]: str
 // レコードの種別に応じたフォーム
 ////////////////////////////////
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function PowerSearchForm({ control }: { control:any }) {
     return (
         <>
@@ -180,6 +181,7 @@ function PowerSearchForm({ control }: { control:any }) {
     )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ItemSearchForm ({ control, watch } : { control:any, watch:any }) {
     const itemType = watch("item-type");
     return (
@@ -201,6 +203,7 @@ function ItemSearchForm ({ control, watch } : { control:any, watch:any }) {
     );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function WeaponSearchForm ({control}: {control:any}) {
     return(
         <>
@@ -214,6 +217,7 @@ function WeaponSearchForm ({control}: {control:any}) {
     );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ArmorSearchForm ({control}: {control:any}) {
     return(
         <>
@@ -225,6 +229,7 @@ function ArmorSearchForm ({control}: {control:any}) {
     );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function VehicleSearchForm ({control}: {control:any}) {
     return(
         <>
@@ -237,6 +242,7 @@ function VehicleSearchForm ({control}: {control:any}) {
     );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ConnectionSearchForm ({control}: {control:any}) {
     return(
         <>
@@ -245,6 +251,7 @@ function ConnectionSearchForm ({control}: {control:any}) {
     );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function GeneralSearchForm ({control}: {control:any}) {
     return(
         <>
@@ -253,7 +260,8 @@ function GeneralSearchForm ({control}: {control:any}) {
     );
 }
 
-function DloisSearchForm({ control }: { control:any }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function DloisSearchForm({ control }: {control:any}) {
     return (
         <>
             <div className="grid-item col-span-12 lg:col-span-12"><TextInput label="名称" name="name" control={control}/></div>
@@ -265,6 +273,7 @@ function DloisSearchForm({ control }: { control:any }) {
     )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function EloisSearchForm({ control }: { control:any }) {
     return (
         <>
@@ -282,6 +291,7 @@ function EloisSearchForm({ control }: { control:any }) {
     )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function WorkSearchForm({ control }: { control:any }) {
     return (
         <>

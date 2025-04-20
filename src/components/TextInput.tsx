@@ -3,6 +3,7 @@
 import { ChevronUp,ChevronDown } from 'lucide-react';
 import { Controller, ControllerRenderProps, FieldValues } from 'react-hook-form';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function TextInput ({control, name, label, isNumber=false, suffix=""}: {control:any, name:string, label:string, isNumber?:boolean, suffix?:string}) {
     
     const changeValue = (e:React.MouseEvent, field:ControllerRenderProps<FieldValues,string>, delta:number) => {
