@@ -14,7 +14,7 @@ type PageProps = {
 
 export default async function Page({ params, searchParams }: PageProps) {
 
-    const { kind } = await params;
+    const { kind } = params;
     if (!isSearchKind(kind)) return notFound();
     const currSearchParams = await searchParams;
 
