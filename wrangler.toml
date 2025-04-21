@@ -1,0 +1,13 @@
+name = "idea"
+compatibility_date = "2025-04-21"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
+
+[[d1_databases]]
+binding       = "DB"
+database_name = "idea-db"
+database_id   = "64a38857-c1bd-48ba-a940-33bee5260bc3"
+
+[vars]
+DISCORD_CLIENT_ID = "1358085922570240191"
+NEXTAUTH_URL      = "https://idea.pages.dev"

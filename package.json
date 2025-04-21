@@ -8,8 +8,8 @@
     "typecheck": "tsc --noEmit",
     "build": "next build",
     "pages:build": "npx @cloudflare/next-on-pages",
-    "preview": "npm run pages:build && wrangler pages dev",
-    "deploy": "npm run pages:build && wrangler pages deploy",
+    "preview": "npm run pages:build && wrangler pages dev . --port 8787",
+    "deploy": "npm run pages:build && wrangler pages deploy  . --branch main",
     "start": "next start",
     "lint": "next lint"
   },
