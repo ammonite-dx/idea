@@ -68,4 +68,7 @@ export const authOptions = {
       return session;
     },
   },
+
+  // 5) デバッグモードを有効にする
+  debug: true,
 } satisfies NextAuthConfig;;
