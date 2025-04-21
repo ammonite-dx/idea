@@ -1,5 +1,6 @@
 export const runtime = "edge";
 
-import { handler } from "@/auth";
+import { handlers } from "@/auth";
 
-export { handler as GET, handler as POST };
+export const GET  = handlers.GET;
+export const POST = handlers.POST;
