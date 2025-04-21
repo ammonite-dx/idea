@@ -1,16 +1,15 @@
 import prisma from "@/lib/prisma";
-import { auth } from "@/auth";             // ← getServerSession → auth に置き換え
+import { auth } from "@/auth";           // ← getToken ではなく auth() を使う
 import getRecordById from "./getRecordById";
 import { CardRecordKind } from "@/types/types";
 
 export default async function getFavorites(kind: CardRecordKind) {
-  // セッションを取得（v5 のユニバーサル auth() を使用）
+  // Server Component／ユーティリティからは auth() だけで OK
   const session = await auth();
   if (!session?.user?.id) {
     return [];
   }
 
-  // お気に入りID取得
   const searchResults = await prisma.favorite.findMany({
     where: {
       user_id:     session.user.id,
@@ -19,7 +18,6 @@ export default async function getFavorites(kind: CardRecordKind) {
     select: { record_id: true },
   });
 
-  // お気に入りデータ取得
   const favorites = (
     await Promise.all(
       searchResults.map(({ record_id }) =>
