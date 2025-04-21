@@ -1,7 +1,9 @@
 export const runtime = "edge";
 
-import { handlers } from "@/auth";
+import NextAuth from "next-auth";
+import { authOptions } from "@/lib/auth";
 
-// handlers の中に GET, POST として定義されている関数を
-// そのまま名前付きエクスポートする
-export const { GET, POST } = handlers;
+const handler = NextAuth(authOptions);
+
+export const GET  = handler;
+export const POST = handler;
