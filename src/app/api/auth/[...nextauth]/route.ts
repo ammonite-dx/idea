@@ -2,5 +2,6 @@ export const runtime = "edge";
 
 import { handlers } from "@/auth";
 
-// App Router では default export を使わず、HTTP メソッドごとの名前付きエクスポートにする
-export { handlers as GET, handlers as POST };
+// handlers の中に GET, POST として定義されている関数を
+// そのまま名前付きエクスポートする
+export const { GET, POST } = handlers;
