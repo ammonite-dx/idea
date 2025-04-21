@@ -1,9 +1,6 @@
-import NextAuth from "next-auth";
-import { authOptions } from "@/lib/auth";
+export const runtime = "edge";
 
-// NextAuth() が返すハンドラー関数を一度だけ受け取る
-const handler = NextAuth(authOptions);
+import { handlers } from "@/auth";
 
-// App Router では default export は無効。
-// GET／POST のみを named exports にする
-export { handler as GET, handler as POST };
+// App Router では default export を使わず、HTTP メソッドごとの名前付きエクスポートにする
+export { handlers as GET, handlers as POST };
