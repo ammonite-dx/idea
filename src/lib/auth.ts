@@ -39,6 +39,7 @@ export const authOptions = {
           { headers: { Authorization: `Bearer ${account.access_token}` } }
         );
         const guilds = await res.json();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return guilds.some((g: any) => g.id === REQUIRED_GUILD_ID);
       } catch (error) {
         console.error("ギルドチェックエラー:", error);
