@@ -4,7 +4,7 @@ import type { JWT } from "next-auth/jwt";
 import DiscordProvider from "next-auth/providers/discord";
 
 const REQUIRED_GUILD_ID = "1358094185848246363";
-
+console.log("🎫 NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET);
 export const authOptions = {
   // 1) OAuth プロバイダーの設定
   providers: [
