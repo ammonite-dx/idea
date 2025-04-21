@@ -1,14 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { PrismaClient } from "@prisma/client";
+export const runtime = "edge";
 
-export const runtime = 'edge';
+import { NextResponse } from "next/server";
+import { auth } from "@/auth";             // ← ラッパーを使う
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+export const POST = auth(async (req) => {
+  const session = req.auth;
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -20,17 +19,17 @@ export async function POST(req: NextRequest) {
 
   const result = await prisma.favorite.create({
     data: {
-      user_id: session.user.id,
+      user_id:     session.user.id,
       record_kind: recordKind,
-      record_id: recordId,
+      record_id:   recordId,
     },
   });
 
   return NextResponse.json({ ok: true, favorite: result });
-}
+});
 
-export async function DELETE(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+export const DELETE = auth(async (req) => {
+  const session = req.auth;
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -42,36 +41,39 @@ export async function DELETE(req: NextRequest) {
 
   await prisma.favorite.deleteMany({
     where: {
-      user_id: session.user.id,
+      user_id:     session.user.id,
       record_kind: recordKind,
-      record_id: recordId,
+      record_id:   recordId,
     },
   });
 
   return NextResponse.json({ ok: true });
-}
+});
 
-export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+export const GET = auth(async (req) => {
+  const session = req.auth;
   if (!session?.user?.id) {
     return NextResponse.json({ isFavorite: false });
   }
 
   const { searchParams } = new URL(req.url);
   const recordKind = searchParams.get("recordKind");
-  const recordId = searchParams.get("recordId");
+  const recordId   = searchParams.get("recordId");
 
   if (!recordKind || !recordId) {
-    return NextResponse.json({ error: "Missing query parameters" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing query parameters" },
+      { status: 400 }
+    );
   }
 
   const exists = await prisma.favorite.findFirst({
     where: {
-      user_id: session.user.id,
+      user_id:     session.user.id,
       record_kind: recordKind,
-      record_id: recordId,
+      record_id:   recordId,
     },
   });
 
-  return NextResponse.json({ isFavorite: !!exists });
-}
+  return NextResponse.json({ isFavorite: Boolean(exists) });
+});
