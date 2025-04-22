@@ -5,6 +5,8 @@ import DiscordProvider from "next-auth/providers/discord"
 
 export const authOptions = {
 
+    basePath: "/api/auth",
+
     logger: { 
         error: (error: Error) => console.error(error), 
         warn: (message: string) => console.warn(message), 
