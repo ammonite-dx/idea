@@ -14,16 +14,19 @@ export const authOptions = {
         DiscordProvider({
             clientId: process.env.DISCORD_CLIENT_ID!,
             clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+            /*
             authorization: {
                 // ギルド一覧を取るためのスコープ
                 params: { scope: "identify guilds" },
             },
+            */
         }),
     ],
 
     secret: process.env.NEXTAUTH_SECRET,
     trustHost: true,
 
+    /*
     callbacks: {
         // サインイン直後にギルド参加をチェック
         async signIn({ account }) {
@@ -41,6 +44,7 @@ export const authOptions = {
             return guilds.some((g) => g.id === REQUIRED_GUILD_ID)
         },
     },
+    */
 } satisfies NextAuthConfig
 
 export const { auth, handlers } = NextAuth(authOptions)
