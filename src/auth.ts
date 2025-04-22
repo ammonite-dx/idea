@@ -3,13 +3,6 @@ import DiscordProvider from "next-auth/providers/discord"
 
 //const REQUIRED_GUILD_ID = process.env.REQUIRED_GUILD_ID!
 
-if (!process.env.NEXTAUTH_SECRET) {
-    console.error("[AUTH CONFIG ERROR] NEXTAUTH_SECRET が設定されていません")
-  }
-  if (!process.env.DISCORD_CLIENT_ID || !process.env.DISCORD_CLIENT_SECRET) {
-    console.error("[AUTH CONFIG ERROR] DISCORD_CLIENT_ID / DISCORD_CLIENT_SECRET が設定されていません")
-  }
-
 export const authOptions = {
 
     logger: { 
@@ -55,13 +48,4 @@ export const authOptions = {
     */
 } satisfies NextAuthConfig
 
-let _nextAuthResult
-try {
-  _nextAuthResult = NextAuth(authOptions)
-} catch (initError) {
-  console.error("[NEXTAUTH INITIALIZATION ERROR]", initError)
-  // ビルド／デプロイ時にも明示的に失敗を出したい場合は再スロー
-  throw initError
-}
-
-export const { auth, handlers } = _nextAuthResult
+export const { auth, handlers } = NextAuth(authOptions)
