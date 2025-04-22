@@ -71,4 +71,4 @@ export const authOptions = {
 
   // 5) デバッグモードを有効にする
   debug: true,
-} satisfies NextAuthConfig;;
+} satisfies NextAuthConfig;

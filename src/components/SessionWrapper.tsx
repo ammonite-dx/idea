@@ -1,12 +1,12 @@
-'use client';
-
-import { SessionProvider } from 'next-auth/react';
+import { auth } from "@/auth"
 import { ReactNode } from 'react';
 
 type Props = {
   children: ReactNode;
 };
 
-export default function SessionWrapper({ children }: Props) {
-  return <SessionProvider>{children}</SessionProvider>;
+export default async function SessionWrapper({ children }: Props) {
+  const session = await auth()
+  if (!session) return <div>Not authenticated</div>
+  return {children};
 }
