@@ -6,6 +6,8 @@ import DiscordProvider from "next-auth/providers/discord"
 export const authOptions = {
 
     basePath: "/api/auth",
+    secret: process.env.NEXTAUTH_SECRET,
+    trustHost: true,
 
     logger: { 
         error: (error: Error) => console.error(error), 
@@ -25,9 +27,6 @@ export const authOptions = {
             */
         }),
     ],
-
-    secret: process.env.NEXTAUTH_SECRET,
-    trustHost: true,
 
     /*
     callbacks: {
