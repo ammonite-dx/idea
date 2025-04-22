@@ -1,9 +1,6 @@
 import NextAuth from "next-auth"
 import DiscordProvider from "next-auth/providers/discord"
 
-console.log("🔍 [auth.ts] DISCORD_CLIENT_ID     =", process.env.DISCORD_CLIENT_ID)
-console.log("🔍 [auth.ts] DISCORD_CLIENT_SECRET =", process.env.DISCORD_CLIENT_SECRET)
-
 const REQUIRED_GUILD_ID = "1358094185848246363";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
