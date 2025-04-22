@@ -1,4 +1,4 @@
-export { auth as middleware } from "@/auth"
+export { auth as default } from "@/auth"
 
 export const config = {
   // API や Next.js の内部アセットを除く全ページを保護
