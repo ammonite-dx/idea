@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import Header from '@/components/Header'
 import './globals.css'
 import { auth } from "@/auth"
+import { redirect } from 'next/navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +17,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const session = await auth()
-  if (!session) return <div>Not authenticated</div>
+  if (!session) redirect(`/api/auth/signin/discord?callbackUrl=/`)
   return (
     <html lang="ja" suppressHydrationWarning>
       <body className={`${inter.className}`}>
