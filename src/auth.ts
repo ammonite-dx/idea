@@ -1,7 +1,8 @@
 import NextAuth from "next-auth"
+import type { NextAuthConfig } from "next-auth"
 import DiscordProvider from "next-auth/providers/discord"
 
-const REQUIRED_GUILD_ID = "1358094185848246363";
+const REQUIRED_GUILD_ID = process.env.REQUIRED_GUILD_ID!
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
@@ -31,5 +32,5 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return guilds.some((g) => g.id === REQUIRED_GUILD_ID)
     },
   },
-})
+} satisfies NextAuthConfig)
 
