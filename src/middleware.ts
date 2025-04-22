@@ -1,15 +1,15 @@
-import { auth } from "@/auth";
-import { getToken } from "next-auth/jwt";
+import { auth } from "@/auth"
+import { NextResponse } from "next/server"
 
-export default auth(async (req) => {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-
-  if (!token) {
-    // 認証されていない場合、Discordの認証ページにリダイレクト
-    return Response.redirect(new URL('/api/auth/signin/discord', req.url));
+export default auth((req) => {
+  // 未ログインなら Discord サインインページへリダイレクト
+  if (!req.auth?.user) {
+    const url = new URL("/api/auth/signin/discord", req.url)
+    return NextResponse.redirect(url)
   }
+  // 認証済みなら何も返さず次へ
 })
-
 export const config = {
-  matcher: ["/((?!_next|favicon.ico|login|api/auth).*)"],
-};
+  // API や _next 以下を除く全パスを保護
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+}
