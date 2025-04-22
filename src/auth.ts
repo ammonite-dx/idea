@@ -1,14 +1,9 @@
 import NextAuth, { NextAuthConfig } from "next-auth"
 import DiscordProvider from "next-auth/providers/discord"
 
-//const REQUIRED_GUILD_ID = process.env.REQUIRED_GUILD_ID!
+// const REQUIRED_GUILD_ID = process.env.REQUIRED_GUILD_ID!
 
 export const authOptions = {
-
-    basePath: "/api/auth",
-    secret: process.env.NEXTAUTH_SECRET,
-    trustHost: true,
-
     logger: { 
         error: (error: Error) => console.error(error), 
         warn: (message: string) => console.warn(message), 
@@ -27,6 +22,9 @@ export const authOptions = {
             */
         }),
     ],
+
+    secret: process.env.NEXTAUTH_SECRET,
+    trustHost: true,
 
     /*
     callbacks: {
