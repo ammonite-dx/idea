@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthConfig } from "next-auth"
 import DiscordProvider from "next-auth/providers/discord"
 
-const REQUIRED_GUILD_ID = process.env.REQUIRED_GUILD_ID!
+//const REQUIRED_GUILD_ID = process.env.REQUIRED_GUILD_ID!
 
 export const authOptions = {
     logger: { 
