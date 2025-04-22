@@ -1,6 +1,5 @@
 import { Inter } from 'next/font/google'
 import { Metadata } from 'next'
-import SessionWrapper from '@/components/SessionWrapper';
 import Header from '@/components/Header'
 import './globals.css'
 import { auth } from "@/auth"
