@@ -1,7 +1,10 @@
 import NextAuth from "next-auth"
 import DiscordProvider from "next-auth/providers/discord"
 
-const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID!
+console.log("🔍 DISCORD_CLIENT_ID     =", process.env.DISCORD_CLIENT_ID)
+console.log("🔍 DISCORD_CLIENT_SECRET =", process.env.DISCORD_CLIENT_SECRET)
+
+const REQUIRED_GUILD_ID = "1358094185848246363";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
@@ -28,7 +31,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (!res.ok) return false
       const guilds: Array<{ id: string }> = await res.json()
       // 必須ギルドがあれば許可、なければ拒否
-      return guilds.some((g) => g.id === DISCORD_CLIENT_ID)
+      return guilds.some((g) => g.id === REQUIRED_GUILD_ID)
     },
   },
   pages: {
