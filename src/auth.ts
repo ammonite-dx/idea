@@ -31,9 +31,5 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return guilds.some((g) => g.id === REQUIRED_GUILD_ID)
     },
   },
-  pages: {
-    // サインインは常に Discord プロバイダーへ
-    signIn: "/api/auth/signin/discord",
-  },
 })
 

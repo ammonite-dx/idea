@@ -9,5 +9,5 @@ database_name = "idea-db"
 database_id   = "64a38857-c1bd-48ba-a940-33bee5260bc3"
 
 [vars]
-DISCORD_CLIENT_ID = "1358085922570240191"
-NEXTAUTH_URL      = "https://dx3rd-idea.pages.dev"
+DISCORD_CLIENT_ID = 1358085922570240191
+NEXTAUTH_URL      = https://dx3rd-idea.pages.dev
