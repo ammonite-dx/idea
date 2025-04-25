@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 import { PrismaClient } from "@prisma/client"
 import { PrismaD1 } from "@prisma/adapter-d1"
 import type { D1Database } from "@cloudflare/workers-types"
