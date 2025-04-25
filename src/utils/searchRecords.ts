@@ -45,9 +45,10 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
         {type_restrict_order: 'asc' as const},
         {ruby: 'asc' as const},
       ],
+      select: { id: true },
     };
     const searchResultsInCategory = await prisma.power.findMany(searchCondition);
-    const powersInCategory = (await Promise.all(searchResultsInCategory.map(async searchResult => getRecordById("power", searchResult.id)))).filter((power) => power !== null);
+    const powersInCategory = (await Promise.all(searchResultsInCategory.map(async ({id}: {id:string}) => getRecordById("power", id)))).filter((power) => power !== null);
     return [category, powersInCategory];
   })));
   return powers;
@@ -96,9 +97,10 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
         {cost_order: "asc" as const},
         {ruby: "asc" as const}
       ],
+      select: { id: true },
     };
     const searchResultsInCategory = await prisma.weapon.findMany(searchCondition);
-    const weaponsInCategory = (await Promise.all(searchResultsInCategory.map(async searchResult => getRecordById("weapon", searchResult.id)))).filter((weapon) => weapon !== null);
+    const weaponsInCategory = (await Promise.all(searchResultsInCategory.map(async ({id}: {id:string}) => getRecordById("weapon", id)))).filter((weapon) => weapon !== null);
     return [category, weaponsInCategory]
   })));
   return weapons;
@@ -120,9 +122,10 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
         {cost_order: "asc" as const},
         {ruby: "asc" as const}
       ],
+      select: { id: true },
     };
     const searchResultsInCategory = await prisma.armor.findMany(searchCondition);
-    const armorsInCategory = (await Promise.all(searchResultsInCategory.map(async searchResult => getRecordById("armor", searchResult.id)))).filter((armor) => armor !== null);
+    const armorsInCategory = (await Promise.all(searchResultsInCategory.map(async ({id}: {id:string}) => getRecordById("armor", id)))).filter((armor) => armor !== null);
     return [category, armorsInCategory]
   })));
   return armors;
@@ -143,9 +146,10 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
         {cost_order: "asc" as const},
         {ruby: "asc" as const}
       ],
+      select: { id:true },
     };
     const searchResultsInCategory = await prisma.vehicle.findMany(searchCondition);
-    const vehiclesInCategory = (await Promise.all(searchResultsInCategory.map(async searchResult => getRecordById("vehicle", searchResult.id)))).filter((vehicle) => vehicle !== null);
+    const vehiclesInCategory = (await Promise.all(searchResultsInCategory.map(async ({id}: {id:string}) => getRecordById("vehicle", id)))).filter((vehicle) => vehicle !== null);
     return [category, vehiclesInCategory]
   })));
   return vehicles;
@@ -166,9 +170,10 @@ async function searchConnections(searchParams: { [key: string]: string | string[
         {cost_order: "asc" as const},
         {ruby: "asc" as const}
       ],
+      select: { id:true }
     };
     const searchResultsInCategory = await prisma.connection.findMany(searchCondition);
-    const connectionsInCategory = (await Promise.all(searchResultsInCategory.map(async searchResult => getRecordById("connection", searchResult.id)))).filter((connection) => connection !== null);
+    const connectionsInCategory = (await Promise.all(searchResultsInCategory.map(async ({id}: {id:string}) => getRecordById("connection", id)))).filter((connection) => connection !== null);
     return [category, connectionsInCategory]
   })));
   return connections;
@@ -190,9 +195,10 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
         {cost_order: "asc" as const},
         {ruby: "asc" as const}
       ],
+      select: { id: true },
     };
     const searchResultsInCategory = await prisma.general.findMany(searchCondition);
-    const generalsInCategory = (await Promise.all(searchResultsInCategory.map(async searchResult => getRecordById("general", searchResult.id)))).filter((general) => general !== null);
+    const generalsInCategory = (await Promise.all(searchResultsInCategory.map(async ({id}: {id:string}) => getRecordById("general", id)))).filter((general) => general !== null);
     return [category, generalsInCategory]
   })));
   return generals;
@@ -209,9 +215,12 @@ async function searchDloises(searchParams: { [key: string]: string | string[] | 
       {restrict_order: "asc" as const},
       {no: "asc" as const}
     ],
+    select: {
+      id: true
+    },
   };
   const searchResults = await prisma.dlois.findMany(searchCondition);
-  const dloises: { [key: string]: Dlois[] } = { "Dロイス": (await Promise.all(searchResults.map(async searchResult => getRecordById("dlois", searchResult.id)))).filter((dlois) => dlois !== null) };
+  const dloises: { [key: string]: Dlois[] } = { "Dロイス": (await Promise.all(searchResults.map(async ({id}: {id:string}) => getRecordById("dlois", id)))).filter((dlois) => dlois !== null) };
   return dloises;
 }
 
@@ -225,9 +234,12 @@ async function searchEloises(searchParams: { [key: string]: string | string[] | 
       {urge_order: "asc" as const},
       {type_order: "asc" as const},
     ],
+    select: {
+      id: true,
+    },
   };
   const searchResults = await prisma.elois.findMany(searchCondition);
-  const eloises: { [key: string]: Elois[] } = { "Eロイス": (await Promise.all(searchResults.map(async searchResult => getRecordById("elois", searchResult.id)))).filter((elois) => elois !== null) };
+  const eloises: { [key: string]: Elois[] } = { "Eロイス": (await Promise.all(searchResults.map(async ({id}: {id:string}) => getRecordById("elois", id)))).filter((elois) => elois !== null) };
   return eloises;
 }
 
@@ -237,9 +249,12 @@ async function searchWorks(searchParams: { [key: string]: string | string[] | un
     where: {
       AND: workWhereCondition(searchParams),
     },
+    select: {
+      id: true,
+    },
   };
   const searchResults = await prisma.works.findMany(searchCondition);
-  const works: { [key:string]: Work[] } = { "ワークス": (await Promise.all(searchResults.map(async searchResult => getRecordById("work", searchResult.id)))).filter((work) => work !== null) };
+  const works: { [key:string]: Work[] } = { "ワークス": (await Promise.all(searchResults.map(async ({id}: {id:string}) => getRecordById("work", id)))).filter((work) => work !== null) };
   return works;
 }
 
