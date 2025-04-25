@@ -1,11 +1,11 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // SWCベースのミニファイを有効化（Webpackのminifyプラグインをスキップ）
-  swcMinify: true,
+  // これ以降の設定でミニファイを制御するので swcMinify は削除
+  // swcMinify: true,  <-- removed, unsupported in v15 :contentReference[oaicite:0]{index=0}
 
-  // （既存のwebpack ignore設定があればそのまま）
   webpack: (config, { dev, isServer }) => {
+    // 開発環境のサーバー側でだけ D1アダプター関連を無視
     if (dev && isServer) {
       const { IgnorePlugin } = require('webpack');
       config.plugins = config.plugins || [];
@@ -15,6 +15,13 @@ const nextConfig: NextConfig = {
         })
       );
     }
+
+    // 本番ビルド時（dev === false）には Webpack のミニファイをオフ
+    if (!dev) {
+      config.optimization = config.optimization || {};
+      config.optimization.minimize = false;
+    }
+
     return config;
   },
 };
