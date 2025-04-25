@@ -1,52 +1,88 @@
+// src/components/FavoriteButton.tsx
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
+import { CardRecordKind } from "@/types/types";
 
-export default function FavoriteButton({ recordKind, recordId }: { recordKind:string, recordId:string }) {
-  const { data: session } = useSession();
+type User = { id: string; name: string } | null;
+
+export default function FavoriteButton({
+  recordKind,
+  recordId,
+}: {
+  recordKind: CardRecordKind;
+  recordId: string;
+}) {
+  // セッションユーザー取得
+  const [user, setUser] = useState<User>(null);
+  const [loadingSession, setLoadingSession] = useState(true);
+
+  // お気に入り状態取得
   const [isFavorite, setIsFavorite] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loadingFavorite, setLoadingFavorite] = useState(true);
 
-  // お気に入り状態を取得
+  // 1) セッションを取得
   useEffect(() => {
-    const fetchFavorite = async () => {
-      if (!session) {
-        setLoading(false);
-        return;
-      }
-      const res = await fetch(`/api/favorites?recordKind=${recordKind}&recordId=${recordId}`);
-      const json = await res.json();
-      setIsFavorite(json.isFavorite);
-      setLoading(false);
-    };
+    fetch("/api/auth/discord/session")
+      .then((res) => res.json())
+      .then((data) => {
+        setUser(data.user);
+      })
+      .catch(() => {
+        setUser(null);
+      })
+      .finally(() => {
+        setLoadingSession(false);
+      });
+  }, []);
 
-    fetchFavorite();
-  }, [session, recordKind, recordId]);
+  // 2) セッション確定後にお気に入り状態を取得
+  useEffect(() => {
+    if (loadingSession) return;
+    if (!user) {
+      setLoadingFavorite(false);
+      return;
+    }
 
-  // 登録 or 解除処理
+    fetch(`/api/favorite?recordKind=${encodeURIComponent(recordKind)}&recordId=${encodeURIComponent(recordId)}`)
+      .then((res) => res.json())
+      .then((json) => {
+        setIsFavorite(Boolean(json.isFavorite));
+      })
+      .catch(() => {
+        setIsFavorite(false);
+      })
+      .finally(() => {
+        setLoadingFavorite(false);
+      });
+  }, [loadingSession, user, recordKind, recordId]);
+
+  // トグル処理
   const toggleFavorite = async () => {
-    if (!session) return;
-    setLoading(true);
+    if (!user) return;
+    setLoadingFavorite(true);
 
-    const method = isFavorite ? "DELETE" : "POST";
-
-    await fetch("/api/favorites", {
-      method,
+    await fetch("/api/favorite", {
+      method: isFavorite ? "DELETE" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ recordKind, recordId }),
     });
 
-    setIsFavorite(!isFavorite);
-    setLoading(false);
+    setIsFavorite((prev) => !prev);
+    setLoadingFavorite(false);
   };
 
-  if (!session) return null;
-  if (loading) return <span>...</span>;
+  // 非ログイン時はボタンを表示しない
+  if (loadingSession || !user) return null;
+  if (loadingFavorite) return <span>...</span>;
 
   return (
     <button onClick={toggleFavorite} className="base-text p-0">
-      {isFavorite ? <div className="w-[2ch] text-right">★</div> : <div className="w-[2ch] text-right">☆</div>}
+      {isFavorite ? (
+        <div className="w-[2ch] text-right">★</div>
+      ) : (
+        <div className="w-[2ch] text-right">☆</div>
+      )}
     </button>
   );
 }

@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -319,13 +320,6 @@ model info {
   refed_elois_id        String?
 }
 
-model favorite {
-  id                  String @id @default(cuid())
-  user_id             String
-  record_kind         String
-  record_id           String
-}
-
 model works {
   id                  String @id
   supplement          String
@@ -333,4 +327,15 @@ model works {
   stat                String
   skills              String
   emblems             String?
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+}
+
+model favorite {
+  id                  String @id @default(cuid())
+  user_id             String
+  record_kind         String
+  record_id           String
 }
