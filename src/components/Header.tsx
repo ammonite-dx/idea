@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import SignOutButton from './SignOutButton'
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -55,11 +54,6 @@ export default function Header() {
             </svg>
           )}
         </button>
-
-        {/* サインアウトボタン（PC） */}
-        <div className="hidden md:block">
-          <SignOutButton />
-        </div>
       </div>
 
       {/* モバイルメニュー（縦並び＆リンククリックで閉じる） */}
@@ -75,9 +69,6 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
-          <div className="pt-2">
-            <SignOutButton />
-          </div> 
         </div>
       )}
     </header>
