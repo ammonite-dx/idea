@@ -1,15 +1,15 @@
 import { PrismaClient } from '@prisma/client'
 
-declare global {
-  // Next.js のホットリロード対策でグローバルにキャッシュ
-  var prisma: PrismaClient | undefined
+const prismaClientSingleton = () => {
+  return new PrismaClient()
 }
 
-// production では毎回新規、開発環境ではグローバルキャッシュ
-export const prisma =
-  global.prisma ||
-  new PrismaClient()
+declare const globalThis: {
+  prismaGlobal: ReturnType<typeof prismaClientSingleton>;
+} & typeof global;
 
-if (process.env.NODE_ENV !== 'production') {
-  global.prisma = prisma
-}
+const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
+
+export default prisma
+
+if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
