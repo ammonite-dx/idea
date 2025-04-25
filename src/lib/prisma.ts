@@ -1,15 +1,13 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@prisma/client"
+import { PrismaD1 } from "@prisma/adapter-d1"
+import { D1Database } from "@cloudflare/workers-types"
 
-const prismaClientSingleton = () => {
-  return new PrismaClient()
+export const runtime = "edge"
+
+declare global {
+  const DB: D1Database
 }
 
-declare const globalThis: {
-  prismaGlobal: ReturnType<typeof prismaClientSingleton>;
-} & typeof global;
-
-const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
-
-export default prisma
-
-if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
+export const prisma = new PrismaClient({
+  adapter: new PrismaD1(DB),
+})
