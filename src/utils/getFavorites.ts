@@ -36,7 +36,7 @@ export default async function getFavorites(kind: CardRecordKind) {
   // 4. 各レコードを getRecordById でフェッチし、null を除去して返却
   const favorites = (
     await Promise.all(
-      searchResults.map(({ record_id }) =>
+      searchResults.map(({ record_id }: { record_id: string }) =>
         getRecordById(kind, record_id)
       )
     )
