@@ -3,7 +3,7 @@ export const runtime = "edge";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 // 環境変数からバイト配列を作成
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);

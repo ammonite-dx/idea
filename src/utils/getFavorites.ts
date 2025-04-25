@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import getRecordById from '@/utils/getRecordById'
 import { CardRecordKind } from '@/types/types'
 import { cookies } from 'next/headers'

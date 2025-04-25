@@ -1,13 +1,22 @@
 import { PrismaClient } from "@prisma/client"
 import { PrismaD1 } from "@prisma/adapter-d1"
-import { D1Database } from "@cloudflare/workers-types"
+import type { D1Database } from "@cloudflare/workers-types"
 
-export const runtime = "edge"
-
+// グローバルにキャッシュ用の変数と、Cloudflare Worker の D1 バインディングを宣言
 declare global {
-  const DB: D1Database
+  var __prisma: PrismaClient | undefined
+  var DB: D1Database
 }
 
-export const prisma = new PrismaClient({
-  adapter: new PrismaD1(DB),
-})
+// PrismaClient のシングルトンを作成
+const prisma = global.__prisma
+  ?? new PrismaClient({
+    adapter: new PrismaD1(globalThis.DB),
+  })
+
+// 初回生成時のみグローバルにキャッシュ
+if (!global.__prisma) {
+  global.__prisma = prisma
+}
+
+export default prisma

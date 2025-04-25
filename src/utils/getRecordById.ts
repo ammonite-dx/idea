@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { Power,Weapon,Armor,Vehicle,Connection,General,Dlois,Elois,Faq,Info,Work,TypeMap } from '@/types/types';
 
 export default async function getRecordById<K extends keyof TypeMap>(
