@@ -1,12 +1,11 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // Webpack 設定のカスタマイズ
-  webpack: (
-    config: any,
-    { dev, isServer }: { dev: boolean; isServer: boolean }
-  ) => {
-    // 開発モードかつサーバー側ビルド時に、D1 アダプター周りを無視
+  // SWCベースのミニファイを有効化（Webpackのminifyプラグインをスキップ）
+  swcMinify: true,
+
+  // （既存のwebpack ignore設定があればそのまま）
+  webpack: (config, { dev, isServer }) => {
     if (dev && isServer) {
       const { IgnorePlugin } = require('webpack');
       config.plugins = config.plugins || [];
