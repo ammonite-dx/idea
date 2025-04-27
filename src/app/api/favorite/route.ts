@@ -3,7 +3,8 @@ export const runtime = "edge";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
-import prisma from "@/lib/prisma";
+import { D1Database } from "@cloudflare/workers-types";
+import getPrisma from "@/lib/prisma";
 
 // 環境変数からバイト配列を作成
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
@@ -21,7 +22,12 @@ async function getUserIdFromCookie(): Promise<string | null> {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(
+  request: Request,
+  { env }: { env: { DB: D1Database } }
+) {
+  const prisma = getPrisma(env.DB);
+
   const userId = await getUserIdFromCookie();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -43,7 +49,12 @@ export async function POST(request: Request) {
   return NextResponse.json({ ok: true, favorite });
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(
+  request: Request,
+  {  env }: { env: { DB: D1Database } }
+) {
+  const prisma = getPrisma(env.DB);
+
   const userId = await getUserIdFromCookie();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -65,29 +76,39 @@ export async function DELETE(request: Request) {
   return NextResponse.json({ ok: true });
 }
 
-export async function GET(request: Request) {
+ // メモ: GETメソッドを検索用に用いる。検索結果の長さによってお気に入りされていると判定する。
+
+export async function GET(
+  request: Request,
+  { env }: { env: { DB: D1Database } }
+) {
+  const prisma = getPrisma(env.DB);
+
+  // ユーザー情報を取得
   const userId = await getUserIdFromCookie();
-  // 未ログイン時はお気に入りにしていない扱い
   if (!userId) {
-    return NextResponse.json({ isFavorite: false });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const url = new URL(request.url);
-  const recordKind = url.searchParams.get("recordKind");
-  const recordId   = url.searchParams.get("recordId");
-  if (!recordKind || !recordId) {
+  const recordKind = url.searchParams.get("record-kind");
+  const recordId   = url.searchParams.get("record-id");
+  if (!recordKind) {
     return NextResponse.json(
-      { error: "Missing query parameters" },
+      { error: "Missing query parameters: record-kind" },
       { status: 400 }
     );
   }
 
-  const exists = await prisma.favorite.findFirst({
+  const favorites = await prisma.favorite.findMany({
     where: { 
-      user_id: userId,
-      record_kind: recordKind,
-      record_id: recordId },
+      AND: [
+        {user_id: userId},
+        {record_kind: recordKind},
+        (recordId === null) ? {} : { record_id: recordId },
+      ],
+    },
   });
 
-  return NextResponse.json({ isFavorite: Boolean(exists) });
+  return NextResponse.json(favorites);
 }
