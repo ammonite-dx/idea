@@ -6,6 +6,7 @@ export const runtime = 'edge';
 // import { NextResponse } from 'next/server';
 
 export async function GET() {
+  console.log("🔥 RUNNING APP ROUTER LOGIN");
   console.log('▶︎ CLIENT_ID=', process.env.DISCORD_CLIENT_ID);
   console.log('▶︎ REDIRECT_URI=', process.env.DISCORD_REDIRECT_URI);
 
