@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma'
+import getPrismaClient from '@/lib/prisma'
 import getRecordById from '@/utils/getRecordById'
 import { CardRecordKind } from '@/types/types'
 import { cookies } from 'next/headers'
@@ -25,6 +25,7 @@ export default async function getFavorites(kind: CardRecordKind) {
   }
 
   // 3. お気に入りレコードを取得
+  const prisma  = await getPrismaClient();
   const searchResults = await prisma.favorite.findMany({
     where: {
       user_id: userId,

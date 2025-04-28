@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import getPrismaClient from '@/lib/prisma';
 import getRecordById from './getRecordById';
 import { toArray, toString } from '@/utils/utils';
 import { POWER_CATEGORIES, POWER_TYPES, POWER_SUPPLEMENTS, POWER_TIMINGS, POWER_SKILLS, POWER_DFCLTIES, POWER_TARGETS, POWER_RNGS, POWER_ENCROACHES, POWER_RESTRICTS } from '@/consts/power';
@@ -33,6 +33,7 @@ export default async function searchRecords<K extends keyof TypeMap>(
 
 // エフェクト
 async function searchPowers(searchParams: { [key: string]: string | string[] | undefined }) {
+  const prisma  = await getPrismaClient();
   const powers: {[key: string]: Power[]} = Object.fromEntries(await Promise.all(toArray(searchParams["category"], POWER_CATEGORIES).map(async category => {
     const searchCondition = {
       where: {
@@ -83,6 +84,7 @@ async function searchItems(searchParams: { [key: string]: string | string[] | un
 
 // 武器
 async function searchWeapons(searchParams: { [key: string]: string | string[] | undefined }) {
+  const prisma  = await getPrismaClient();
   const weapons: { [key: string]: Weapon[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
     const searchCondition = {
       where: {
@@ -108,6 +110,7 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
 
 // 防具
 async function searchArmors(searchParams: { [key: string]: string | string[] | undefined }) {
+  const prisma  = await getPrismaClient();
   const armors: { [key: string]: Armor[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
     const searchCondition = {
       where: {
@@ -133,6 +136,7 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
 
 // ヴィークル
 async function searchVehicles(searchParams: { [key: string]: string | string[] | undefined }) {
+  const prisma  = await getPrismaClient();
   const vehicles: { [key: string]: Vehicle[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
     const searchCondition = {
       where: {
@@ -157,6 +161,7 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
 
 // コネ
 async function searchConnections(searchParams: { [key: string]: string | string[] | undefined }) {
+  const prisma  = await getPrismaClient();
   const connections: { [key: string]: Connection[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
     const searchCondition = {
       where: {
@@ -181,6 +186,7 @@ async function searchConnections(searchParams: { [key: string]: string | string[
 
 // 一般アイテム
 async function searchGenerals(searchParams: { [key: string]: string | string[] | undefined }) {
+  const prisma  = await getPrismaClient();
   const generals: { [key: string]: General[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
     const searchCondition = {
       where: {
@@ -206,6 +212,7 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
 
 // Dロイス
 async function searchDloises(searchParams: { [key: string]: string | string[] | undefined }) {
+  const prisma  = await getPrismaClient();
   const searchCondition = {
     where: {
       AND: dloisWhereCondition(searchParams),
@@ -226,6 +233,7 @@ async function searchDloises(searchParams: { [key: string]: string | string[] | 
 
 // Eロイス
 async function searchEloises(searchParams: { [key: string]: string | string[] | undefined }) {
+  const prisma  = await getPrismaClient();
   const searchCondition = {
     where: {
       AND: eloisWhereCondition(searchParams),
@@ -245,6 +253,7 @@ async function searchEloises(searchParams: { [key: string]: string | string[] | 
 
 // ワークス
 async function searchWorks(searchParams: { [key: string]: string | string[] | undefined }) {
+  const prisma  = await getPrismaClient();
   const searchCondition = {
     where: {
       AND: workWhereCondition(searchParams),

@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import getPrismaClient from '@/lib/prisma';
 import { Power,Weapon,Armor,Vehicle,Connection,General,Dlois,Elois,Faq,Info,Work,TypeMap } from '@/types/types';
 
 export default async function getRecordById<K extends keyof TypeMap>(
@@ -23,6 +23,7 @@ export default async function getRecordById<K extends keyof TypeMap>(
 
 // エフェクトの取得
 async function getPowerById(id:string) {
+    const prisma  = await getPrismaClient();
     const searchResult = await prisma.power.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const { ref_weapon_id, ref_armor_id, ref_faq_id, ref_info_id, ...base } = searchResult;
@@ -43,6 +44,7 @@ async function getPowerById(id:string) {
 
 // 武器の取得
 async function getWeaponById(id: string) {
+    const prisma  = await getPrismaClient();
     const searchResult = await prisma.weapon.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const { ref_faq_id, ref_info_id, ...base } = searchResult;
@@ -59,6 +61,7 @@ async function getWeaponById(id: string) {
 
 // 防具の取得
 async function getArmorById(id: string) {
+    const prisma  = await getPrismaClient();
     const searchResult = await prisma.armor.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const { ref_weapon_id, ref_faq_id, ref_info_id, ...base } = searchResult;
@@ -77,6 +80,7 @@ async function getArmorById(id: string) {
 
 // ヴィークルの取得
 async function getVehicleById(id: string) {
+    const prisma  = await getPrismaClient();
     const searchResult = await prisma.vehicle.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const { ref_faq_id, ref_info_id, ...base } = searchResult;
@@ -93,6 +97,7 @@ async function getVehicleById(id: string) {
 
 // コネの取得
 async function getConnectionById(id: string) {
+    const prisma  = await getPrismaClient();
     const searchResult = await prisma.connection.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const { ref_faq_id, ref_info_id, ...base } = searchResult;
@@ -109,6 +114,7 @@ async function getConnectionById(id: string) {
 
 // 一般アイテムの取得
 async function getGeneralById(id: string) {
+    const prisma  = await getPrismaClient();
     const searchResult = await prisma.general.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const { ref_weapon_id, ref_faq_id, ref_info_id, ...base } = searchResult;
@@ -127,6 +133,7 @@ async function getGeneralById(id: string) {
 
 // Dロイスの取得
 async function getDloisById(id: string) {
+    const prisma  = await getPrismaClient();
     const searchResult = await prisma.dlois.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const { ref_power_id, ref_faq_id, ref_info_id, ...base } = searchResult;
@@ -145,6 +152,7 @@ async function getDloisById(id: string) {
 
 // Eロイスの取得
 async function getEloisById(id: string) {
+    const prisma  = await getPrismaClient();
     const searchResult = await prisma.elois.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const { ref_faq_id, ref_info_id, ...base } = searchResult;
@@ -161,6 +169,7 @@ async function getEloisById(id: string) {
 
 // FAQの取得
 async function getFaqById(id: string) {
+    const prisma  = await getPrismaClient();
     const searchResult = await prisma.faq.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const faq: Faq = {
@@ -174,6 +183,7 @@ async function getFaqById(id: string) {
 
 // 補足情報の取得
 async function getInfoById(id: string) {
+    const prisma  = await getPrismaClient();
     const searchResult = await prisma.info.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const info: Info = {
@@ -187,6 +197,7 @@ async function getInfoById(id: string) {
 
 // ワークスの取得
 async function getWorkById(id: string) {
+    const prisma  = await getPrismaClient();
     const searchResult = await prisma.works.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const work: Work = {

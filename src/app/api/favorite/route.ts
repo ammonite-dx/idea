@@ -3,7 +3,7 @@ export const runtime = "edge";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
-import prisma from "@/lib/prisma";
+import getPrismaClient from "@/lib/prisma";
 
 // 環境変数からバイト配列を作成
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
@@ -32,6 +32,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
   }
 
+  const prisma  = await getPrismaClient();
   const favorite = await prisma.favorite.create({
     data: {
       user_id: userId,
@@ -54,6 +55,7 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
   }
 
+  const prisma  = await getPrismaClient();
   await prisma.favorite.deleteMany({
     where: {
       user_id: userId,
@@ -82,6 +84,7 @@ export async function GET(request: Request) {
     );
   }
 
+  const prisma  = await getPrismaClient();
   const exists = await prisma.favorite.findFirst({
     where: { 
       user_id: userId,
