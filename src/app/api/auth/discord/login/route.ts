@@ -18,5 +18,5 @@ export async function GET() {
 
   console.log('▶︎ redirecting to', authorizeUrl.toString());
 
-  return NextResponse.redirect(authorizeUrl);
+  return NextResponse.redirect(authorizeUrl.toString());
 }
