@@ -1,22 +1,29 @@
+// src/app/api/auth/discord/callback/route.ts
+
 import { NextResponse } from "next/server";
 import { SignJWT } from "jose";
 
 export const runtime = "edge";
 
 async function exchangeCode(code: string) {
-  const params = new URLSearchParams({
-    client_id: process.env.DISCORD_CLIENT_ID!,
-    client_secret: process.env.DISCORD_CLIENT_SECRET!,
-    grant_type: "authorization_code",
-    code,
-    redirect_uri: process.env.DISCORD_REDIRECT_URI!,
-  });
-  const res = await fetch("https://discord.com/api/oauth2/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: params.toString(),
-  });
-  return res.json(); // { access_token, refresh_token, expires_in, ... }
+  try {
+    const params = new URLSearchParams({
+      client_id: process.env.DISCORD_CLIENT_ID!,
+      client_secret: process.env.DISCORD_CLIENT_SECRET!,
+      grant_type: "authorization_code",
+      code,
+      redirect_uri: process.env.DISCORD_REDIRECT_URI!,
+    });
+    const res = await fetch("https://discord.com/api/oauth2/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: params.toString(),
+    });
+    return res.json();
+  } catch (e) {
+    console.error("⚠️ exchangeCode failed:", e);
+    throw e;
+  }
 }
 
 async function fetchDiscord(path: string, token: string) {
@@ -27,8 +34,12 @@ async function fetchDiscord(path: string, token: string) {
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
+  console.log("▶︎ incoming req.url:", url);
   const code = url.searchParams.get("code");
-  if (!code) return NextResponse.redirect("/auth/error?error=code_missing");
+  if (!code) {
+    console.error("⚠️ code がない");
+    return new Response("code is required", { status: 400 });
+  }
 
   const tokenData = await exchangeCode(code);
   if (tokenData.error) {

@@ -1,3 +1,5 @@
+// src/app/api/auth/discord/login/route.ts
+
 export const runtime = 'edge';
 import { NextResponse } from "next/server";
 
