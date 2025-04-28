@@ -2,21 +2,27 @@
 
 export const runtime = 'edge';
 
-import { NextResponse } from 'next/server';
+// NextResponse は使わないので削除
+// import { NextResponse } from 'next/server';
 
 export async function GET() {
-  // — デバッグ用ログ — 
-  console.log("▶︎ RAW VALUE (JSON):", JSON.stringify(process.env.DISCORD_REDIRECT_URI));
-  console.log("▶︎ LENGTH:", process.env.DISCORD_REDIRECT_URI?.length);
+  console.log('▶︎ CLIENT_ID=', process.env.DISCORD_CLIENT_ID);
+  console.log('▶︎ REDIRECT_URI=', process.env.DISCORD_REDIRECT_URI);
 
-  // Discord OAuth2 の authorize エンドポイントを組み立て
-  const authorizeUrl = new URL('https://discord.com/api/oauth2/authorize');
-  authorizeUrl.searchParams.set('client_id', process.env.DISCORD_CLIENT_ID!);
-  authorizeUrl.searchParams.set('redirect_uri', process.env.DISCORD_REDIRECT_URI!);
-  authorizeUrl.searchParams.set('response_type', 'code');
-  authorizeUrl.searchParams.set('scope', 'identify guilds');
+  const url = new URL('https://discord.com/api/oauth2/authorize');
+  url.searchParams.set('client_id',   process.env.DISCORD_CLIENT_ID!);
+  url.searchParams.set('redirect_uri', process.env.DISCORD_REDIRECT_URI!);
+  url.searchParams.set('response_type','code');
+  url.searchParams.set('scope',        'identify guilds');
 
-  console.log('▶︎ redirecting to', authorizeUrl.toString());
+  const location = url.toString();
+  console.log('▶︎ redirect to:', location);
 
-  return NextResponse.redirect(authorizeUrl.toString());
+  // NextResponse.redirect()/Response.redirect() を使わず、new Response で返す
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: location
+    }
+  });
 }
