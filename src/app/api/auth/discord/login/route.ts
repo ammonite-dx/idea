@@ -6,9 +6,8 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   // — デバッグ用ログ — 
-  console.log("▶︎ ENV KEYS:", Object.keys(process.env));
-  console.log("▶︎ RAW REDIRECT_URI:", process.env.DISCORD_REDIRECT_URI);
-  console.log("▶︎ CHAR CODES:", process.env.DISCORD_REDIRECT_URI!.split("").map(c=>c.charCodeAt(0)).join(","));
+  console.log("▶︎ RAW VALUE (JSON):", JSON.stringify(process.env.DISCORD_REDIRECT_URI));
+  console.log("▶︎ LENGTH:", process.env.DISCORD_REDIRECT_URI?.length);
 
   // Discord OAuth2 の authorize エンドポイントを組み立て
   const authorizeUrl = new URL('https://discord.com/api/oauth2/authorize');
