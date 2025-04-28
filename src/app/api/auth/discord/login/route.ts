@@ -4,7 +4,7 @@ export const runtime = 'edge';
 
 import { NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+export async function GET() {
   // — デバッグ用ログ — 
   console.log('▶︎ DISCORD_CLIENT_ID=', process.env.DISCORD_CLIENT_ID);
   console.log('▶︎ DISCORD_REDIRECT_URI=', process.env.DISCORD_REDIRECT_URI);
