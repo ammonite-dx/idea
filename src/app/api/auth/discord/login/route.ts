@@ -1,16 +1,22 @@
 // src/app/api/auth/discord/login/route.ts
 
 export const runtime = 'edge';
-import { NextResponse } from "next/server";
 
-export async function GET() {
-  const params = new URLSearchParams({
-    client_id: process.env.DISCORD_CLIENT_ID!,
-    redirect_uri: process.env.DISCORD_REDIRECT_URI!,
-    response_type: "code",
-    scope: "identify guilds",
-  });
-  return NextResponse.redirect(
-    `https://discord.com/api/oauth2/authorize?${params.toString()}`
-  );
+import { NextResponse } from 'next/server';
+
+export async function GET(request: Request) {
+  // — デバッグ用ログ — 
+  console.log('▶︎ DISCORD_CLIENT_ID=', process.env.DISCORD_CLIENT_ID);
+  console.log('▶︎ DISCORD_REDIRECT_URI=', process.env.DISCORD_REDIRECT_URI);
+
+  // Discord OAuth2 の authorize エンドポイントを組み立て
+  const authorizeUrl = new URL('https://discord.com/api/oauth2/authorize');
+  authorizeUrl.searchParams.set('client_id', process.env.DISCORD_CLIENT_ID!);
+  authorizeUrl.searchParams.set('redirect_uri', process.env.DISCORD_REDIRECT_URI!);
+  authorizeUrl.searchParams.set('response_type', 'code');
+  authorizeUrl.searchParams.set('scope', 'identify guilds');
+
+  console.log('▶︎ redirecting to', authorizeUrl.toString());
+
+  return NextResponse.redirect(authorizeUrl);
 }
