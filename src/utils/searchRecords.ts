@@ -1,8 +1,17 @@
 import getPrismaClient from '@/lib/prisma';
 import getRecordById from './getRecordById';
 import { toArray, toString } from '@/utils/utils';
-import { ITEM_CATEGORIES } from '@/consts/item';
-import { TypeMap } from '@/types/types';
+import { POWER_CATEGORIES, POWER_TYPES, POWER_SUPPLEMENTS, POWER_TIMINGS, POWER_SKILLS, POWER_DFCLTIES, POWER_TARGETS, POWER_RNGS, POWER_ENCROACHES, POWER_RESTRICTS } from '@/consts/power';
+import { ITEM_CATEGORIES, ITEM_SUPPLEMENTS } from '@/consts/item';
+import { WEAPON_SKILLS, WEAPON_TYPES } from '@/consts/weapon';
+import { ARMOR_TYPES } from '@/consts/armor';
+import { VEHICLE_SKILLS } from '@/consts/vehicle';
+import { CONNECTION_SKILLS } from '@/consts/connection';
+import { GENERAL_TYPES } from '@/consts/general';
+import { DLOIS_RESTRICTS, DLOIS_SUPPLEMENTS, DLOIS_TYPES } from '@/consts/dlois';
+import { ELOIS_SUPPLEMENTS, ELOIS_TYPES, ELOIS_TIMINGS, ELOIS_SKILLS, ELOIS_DFCLTIES, ELOIS_TARGETS, ELOIS_RNGS, ELOIS_URGES } from '@/consts/elois';
+import { WORK_SKILLS, WORK_STATS, WORK_SUPPLEMENTS } from '@/consts/work';
+import { TypeMap, Power, Item, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work } from '@/types/types';
 
 export default async function searchRecords<K extends keyof TypeMap>(
   kind: K,

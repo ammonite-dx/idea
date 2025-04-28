@@ -23,9 +23,7 @@ async function getUserIdFromCookie(): Promise<string | null> {
 
 export async function POST(
   request: Request,
-  { env }: { env: { DB: D1Database } }
 ) {
-  const prisma = getPrisma(env.DB);
 
   const userId = await getUserIdFromCookie();
   if (!userId) {
@@ -51,9 +49,7 @@ export async function POST(
 
 export async function DELETE(
   request: Request,
-  {  env }: { env: { DB: D1Database } }
 ) {
-  const prisma = getPrisma(env.DB);
 
   const userId = await getUserIdFromCookie();
   if (!userId) {
@@ -81,9 +77,7 @@ export async function DELETE(
 
 export async function GET(
   request: Request,
-  { env }: { env: { DB: D1Database } }
 ) {
-  const prisma = getPrisma(env.DB);
 
   // ユーザー情報を取得
   const userId = await getUserIdFromCookie();
@@ -112,5 +106,5 @@ export async function GET(
     },
   });
 
-  return NextResponse.json(favorites);
+  return NextResponse.json({ ok: true, exists: exists });
 }
