@@ -7,6 +7,7 @@ export const runtime = 'edge';
 console.log('🔥 APP-ROUTER LOGIN HANDLER v2 🔥');
 
 export async function GET() {
+  console.log('🔥 APP-ROUTER LOGIN HANDLER v2 in GET 🔥');
   /* 以下は先ほどお渡しした meta リダイレクト のコード */
   const clientId    = process.env.DISCORD_CLIENT_ID!;
   const redirectUri = process.env.DISCORD_REDIRECT_URI!;
