@@ -21,7 +21,7 @@ export async function middleware(req: NextRequest) {
   const token = req.cookies.get("session")?.value;
   if (!token) {
     // 未ログインならサインインページへ
-    return NextResponse.redirect(new URL("/auth/signin", req.url));
+    return NextResponse.redirect(new URL("/auth/discord/signin", req.url));
   }
 
   try {
@@ -30,7 +30,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   } catch {
     // トークン無効なら再ログイン
-    return NextResponse.redirect(new URL("/auth/signin", req.url));
+    return NextResponse.redirect(new URL("/auth/discord/signin", req.url));
   }
 }
 
