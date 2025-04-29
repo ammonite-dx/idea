@@ -2,8 +2,12 @@ import { cookies }   from "next/headers";
 import { redirect }  from "next/navigation";
 import { SignJWT }   from "jose";
 
-export default async function CallbackPage(                  
+type PageProps = {
     searchParams: Promise<{ code?: string }>
+}
+
+export default async function CallbackPage(                  
+    {searchParams}: PageProps
 ) {
     const { code } = await searchParams;
     if (!code) {
