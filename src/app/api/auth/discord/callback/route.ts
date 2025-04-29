@@ -1,6 +1,5 @@
 // src/app/api/auth/discord/callback/route.ts
 
-import { NextResponse } from "next/server";
 import { SignJWT } from "jose";
 
 export const runtime = "edge";
@@ -13,15 +12,6 @@ interface TokenResponse {
   scope: string;
   error?: string;
   error_description?: string;
-}
-
-interface DiscordUser {
-  id: string;
-  username: string;
-}
-
-interface Guild {
-  id: string;
 }
 
 async function exchangeCode(code: string): Promise<TokenResponse> {
@@ -59,7 +49,7 @@ export async function GET(req: Request) {
 
     // 1) トークン交換
     const tokenData = await exchangeCode(code);
-    if ((tokenData as any).error) throw new Error("token_failed");
+    if (tokenData.error) throw new Error("token_failed");
 
     // 2) ユーザー情報・ギルド一覧取得
     const user   = await fetchDiscord<{ id: string; username: string }>("/users/@me", tokenData.access_token);
