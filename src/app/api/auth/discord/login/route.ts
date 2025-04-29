@@ -21,5 +21,6 @@ export async function GET() {
 
   // ↓ここがポイント。静的メソッドをNextResponseにバインドして呼び出す
   const safeRedirect = NextResponse.redirect.bind(NextResponse);
+  console.log('🔥 in GET end');
   return safeRedirect(location);
 }
