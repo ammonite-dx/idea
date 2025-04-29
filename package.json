@@ -28,8 +28,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.54.2",
-    "react-select": "^5.10.0",
-    "wrangler": "^3.39.0"
+    "react-select": "^5.10.0"
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.12",
@@ -48,6 +47,7 @@
     "tailwindcss": "^3.4.17",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
-    "webpack": "^5.99.6"
+    "webpack": "^5.99.6",
+    "wrangler": "^4.13.2"
   }
 }
