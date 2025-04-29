@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export function SignIn() {
+export default function page() {
   const [loading, setLoading] = useState(false);
 
   const handleClick = () => {
