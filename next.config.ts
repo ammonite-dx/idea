@@ -1,12 +1,13 @@
 import type { NextConfig } from 'next'
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
-import webpack from 'webpack'
 
+// 開発環境で Cloudflare Pages コンテキストを有効化
 initOpenNextCloudflareForDev()
 
 const nextConfig: NextConfig = {
-  webpack(config, { dev }) {
-    // Edge Runtime 向けに Node.js ビルトインを除外
+
+  webpack(config, { dev, webpack }) {
+    // Edge Runtime 向けに不要な Node.js ビルトインを除外
     config.resolve.fallback = {
       ...(config.resolve.fallback || {}),
       fs: false,
@@ -23,7 +24,7 @@ const nextConfig: NextConfig = {
       assert: false,
     }
 
-    // 開発時にのみ miniflare を無視
+    // 開発時のみ miniflare を無視
     if (dev) {
       config.plugins.push(
         new webpack.IgnorePlugin({ resourceRegExp: /^miniflare$/ })
