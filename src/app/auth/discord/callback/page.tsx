@@ -2,13 +2,10 @@ import { cookies }   from "next/headers";
 import { redirect }  from "next/navigation";
 import { SignJWT }   from "jose";
 
-export default async function CallbackPage(
-    props: {
-      params: {};                     // ここを必ず書く
-      searchParams: { code?: string } // code は optional
-    }
+export default async function CallbackPage(                  
+    searchParams: Promise<{ code?: string }>
 ) {
-    const { code } = props.searchParams;
+    const { code } = await searchParams;
     if (!code) {
         redirect("/auth/error?error=missing_code");
     }
