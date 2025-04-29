@@ -3,11 +3,11 @@ export const runtime = 'edge';
 import SetSessionCookie from '@/components/SetSessionCookie';
 
 interface Props {
-  searchParams: { code?: string };
+  searchParams: Promise<{ code?: string }>;
 }
 
 export default async function CallbackPage({ searchParams }: Props) {
-  const code = searchParams.code;
+  const { code } = await searchParams;
   if (!code) {
     // クライアントサイドで error ページに遷移
     return <SetSessionCookie error="missing_code" />;
