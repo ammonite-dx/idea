@@ -24,7 +24,7 @@ interface Guild {
   id: string;
 }
 
-async function exchangeCode(code: string) {
+async function exchangeCode(code: string): Promise<TokenResponse> {
   try {
     const params = new URLSearchParams({
       client_id: process.env.DISCORD_CLIENT_ID!,
