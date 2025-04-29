@@ -52,72 +52,45 @@ async function fetchDiscord<T>(path: string, token: string): Promise<T> {
 }
 
 export async function GET(req: Request) {
-  console.log("🔁 [callback] start:", req.url);
   try {
-    const url = new URL(req.url);
+    const url  = new URL(req.url);
     const code = url.searchParams.get("code");
-    console.log("🔁 [callback] code:", code);
-    if (!code) throw new Error("code missing");
+    if (!code) throw new Error("missing_code");
 
-    // 環境変数チェック
-    console.log("🔁 [callback] NEXT_PUBLIC_DISCORD_CLIENT_ID:", !!process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID);
-    console.log("🔁 [callback] DISCORD_CLIENT_SECRET:", !!process.env.DISCORD_CLIENT_SECRET);
-    console.log("🔁 [callback] REDIRECT_URI:", process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI);
-    console.log("🔁 [callback] REQUIRED_GUILD_ID:", process.env.REQUIRED_GUILD_ID);
-    console.log("🔁 [callback] JWT_SECRET:", !!process.env.JWT_SECRET);
+    // 1) トークン交換
+    const tokenData = await exchangeCode(code);
+    if ((tokenData as any).error) throw new Error("token_failed");
 
-    // ① トークン取得
-    console.log("🔁 [callback] exchangeCode() start");
-    const tokenData = await exchangeCode(code!);
-    console.log("🔁 [callback] tokenData:", tokenData);
-    if (tokenData.error) {
-      console.error("🔁 [callback] token error:", tokenData);
-      return NextResponse.redirect("/auth/error?error=token_failed");
-    }
+    // 2) ユーザー情報・ギルド一覧取得
+    const user   = await fetchDiscord<{ id: string; username: string }>("/users/@me", tokenData.access_token);
+    const guilds = await fetchDiscord<Array<{ id: string }>>("/users/@me/guilds", tokenData.access_token);
+    const inGuild = guilds.some(g => g.id === process.env.REQUIRED_GUILD_ID);
+    if (!inGuild) throw new Error("not_in_guild");
 
-    // ② ユーザー情報
-    console.log("🔁 [callback] fetchDiscord user start");
-    const user = await fetchDiscord<DiscordUser>("/users/@me", tokenData.access_token);
-    console.log("🔁 [callback] user:", user);
-
-    // ③ ギルド一覧
-    console.log("🔁 [callback] fetchDiscord guilds start");
-    const guilds = await fetchDiscord<Guild[]>("/users/@me/guilds", tokenData.access_token);
-    console.log("🔁 [callback] guilds:", guilds);
-
-    // ④ ギルド所属チェック
-    const ok = Array.isArray(guilds) && guilds.some((g) => g.id === process.env.REQUIRED_GUILD_ID);
-    console.log("🔁 [callback] in required guild?", ok);
-    if (!ok) {
-      return NextResponse.redirect("/auth/error?error=not_in_guild");
-    }
-
-    // ⑤ JWT 発行
-    console.log("🔁 [callback] sign JWT start");
+    // 3) JWT 発行
     const jwt = await new SignJWT({ sub: user.id, name: user.username })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setExpirationTime("8h")
       .sign(new TextEncoder().encode(process.env.JWT_SECRET!));
-    console.log("🔁 [callback] jwt:", jwt.slice(0,10) + "...");
 
-    // ⑥ リダイレクト＆Cookie 設定
-    console.log("🔁 [callback] setting cookie and redirect");
-    const redirectToRoot = new URL("/", req.url);
-    const res = NextResponse.redirect(redirectToRoot);
-    res.cookies.set("session", jwt, {
-      httpOnly: true,
-      path: "/",
-      maxAge: 8 * 60 * 60,
+    // 4) Cookie とリダイレクトヘッダを自前で設定
+    const redirectTo = new URL("/", req.url).toString();
+    const headers = new Headers({
+      Location:    redirectTo,
+      "Set-Cookie": `session=${jwt}; HttpOnly; Path=/; Max-Age=${8 * 60 * 60}`,
     });
-    console.log("🔁 [callback] done");
-    return res;
+
+    console.log("🔁 [callback] success, redirecting");
+    return new Response(null, { status: 302, headers });
 
   } catch (err: unknown) {
     if (err instanceof Error) {
-      console.error("🔥 [callback] Exception:", err);
-      console.error("🔥 [callback] Exception:", err.message);
-      console.error(err.stack);
+      console.error("🔥 [callback] error:", err.message);
+      // エラーコードに応じたページへ絶対URLでリダイレクト
+      const errorUrl = new URL(`/auth/error?error=${err.message}`, req.url).toString();
+      const headers  = new Headers({ Location: errorUrl });
+      return new Response(null, { status: 302, headers });
     }
     return new Response("Callback processing error", { status: 500 });
   }
