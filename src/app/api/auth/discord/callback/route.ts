@@ -5,6 +5,25 @@ import { SignJWT } from "jose";
 
 export const runtime = "edge";
 
+interface TokenResponse {
+  access_token: string;
+  token_type:   string;
+  expires_in:   number;
+  refresh_token?: string;
+  scope: string;
+  error?: string;
+  error_description?: string;
+}
+
+interface DiscordUser {
+  id: string;
+  username: string;
+}
+
+interface Guild {
+  id: string;
+}
+
 async function exchangeCode(code: string) {
   try {
     const params = new URLSearchParams({
@@ -26,10 +45,10 @@ async function exchangeCode(code: string) {
   }
 }
 
-async function fetchDiscord(path: string, token: string) {
+async function fetchDiscord<T>(path: string, token: string): Promise<T> {
   return fetch(`https://discord.com/api${path}`, {
     headers: { Authorization: `Bearer ${token}` },
-  }).then(r => r.json());
+  }).then(r => r.json() as Promise<T>);
 }
 
 export async function GET(req: Request) {
@@ -58,16 +77,16 @@ export async function GET(req: Request) {
 
     // ② ユーザー情報
     console.log("🔁 [callback] fetchDiscord user start");
-    const user = await fetchDiscord("/users/@me", tokenData.access_token);
+    const user = await fetchDiscord<DiscordUser>("/users/@me", tokenData.access_token);
     console.log("🔁 [callback] user:", user);
 
     // ③ ギルド一覧
     console.log("🔁 [callback] fetchDiscord guilds start");
-    const guilds = await fetchDiscord("/users/@me/guilds", tokenData.access_token);
+    const guilds = await fetchDiscord<Guild[]>("/users/@me/guilds", tokenData.access_token);
     console.log("🔁 [callback] guilds:", guilds);
 
     // ④ ギルド所属チェック
-    const ok = Array.isArray(guilds) && guilds.some((g: any) => g.id === process.env.REQUIRED_GUILD_ID);
+    const ok = Array.isArray(guilds) && guilds.some((g) => g.id === process.env.REQUIRED_GUILD_ID);
     console.log("🔁 [callback] in required guild?", ok);
     if (!ok) {
       return NextResponse.redirect("/auth/error?error=not_in_guild");
@@ -94,9 +113,12 @@ export async function GET(req: Request) {
     console.log("🔁 [callback] done");
     return res;
 
-  } catch (err: any) {
-    console.error("🔥 [callback] Exception:", err.message);
-    console.error(err.stack);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("🔥 [callback] Exception:", err);
+      console.error("🔥 [callback] Exception:", err.message);
+      console.error(err.stack);
+    }
     return new Response("Callback processing error", { status: 500 });
   }
 }
