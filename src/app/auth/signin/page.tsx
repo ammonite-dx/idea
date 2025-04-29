@@ -2,22 +2,25 @@
 
 import { useState } from 'react';
 
-export default function SignIn() {
+export function SignIn() {
   const [loading, setLoading] = useState(false);
 
-  const handleClick = async () => {
+  const handleClick = () => {
     setLoading(true);
-    try {
-      const res = await fetch('/api/auth/discord/login');
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const { url } = await res.json();
-      // ここでクライアントサイド遷移
-      window.location.href = url;
-    } catch (e) {
-      console.error('Discord login failed', e);
-      setLoading(false);
-      alert('ログイン用URLの取得に失敗しました');
-    }
+
+    // クライアント環境変数から直接読んで URL を組み立て
+    const clientId    = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID!;
+    const redirectUri = process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI!;
+    const params = new URLSearchParams({
+      client_id:    clientId,
+      redirect_uri: redirectUri,
+      response_type:'code',
+      scope:        'identify guilds',
+    });
+    const url = `https://discord.com/api/oauth2/authorize?${params}`;
+
+    // そのままブラウザを遷移させる
+    window.location.href = url;
   };
 
   return (
