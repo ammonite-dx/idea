@@ -10,7 +10,6 @@ export async function GET() {
   const clientId    = process.env.DISCORD_CLIENT_ID!;
   const redirectUri = process.env.DISCORD_REDIRECT_URI!;
 
-  // 文字列でクエリを手動組み立て
   const params = [
     `client_id=${encodeURIComponent(clientId)}`,
     `redirect_uri=${encodeURIComponent(redirectUri)}`,
@@ -18,9 +17,9 @@ export async function GET() {
     `scope=${encodeURIComponent('identify guilds')}`
   ].join('&');
   const location = `https://discord.com/api/oauth2/authorize?${params}`;
-
   console.log('▶︎ redirect to:', location);
 
-  // ← ここだけを使う。NextResponse.redirect は静的メソッドなので this 問題を起こしません
-  return NextResponse.redirect(location);
+  // ↓ここがポイント。静的メソッドをNextResponseにバインドして呼び出す
+  const safeRedirect = NextResponse.redirect.bind(NextResponse);
+  return safeRedirect(location);
 }
