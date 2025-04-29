@@ -2,7 +2,7 @@ import type { NextConfig } from 'next';
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
 import webpack from 'webpack';
 
-initOpenNextCloudflareForDev()
+initOpenNextCloudflareForDev();
 
 const nextConfig: NextConfig = {
   webpack: (config, { dev }) => {
