@@ -27,11 +27,11 @@ interface Guild {
 async function exchangeCode(code: string): Promise<TokenResponse> {
   try {
     const params = new URLSearchParams({
-      client_id: process.env.DISCORD_CLIENT_ID!,
+      client_id: process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID!,
       client_secret: process.env.DISCORD_CLIENT_SECRET!,
       grant_type: "authorization_code",
       code,
-      redirect_uri: process.env.DISCORD_REDIRECT_URI!,
+      redirect_uri: process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI!,
     });
     const res = await fetch("https://discord.com/api/oauth2/token", {
       method: "POST",
@@ -60,9 +60,9 @@ export async function GET(req: Request) {
     if (!code) throw new Error("code missing");
 
     // 環境変数チェック
-    console.log("🔁 [callback] DISCORD_CLIENT_ID:", !!process.env.DISCORD_CLIENT_ID);
+    console.log("🔁 [callback] NEXT_PUBLIC_DISCORD_CLIENT_ID:", !!process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID);
     console.log("🔁 [callback] DISCORD_CLIENT_SECRET:", !!process.env.DISCORD_CLIENT_SECRET);
-    console.log("🔁 [callback] REDIRECT_URI:", process.env.DISCORD_REDIRECT_URI);
+    console.log("🔁 [callback] REDIRECT_URI:", process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI);
     console.log("🔁 [callback] REQUIRED_GUILD_ID:", process.env.REQUIRED_GUILD_ID);
     console.log("🔁 [callback] JWT_SECRET:", !!process.env.JWT_SECRET);
 
