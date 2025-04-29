@@ -6,6 +6,8 @@ initOpenNextCloudflareForDev()
 
 const nextConfig: NextConfig = {
 
+  swcMinify: true,
+
   webpack(config, { dev, webpack }) {
     // Edge Runtime 向けに不要な Node.js ビルトインを除外
     config.resolve.fallback = {
