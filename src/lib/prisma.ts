@@ -6,6 +6,9 @@ let prisma: PrismaClient | null = null;
 
 /** リクエストごとではなく、ワーカーのウォームスタート中は同一インスタンスを使い回す */
 export default async function getPrismaClient(): Promise<PrismaClient> {
+
+  console.error("📌 getPrismaClient called from:", new Error().stack);
+
   if (prisma) return prisma;
 
   // 初回生成時のみ、binded DB を取得
