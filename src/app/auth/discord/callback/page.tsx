@@ -1,15 +1,14 @@
-"use server";
-
 import { cookies }   from "next/headers";
 import { redirect }  from "next/navigation";
 import { SignJWT }   from "jose";
 
-export default async function CallbackPage({
-    searchParams,
-}: {
-    searchParams: { code?: string };
-}) {
-    const code = searchParams.code;
+export default async function CallbackPage(
+    props: {
+      params: {};                     // ここを必ず書く
+      searchParams: { code?: string } // code は optional
+    }
+) {
+    const { code } = props.searchParams;
     if (!code) {
         redirect("/auth/error?error=missing_code");
     }
