@@ -40,12 +40,12 @@ export async function GET() {
       }
     });
   } catch (e: unknown) {
+    console.log('❌ Error caught');
     if (e instanceof Error) {
-      console.error('❌ Illegal invocation caught:', e);
-      console.error(e.stack);
+      console.log(e.stack);
       throw e;
     } else {
-      console.error('❌ Unknown error caught:', e);
+      console.log('❌ Unknown error caught');
       throw new Error('Unknown error occurred during Discord login.');
     }
   }
