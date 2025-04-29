@@ -27,7 +27,7 @@ export default async function CallbackPage({ searchParams }: Props) {
   });
   const tokenData = await tokenRes.json();
 
-  if ((tokenData as any).error) {
+  if (tokenData.error) {
     return <SetSessionCookie error="token_failed" />;
   }
 
