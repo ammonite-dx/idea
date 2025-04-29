@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
 
   swcMinify: true,
 
-  webpack(config, { dev, webpack }) {
+  webpack( config ) {
     // Edge Runtime 向けに不要な Node.js ビルトインを除外
     config.resolve.fallback = {
       ...(config.resolve.fallback || {}),
@@ -26,12 +26,8 @@ const nextConfig: NextConfig = {
       assert: false,
     }
 
-    // 開発時のみ miniflare を無視
-    if (dev) {
-      config.plugins.push(
-        new webpack.IgnorePlugin({ resourceRegExp: /^miniflare$/ })
-      )
-    }
+    config.optimization = config.optimization || {}
+    config.optimization.minimize = false
 
     return config
   },
