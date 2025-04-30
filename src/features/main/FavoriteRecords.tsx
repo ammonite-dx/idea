@@ -1,13 +1,14 @@
 import getFavorites from "@/utils/getFavorites";
 import CardList from "@/components/CardList";
+import { Item } from "@/types/types";
 
 export default async function FavoriteRecords() {
     const favPowers = await getFavorites("power");
-    const favWeapons = await getFavorites("weapon");
-    const favArmors = await getFavorites("armor");
-    const favVehicles = await getFavorites("vehicle");
-    const favConnections = await getFavorites("connection");
-    const favGenerals = await getFavorites("general");
+    const favWeapons = await getFavorites("weapon") as Item[];
+    const favArmors = await getFavorites("armor") as Item[];
+    const favVehicles = await getFavorites("vehicle") as Item[];
+    const favConnections = await getFavorites("connection") as Item[];
+    const favGenerals = await getFavorites("general") as Item[];
     const favItems = favWeapons.concat(favArmors, favVehicles, favConnections, favGenerals);
     const favDloises = await getFavorites("dlois");
     const favEloises = await getFavorites("elois");
