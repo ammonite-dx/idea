@@ -1,6 +1,7 @@
 name = "dx3rd-idea"
 compatibility_date = "2025-04-25"
 compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
 
 [vars]
 NEXT_PUBLIC_DISCORD_CLIENT_ID = "1358085922570240191"
