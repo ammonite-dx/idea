@@ -24,6 +24,7 @@ async function getUserIdFromCookie(): Promise<string | null> {
 export async function POST(
   request: Request,
 ) {
+  const prisma = await getPrismaClient();
 
   const userId = await getUserIdFromCookie();
   if (!userId) {
@@ -35,7 +36,6 @@ export async function POST(
     return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
   }
 
-  const prisma  = await getPrismaClient();
   const favorite = await prisma.favorite.create({
     data: {
       user_id: userId,
@@ -50,6 +50,7 @@ export async function POST(
 export async function DELETE(
   request: Request,
 ) {
+  const prisma = await getPrismaClient();
 
   const userId = await getUserIdFromCookie();
   if (!userId) {
@@ -61,7 +62,6 @@ export async function DELETE(
     return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
   }
 
-  const prisma  = await getPrismaClient();
   await prisma.favorite.deleteMany({
     where: {
       user_id: userId,
@@ -78,6 +78,7 @@ export async function DELETE(
 export async function GET(
   request: Request,
 ) {
+  const prisma = await getPrismaClient();
 
   // ユーザー情報を取得
   const userId = await getUserIdFromCookie();
@@ -95,8 +96,7 @@ export async function GET(
     );
   }
 
-  const prisma  = await getPrismaClient();
-  const exists = await prisma.favorite.findFirst({
+  const favorites = await prisma.favorite.findMany({
     where: { 
       AND: [
         {user_id: userId},
@@ -106,5 +106,5 @@ export async function GET(
     },
   });
 
-  return NextResponse.json({ ok: true, exists: exists });
+  return NextResponse.json(favorites);
 }
