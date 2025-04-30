@@ -1,7 +1,14 @@
-import { TypeMap } from '@/types/types'
+import { CardRecordKind } from "@/types/types";
 
-export default async function getFavorites<K extends keyof TypeMap>(
-    kind: K,
-): Promise<TypeMap[K][]> {
-    return (await (await fetch(`/api/record/${kind}?record-kind=${kind}`,{method:"GET"})).json()) as TypeMap[K][];
+type Favorite = {
+    id: string;
+    user_id: string;
+    record_kind: string;
+    record_id: string;
+};
+
+export default async function getFavorites(
+    kind: CardRecordKind,
+): Promise<Favorite[]> {
+    return (await (await fetch(`/api/favorite?record-kind=${kind}`,{method:"GET"})).json()) as Favorite[];
 }
