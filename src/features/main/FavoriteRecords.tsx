@@ -1,28 +1,113 @@
 'use client';
 
+import React, { useEffect, useState } from 'react';
+
 type Favorite = {
-    id: string;
-    user_id: string;
-    record_kind: string;
-    record_id: string;
+  id: string;
+  user_id: string;
+  record_kind: string;
+  record_id: string;
 };
 
-export default async function FavoriteRecords() {
-    const favPowers = (await (await fetch(`/api/favorite?record-kind=power`,{method:"GET"})).json()) as Favorite[];
-    const favWeapons = (await (await fetch(`/api/favorite?record-kind=weapon`,{method:"GET"})).json()) as Favorite[];
-    const favArmors = (await (await fetch(`/api/favorite?record-kind=armor`,{method:"GET"})).json()) as Favorite[];
-    const favVehicles = (await (await fetch(`/api/favorite?record-kind=vehicle`,{method:"GET"})).json()) as Favorite[];
-    const favConnections = (await (await fetch(`/api/favorite?record-kind=connection`,{method:"GET"})).json()) as Favorite[];
-    const favGenerals = (await (await fetch(`/api/favorite?record-kind=general`,{method:"GET"})).json()) as Favorite[];
-    const favItems = favWeapons.concat(favArmors, favVehicles, favConnections, favGenerals);
-    const favDloises = (await (await fetch(`/api/favorite?record-kind=dlois`,{method:"GET"})).json()) as Favorite[];
-    const favEloises = (await (await fetch(`/api/favorite?record-kind=elois`,{method:"GET"})).json()) as Favorite[];
-    return (
-        <div>
-            {favPowers.length>0 && favPowers.map((power) => (<div key={power.id}>{power.record_id}</div>))}
-            {favItems.length>0 && favItems.map((item) => (<div key={item.id}>{item.record_id}</div>))}
-            {favDloises.length>0 && favDloises.map((dlois) => (<div key={dlois.id}>{dlois.record_id}</div>))}
-            {favEloises.length>0 && favEloises.map((elois) => (<div key={elois.id}>{elois.record_id}</div>))}
-        </div>
-    );
+export default function FavoriteRecords() {
+  const [favPowers, setFavPowers] = useState<Favorite[]>([]);
+  const [favItems, setFavItems] = useState<Favorite[]>([]);
+  const [favDloises, setFavDloises] = useState<Favorite[]>([]);
+  const [favEloises, setFavEloises] = useState<Favorite[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchFavorites() {
+      try {
+        const kinds = [
+          'power',
+          'weapon',
+          'armor',
+          'vehicle',
+          'connection',
+          'general',
+          'dlois',
+          'elois',
+        ];
+
+        // 全種類を並列フェッチ
+        const responses = await Promise.all(
+          kinds.map(kind =>
+            fetch(`/api/favorite?record-kind=${kind}`, { cache: 'no-store' })
+          )
+        );
+
+        // JSON 変換＆エラーチェック
+        const dataArrays = await Promise.all(
+          responses.map((res, i) => {
+            if (!res.ok) throw new Error(`${kinds[i]}: ${res.statusText}`);
+            return res.json() as Promise<Favorite[]>;
+          })
+        );
+
+        // 結果をステートに格納
+        setFavPowers(dataArrays[0]!);
+        setFavItems([
+          ...dataArrays[1]!,
+          ...dataArrays[2]!,
+          ...dataArrays[3]!,
+          ...dataArrays[4]!,
+          ...dataArrays[5]!,
+        ]);
+        setFavDloises(dataArrays[6]!);
+        setFavEloises(dataArrays[7]!);
+      } catch (e) {
+        console.error(e);
+        setError(e instanceof Error ? e.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchFavorites();
+  }, []);
+
+  if (loading) return <div>Loading favorites…</div>;
+  if (error) return <div style={{ color: 'red' }}>Error: {error}</div>;
+
+  return (
+    <div>
+      {favPowers.length > 0 && (
+        <section>
+          <h2>Powers</h2>
+          {favPowers.map(p => (
+            <div key={p.id}>{p.record_id}</div>
+          ))}
+        </section>
+      )}
+
+      {favItems.length > 0 && (
+        <section>
+          <h2>Items</h2>
+          {favItems.map(i => (
+            <div key={i.id}>{i.record_id}</div>
+          ))}
+        </section>
+      )}
+
+      {favDloises.length > 0 && (
+        <section>
+          <h2>Dloises</h2>
+          {favDloises.map(d => (
+            <div key={d.id}>{d.record_id}</div>
+          ))}
+        </section>
+      )}
+
+      {favEloises.length > 0 && (
+        <section>
+          <h2>Eloises</h2>
+          {favEloises.map(e => (
+            <div key={e.id}>{e.record_id}</div>
+          ))}
+        </section>
+      )}
+    </div>
+  );
 }
