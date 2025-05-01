@@ -22,7 +22,7 @@ export default function FavoriteButton({
 
   // 1) セッションを取得
   useEffect(() => {
-    fetch("/api/auth/discord/session")
+    fetch("/api/session")
       .then((res) => res.json())
       .then((data) => {
         setUser(data.user);

@@ -1,5 +1,3 @@
-// src/app/api/auth/discord/session/route.ts
-
 export const runtime = 'edge';
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
