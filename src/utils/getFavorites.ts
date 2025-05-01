@@ -1,3 +1,5 @@
+"use client";
+
 import { CardRecordKind } from "@/types/types";
 
 type Favorite = {
