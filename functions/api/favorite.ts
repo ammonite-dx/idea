@@ -22,7 +22,7 @@ async function getUserIdFromCookie(): Promise<string | null> {
   }
 }
 
-export async function POST(
+export async function onRequestPost(
   request: Request,
   { env }: { env: { DB: D1Database } }
 ) {
@@ -49,7 +49,7 @@ export async function POST(
   return NextResponse.json({ ok: true, favorite });
 }
 
-export async function DELETE(
+export async function onRequestDelete(
   request: Request,
   { env }: { env: { DB: D1Database } }
 ) {
@@ -76,9 +76,7 @@ export async function DELETE(
   return NextResponse.json({ ok: true });
 }
 
- // メモ: GETメソッドを検索用に用いる。検索結果の長さによってお気に入りされていると判定する。
-
-export async function GET(
+export async function onRequestGet(
   request: Request,
   { env }: { env: { DB: D1Database } }
 ) {

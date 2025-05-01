@@ -2,7 +2,7 @@ export const runtime = 'edge';
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-export async function GET(req: Request) {
+export async function onRequestGet(req: Request) {
   const cookies = req.headers.get("cookie") || "";
   const match = cookies.match(/session=([^;]+)/);
   if (!match) return NextResponse.json({ user: null });

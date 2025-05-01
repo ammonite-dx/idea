@@ -15,3 +15,10 @@ CLOUDFLARE_D1_TOKEN = "F2S8jDd3YBdJlQ2FsYkaYVz-KkuV0FKQlhmJYm1y"
 binding = "DB"
 database_name = "idea-db"
 database_id = "64a38857-c1bd-48ba-a940-33bee5260bc3"
+
+[build]
+command = "npm run build"
+functions = "functions"
+
+[functions]
+directory = "functions"
