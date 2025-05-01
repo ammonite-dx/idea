@@ -1,112 +1,182 @@
-export const runtime = "edge";
+// functions/api/favorite.ts
 
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import getPrismaClient from "@/lib/prisma";
-import { D1Database } from "@cloudflare/workers-types";
+import type { PagesFunction, D1Database, Response as CFResponse } from "@cloudflare/workers-types";
 
-// 環境変数からバイト配列を作成
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
+type FavoriteRequest = {
+  recordKind: string;
+  recordId?:   string;
+};
 
-// Cookie から JWT を取り出して userId を返すユーティリティ
-async function getUserIdFromCookie(): Promise<string | null> {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("session")?.value;
-  if (!token) return null;
+// ざっくり Cookie パース
+function parseCookies(cookieHeader: string): Record<string, string> {
+  return cookieHeader.split(";").reduce((acc, part) => {
+    const [k, v] = part.split("=").map((s) => s.trim());
+    if (k && v) acc[k] = decodeURIComponent(v);
+    return acc;
+  }, {} as Record<string, string>);
+}
+
+export const onRequestGet: PagesFunction<{
+  DB: D1Database;
+  JWT_SECRET: string;
+}> = async ({ request, env }) => {
+
+  // 1) JWT_SECRET を env から取得
+  const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET);
+
+  // 2) Cookie → session トークン取得
+  const cookieHeader = request.headers.get("Cookie") || "";
+  const cookies = parseCookies(cookieHeader);
+  const token = cookies.session;
+  if (!token) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }) as unknown as CFResponse;
+  }
+
+  // 3) トークン検証
+  let userId: string;
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    return typeof payload.sub === "string" ? payload.sub : null;
+    if (typeof payload.sub !== "string") throw new Error();
+    userId = payload.sub;
   } catch {
-    return null;
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }) as unknown as CFResponse;
   }
-}
 
-export async function onRequestPost(
-  request: Request,
-  { env }: { env: { DB: D1Database } }
-) {
+  // 4) クエリパラメータ
+  const url = new URL(request.url);
+  const kind = url.searchParams.get("record-kind");
+  if (!kind) {
+    return new Response(
+      JSON.stringify({ error: "Missing query parameter: record-kind" }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    ) as unknown as CFResponse;
+  }
+  const id = url.searchParams.get("record-id") || undefined;
+
+  // 5) Prisma
   const prisma = getPrismaClient(env);
+  const favs = await prisma.favorite.findMany({
+    where: { user_id: userId, record_kind: kind, ...(id ? { record_id: id } : {}) },
+  });
 
-  const userId = await getUserIdFromCookie();
-  if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  return new Response(JSON.stringify(favs), {
+    headers: { "Content-Type": "application/json" },
+  }) as unknown as CFResponse;
+};
+
+export const onRequestPost: PagesFunction<{
+  DB: D1Database;
+  JWT_SECRET: string;
+}> = async ({ request, env }) => {
+  // env から JWT_SECRET を取得
+  const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET);
+
+  // Cookie → session トークン
+  const cookies = parseCookies(request.headers.get("Cookie") || "");
+  const token   = cookies.session;
+  if (!token) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }) as unknown as CFResponse;
   }
 
-  const { recordKind, recordId } = await request.json();
+  // JWT 検証
+  let userId: string;
+  try {
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    if (typeof payload.sub !== "string") throw new Error();
+    userId = payload.sub;
+  } catch {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }) as unknown as CFResponse;
+  }
+
+  // リクエストボディ
+  const { recordKind, recordId } = await request.json() as FavoriteRequest;
   if (!recordKind || !recordId) {
-    return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
+    return new Response(
+      JSON.stringify({ error: "Missing parameters" }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    ) as unknown as CFResponse;
   }
 
+  // DB 操作
+  const prisma   = getPrismaClient(env);
   const favorite = await prisma.favorite.create({
     data: {
-      user_id: userId,
+      user_id:     userId,
       record_kind: recordKind,
-      record_id: recordId,
+      record_id:   recordId,
     },
   });
 
-  return NextResponse.json({ ok: true, favorite });
-}
+  return new Response(JSON.stringify({ ok: true, favorite }), {
+    headers: { "Content-Type": "application/json" },
+  }) as unknown as CFResponse;
+};
 
-export async function onRequestDelete(
-  request: Request,
-  { env }: { env: { DB: D1Database } }
-) {
-  const prisma = getPrismaClient(env);
+// DELETE /api/favorite
+export const onRequestDelete: PagesFunction<{
+  DB: D1Database;
+  JWT_SECRET: string;
+}> = async ({ request, env }) => {
+  // env から JWT_SECRET を取得
+  const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET);
 
-  const userId = await getUserIdFromCookie();
-  if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Cookie → session トークン
+  const cookies = parseCookies(request.headers.get("Cookie") || "");
+  const token   = cookies.session;
+  if (!token) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }) as unknown as CFResponse;
   }
 
-  const { recordKind, recordId } = await request.json();
+  // JWT 検証
+  let userId: string;
+  try {
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    if (typeof payload.sub !== "string") throw new Error();
+    userId = payload.sub;
+  } catch {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    }) as unknown as CFResponse;
+  }
+
+  // リクエストボディ
+  const { recordKind, recordId } = await request.json() as FavoriteRequest;
   if (!recordKind || !recordId) {
-    return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
+    return new Response(
+      JSON.stringify({ error: "Missing parameters" }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    ) as unknown as CFResponse;
   }
 
+  // DB 操作
+  const prisma = await getPrismaClient(env);
   await prisma.favorite.deleteMany({
     where: {
-      user_id: userId,
+      user_id:     userId,
       record_kind: recordKind,
-      record_id: recordId,
+      record_id:   recordId,
     },
   });
 
-  return NextResponse.json({ ok: true });
-}
-
-export async function onRequestGet(
-  request: Request,
-  { env }: { env: { DB: D1Database } }
-) {
-  const prisma = getPrismaClient(env);
-
-  // ユーザー情報を取得
-  const userId = await getUserIdFromCookie();
-  if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const url = new URL(request.url);
-  const recordKind = url.searchParams.get("record-kind");
-  const recordId   = url.searchParams.get("record-id");
-  if (!recordKind) {
-    return NextResponse.json(
-      { error: "Missing query parameters: record-kind" },
-      { status: 400 }
-    );
-  }
-
-  const favorites = await prisma.favorite.findMany({
-    where: { 
-      AND: [
-        {user_id: userId},
-        {record_kind: recordKind},
-        (recordId === null) ? {} : { record_id: recordId },
-      ],
-    },
-  });
-
-  return NextResponse.json(favorites);
-}
+  return new Response(JSON.stringify({ ok: true }), {
+    headers: { "Content-Type": "application/json" },
+  }) as unknown as CFResponse;
+};
