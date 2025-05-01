@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import getPrismaClient from "@/lib/prisma";
+import { D1Database } from "@cloudflare/workers-types";
 
 // 環境変数からバイト配列を作成
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
@@ -23,8 +24,9 @@ async function getUserIdFromCookie(): Promise<string | null> {
 
 export async function POST(
   request: Request,
+  { env }: { env: { DB: D1Database } }
 ) {
-  const prisma = await getPrismaClient();
+  const prisma = getPrismaClient(env);
 
   const userId = await getUserIdFromCookie();
   if (!userId) {
@@ -49,8 +51,9 @@ export async function POST(
 
 export async function DELETE(
   request: Request,
+  { env }: { env: { DB: D1Database } }
 ) {
-  const prisma = await getPrismaClient();
+  const prisma = getPrismaClient(env);
 
   const userId = await getUserIdFromCookie();
   if (!userId) {
@@ -77,8 +80,9 @@ export async function DELETE(
 
 export async function GET(
   request: Request,
+  { env }: { env: { DB: D1Database } }
 ) {
-  const prisma = await getPrismaClient();
+  const prisma = getPrismaClient(env);
 
   // ユーザー情報を取得
   const userId = await getUserIdFromCookie();

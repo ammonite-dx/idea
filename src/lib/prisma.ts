@@ -1,18 +1,16 @@
-import { PrismaClient }   from "@prisma/client/edge";
+import { PrismaClient }   from "@prisma/client";
 import { PrismaD1 }        from "@prisma/adapter-d1";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { D1Database }      from "@cloudflare/workers-types";
 
-let prisma: PrismaClient | null = null;
+let cache: { [binding: string]: PrismaClient } = {};
 
-/** リクエストごとではなく、ワーカーのウォームスタート中は同一インスタンスを使い回す */
-export default async function getPrismaClient(): Promise<PrismaClient> {
-
-  if (prisma) return prisma;
-
-  // 初回生成時のみ、binded DB を取得
-  const { env } = await getCloudflareContext({ async: true });
-  prisma = new PrismaClient({
-    adapter: new PrismaD1(env.DB),
-  });
-  return prisma;
+export default function getPrismaClient(env: { DB: D1Database }): PrismaClient {
+  // ページ関数ごとに渡ってくる env.DB をキーにキャッシュ
+  const key = "DB";
+  if (!cache[key]) {
+    cache[key] = new PrismaClient({
+      adapter: new PrismaD1(env.DB),
+    });
+  }
+  return cache[key];
 }
