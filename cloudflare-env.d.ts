@@ -8,4 +8,5 @@ interface CloudflareEnv {
 	CLOUDFLARE_DATABASE_ID: "64a38857-c1bd-48ba-a940-33bee5260bc3";
 	CLOUDFLARE_D1_TOKEN: "F2S8jDd3YBdJlQ2FsYkaYVz-KkuV0FKQlhmJYm1y";
 	DB: D1Database;
+	JWT_SECRET: string
 }

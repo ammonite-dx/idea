@@ -3,7 +3,7 @@ export const runtime = 'edge';
 import { NextResponse } from 'next/server';
 import { jwtVerify }   from 'jose';
 import getPrismaClient  from '@/lib/prisma';
-import type { D1Database } from '@cloudflare/workers-types';
+import { getRequestContext } from "@cloudflare/next-on-pages";
 
 /* ──────────────────────────────────────────────────────────── */
 /* eslint-disable @typescript-eslint/no-explicit-any            */
@@ -35,63 +35,63 @@ async function getUserIdFromRequest(
 }
 
 export async function GET(
-  request: Request,
-  { env }: { env: { DB: D1Database; JWT_SECRET: string } }
+    request: Request,
 ) {
-  const secret = new TextEncoder().encode(env.JWT_SECRET);
+    const { env } = getRequestContext();
+    const secret = new TextEncoder().encode(env.JWT_SECRET);
 
-  const userId = await getUserIdFromRequest(request, secret);
-  if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+    const userId = await getUserIdFromRequest(request, secret);
+    if (!userId) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-  const url  = new URL(request.url);
-  const kind = url.searchParams.get('record-kind');
-  if (!kind) {
-    return NextResponse.json(
-      { error: 'Missing query parameter: record-kind' },
-      { status: 400 }
-    );
-  }
-  const recordId = url.searchParams.get('record-id') ?? undefined;
+    const url  = new URL(request.url);
+    const kind = url.searchParams.get('record-kind');
+    if (!kind) {
+        return NextResponse.json(
+        { error: 'Missing query parameter: record-kind' },
+        { status: 400 }
+        );
+    }
+    const recordId = url.searchParams.get('record-id') ?? undefined;
 
-  const prisma = getPrismaClient(env.DB);
-  const where  = recordId
-    ? { user_id: userId, record_kind: kind, record_id: recordId }
-    : { user_id: userId, record_kind: kind };
-  const favs   = await prisma.favorite.findMany({ where });
+    const prisma = getPrismaClient(env.DB);
+    const where  = recordId
+        ? { user_id: userId, record_kind: kind, record_id: recordId }
+        : { user_id: userId, record_kind: kind };
+    const favs   = await prisma.favorite.findMany({ where });
 
-  return NextResponse.json(favs);
+    return NextResponse.json(favs);
 }
 
 export async function POST(
-  request: Request,
-  { env }: { env: { DB: D1Database; JWT_SECRET: string } }
+    request: Request,
 ) {
-  const secret = new TextEncoder().encode(env.JWT_SECRET);
+    const { env } = getRequestContext();
+    const secret = new TextEncoder().encode(env.JWT_SECRET);
 
-  const userId = await getUserIdFromRequest(request, secret);
-  if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+    const userId = await getUserIdFromRequest(request, secret);
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-  const { recordKind, recordId } = (await request.json()) as any;
-  if (!recordKind || !recordId) {
-    return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
-  }
+    const { recordKind, recordId } = (await request.json()) as any;
+    if (!recordKind || !recordId) {
+      return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
+    }
 
-  const prisma   = getPrismaClient(env.DB);
-  const favorite = await prisma.favorite.create({
-    data: { user_id: userId, record_kind: recordKind, record_id: recordId },
-  });
+    const prisma   = getPrismaClient(env.DB);
+    const favorite = await prisma.favorite.create({
+      data: { user_id: userId, record_kind: recordKind, record_id: recordId },
+    });
 
   return NextResponse.json({ ok: true, favorite });
 }
 
 export async function DELETE(
   request: Request,
-  { env }: { env: { DB: D1Database; JWT_SECRET: string } }
 ) {
+  const { env } = getRequestContext();
   const secret = new TextEncoder().encode(env.JWT_SECRET);
 
   const userId = await getUserIdFromRequest(request, secret);
