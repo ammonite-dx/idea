@@ -1,4 +1,3 @@
-// src/app/api/favorite/route.ts
 export const runtime = 'edge';
 
 import { NextResponse } from 'next/server';
@@ -6,14 +5,11 @@ import { jwtVerify }   from 'jose';
 import getPrismaClient  from '@/lib/prisma';
 import type { D1Database } from '@cloudflare/workers-types';
 
-// Workers ランタイムで自動的に注入される globals
-declare const DB: D1Database;
-declare const JWT_SECRET: string;
+/* ──────────────────────────────────────────────────────────── */
+/* eslint-disable @typescript-eslint/no-explicit-any            */
+/* ──────────────────────────────────────────────────────────── */
 
-// ────────────────────────────────────────────────────────────
-// ESLint の any 警告をこのファイルだけ無効化
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// ────────────────────────────────────────────────────────────
+declare const DB: D1Database; // PrismaD1 用のバインディング
 
 function parseCookies(cookieHeader: string): Record<string, string> {
   return cookieHeader.split(';').reduce((acc, part) => {
@@ -41,7 +37,9 @@ async function getUserIdFromRequest(
 }
 
 export async function GET(request: Request) {
-  const secret = new TextEncoder().encode(JWT_SECRET);
+  // ★ process.env から取り出す ★
+  const rawSecret = process.env.JWT_SECRET!;
+  const secret = new TextEncoder().encode(rawSecret);
 
   const userId = await getUserIdFromRequest(request, secret);
   if (!userId) {
@@ -68,7 +66,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const secret = new TextEncoder().encode(JWT_SECRET);
+  const rawSecret = process.env.JWT_SECRET!;
+  const secret = new TextEncoder().encode(rawSecret);
 
   const userId = await getUserIdFromRequest(request, secret);
   if (!userId) {
@@ -89,7 +88,8 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const secret = new TextEncoder().encode(JWT_SECRET);
+  const rawSecret = process.env.JWT_SECRET!;
+  const secret = new TextEncoder().encode(rawSecret);
 
   const userId = await getUserIdFromRequest(request, secret);
   if (!userId) {
