@@ -4,12 +4,11 @@ import { D1Database }      from "@cloudflare/workers-types";
 
 const cache: { [binding: string]: PrismaClient } = {};
 
-export default function getPrismaClient(env: { DB: D1Database }): PrismaClient {
-  // ページ関数ごとに渡ってくる env.DB をキーにキャッシュ
+export default function getPrismaClient(db: D1Database): PrismaClient {
   const key = "DB";
   if (!cache[key]) {
     cache[key] = new PrismaClient({
-      adapter: new PrismaD1(env.DB),
+      adapter: new PrismaD1(db),
     });
   }
   return cache[key];
