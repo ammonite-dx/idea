@@ -4,6 +4,8 @@ import { jwtVerify } from "jose";
 import getPrismaClient from "@/lib/prisma";
 import type { PagesFunction, D1Database, Response as CFResponse } from "@cloudflare/workers-types";
 
+console.log("📣 /api/favorite function module loaded");
+
 type FavoriteRequest = {
   recordKind: string;
   recordId?:   string;
@@ -22,6 +24,7 @@ export const onRequestGet: PagesFunction<{
   DB: D1Database;
   JWT_SECRET: string;
 }> = async ({ request, env }) => {
+  console.log("📣 /api/favorite GET handler called");
 
   // 1) JWT_SECRET を env から取得
   const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET);
