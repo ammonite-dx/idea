@@ -23,7 +23,7 @@ export default function FavoriteButton({
   // 1) セッションを取得
   useEffect(() => {
     fetch("/api/session")
-      .then((res) => res.json())
+      .then((res) => res.json() as Promise<{ user: User }>)
       .then((data) => {
         setUser(data.user);
       })
@@ -44,7 +44,7 @@ export default function FavoriteButton({
     }
 
     fetch(`/api/favorite?recordKind=${encodeURIComponent(recordKind)}&recordId=${encodeURIComponent(recordId)}`)
-      .then((res) => res.json())
+      .then((res) => res.json() as Promise<{ isFavorite: boolean }>)
       .then((json) => {
         setIsFavorite(Boolean(json.isFavorite));
       })
