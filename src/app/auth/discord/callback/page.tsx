@@ -25,7 +25,7 @@ export default async function CallbackPage({ searchParams }: Props) {
       redirect_uri:  process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI!,
     }),
   });
-  const tokenData = await tokenRes.json();
+  const tokenData: { error?: string; access_token?: string } = await tokenRes.json();
 
   if (tokenData.error) {
     return <SetSessionCookie error="token_failed" />;
@@ -35,7 +35,7 @@ export default async function CallbackPage({ searchParams }: Props) {
   const userRes = await fetch('https://discord.com/api/users/@me', {
     headers: { Authorization: `Bearer ${tokenData.access_token}` },
   });
-  const user = await userRes.json();
+  const user: { id: string; username: string } = await userRes.json();
   const guildsRes = await fetch('https://discord.com/api/users/@me/guilds', {
     headers: { Authorization: `Bearer ${tokenData.access_token}` },
   });
