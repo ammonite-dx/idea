@@ -37,30 +37,8 @@ async function getUserIdFromRequest(
 export async function GET(
   request: Request,
 ) {
+
   const { env } = getRequestContext();
-  console.log(request);
-
-  // 1) SQL 文を準備
-  const stmt = env.DB.prepare("SELECT 1 AS x");
-
-  // 2) パラメータが無いなら bind() を呼び出し
-  const bound = stmt.bind();
-
-  // 3) all() で結果を取ってみる
-  const { results } = await bound.all();
-
-  return new Response(JSON.stringify(results), {
-    headers: { "Content-Type": "application/json" },
-  });
-
-  /*
-  const { env } = getRequestContext();
-
-  console.log("env.DB type:", typeof env.DB);
-  console.log("env.DB.prepare type:", typeof (env.DB as any).prepare);
-  const stmt = (env.DB as any).prepare("SELECT 1 as x");
-  console.log("stmt.bind type:", typeof (stmt as any).bind);
-
   const secret = new TextEncoder().encode(env.JWT_SECRET);
 
   const userId = await getUserIdFromRequest(request, secret);
@@ -85,7 +63,6 @@ export async function GET(
   const favs   = await prisma.favorite.findMany({ where });
 
   return NextResponse.json(favs);
-  */
 }
 
 export async function POST(
