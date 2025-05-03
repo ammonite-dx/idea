@@ -35,39 +35,56 @@ async function getUserIdFromRequest(
 }
 
 export async function GET(
-    request: Request,
+  request: Request,
 ) {
-    const { env } = getRequestContext();
+  const { env } = getRequestContext();
 
-    console.log("env.DB type:", typeof env.DB);
-    console.log("env.DB.prepare type:", typeof (env.DB as any).prepare);
-    const stmt = (env.DB as any).prepare("SELECT 1 as x");
-    console.log("stmt.bind type:", typeof (stmt as any).bind);
-    
-    const secret = new TextEncoder().encode(env.JWT_SECRET);
+  // 1) SQL 文を準備
+  const stmt = env.DB.prepare("SELECT 1 AS x");
 
-    const userId = await getUserIdFromRequest(request, secret);
-    if (!userId) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  // 2) パラメータが無いなら bind() を呼び出し
+  const bound = stmt.bind();
 
-    const url  = new URL(request.url);
-    const kind = url.searchParams.get('record-kind');
-    if (!kind) {
-        return NextResponse.json(
-        { error: 'Missing query parameter: record-kind' },
-        { status: 400 }
-        );
-    }
-    const recordId = url.searchParams.get('record-id') ?? undefined;
+  // 3) all() で結果を取ってみる
+  const { results } = await bound.all();
 
-    const prisma = getPrismaClient(env.DB);
-    const where  = recordId
-        ? { user_id: userId, record_kind: kind, record_id: recordId }
-        : { user_id: userId, record_kind: kind };
-    const favs   = await prisma.favorite.findMany({ where });
+  return new Response(JSON.stringify(results), {
+    headers: { "Content-Type": "application/json" },
+  });
 
-    return NextResponse.json(favs);
+  /*
+  const { env } = getRequestContext();
+
+  console.log("env.DB type:", typeof env.DB);
+  console.log("env.DB.prepare type:", typeof (env.DB as any).prepare);
+  const stmt = (env.DB as any).prepare("SELECT 1 as x");
+  console.log("stmt.bind type:", typeof (stmt as any).bind);
+
+  const secret = new TextEncoder().encode(env.JWT_SECRET);
+
+  const userId = await getUserIdFromRequest(request, secret);
+  if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const url  = new URL(request.url);
+  const kind = url.searchParams.get('record-kind');
+  if (!kind) {
+      return NextResponse.json(
+      { error: 'Missing query parameter: record-kind' },
+      { status: 400 }
+      );
+  }
+  const recordId = url.searchParams.get('record-id') ?? undefined;
+
+  const prisma = getPrismaClient(env.DB);
+  const where  = recordId
+      ? { user_id: userId, record_kind: kind, record_id: recordId }
+      : { user_id: userId, record_kind: kind };
+  const favs   = await prisma.favorite.findMany({ where });
+
+  return NextResponse.json(favs);
+  */
 }
 
 export async function POST(
