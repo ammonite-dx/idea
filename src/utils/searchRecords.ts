@@ -367,7 +367,7 @@ function eloisWhereCondition(searchParams: { [key: string]: string | string[] | 
     ]},
     {OR: toArray(searchParams["type"], ELOIS_TYPES).map(type => ({type: type}))},
     {name: {contains: toString(searchParams["name"], "")}},
-    {OR: toArray(searchParams["restrict"], ELOIS_TIMINGS).map(timing => ({timing: {contains: timing}}))},
+    {OR: toArray(searchParams["timing"], ELOIS_TIMINGS).map(timing => ({timing: {contains: timing}}))},
     {OR: toArray(searchParams["skill"], ELOIS_SKILLS).map(skill => ({skill: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))},
     {OR: toArray(searchParams["dfclty"], ELOIS_DFCLTIES).map(dfclty => ({dfclty: {contains: dfclty}}))},
     {OR: toArray(searchParams["target"], ELOIS_TARGETS).map(target => ({target: {contains: target}}))},
