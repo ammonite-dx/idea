@@ -38,6 +38,7 @@ export async function GET(
   request: Request,
 ) {
   const { env } = getRequestContext();
+  console.log(request);
 
   // 1) SQL 文を準備
   const stmt = env.DB.prepare("SELECT 1 AS x");
