@@ -38,6 +38,7 @@ export async function GET(
     request: Request,
 ) {
     const { env } = getRequestContext();
+    console.log("D1 bindings:", Object.keys(env)); 
     const secret = new TextEncoder().encode(env.JWT_SECRET);
 
     const userId = await getUserIdFromRequest(request, secret);
