@@ -38,7 +38,12 @@ export async function GET(
     request: Request,
 ) {
     const { env } = getRequestContext();
-    console.log("D1 bindings:", Object.keys(env)); 
+
+    console.log("env.DB type:", typeof env.DB);
+    console.log("env.DB.prepare type:", typeof (env.DB as any).prepare);
+    const stmt = (env.DB as any).prepare("SELECT 1 as x");
+    console.log("stmt.bind type:", typeof (stmt as any).bind);
+    
     const secret = new TextEncoder().encode(env.JWT_SECRET);
 
     const userId = await getUserIdFromRequest(request, secret);
