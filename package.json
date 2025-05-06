@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "dev:fast": "tsc --noEmit & next dev",
     "typecheck": "tsc --noEmit",
-    "build": "cross-env NEXT_DISABLE_APP_PATHS_TYPE_CHECK=true next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },

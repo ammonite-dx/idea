@@ -144,7 +144,9 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
         {ruby: "asc" as const}
       ],
     };
-    const searchResultsInCategory = await prisma.vehicle.findMany(searchCondition);
+    const searchResultsInCategory = await prisma.vehicle.findMany({
+      where: {AND: [{category: category}, {name: {contains: toString(searchParams["name"], "")}}]},
+    });
     const vehiclesInCategory = (await Promise.all(searchResultsInCategory.map(async searchResult => getRecordById("vehicle", searchResult.id)))).filter((vehicle) => vehicle !== null);
     return [category, vehiclesInCategory]
   })));
@@ -238,7 +240,7 @@ async function searchWorks(searchParams: { [key: string]: string | string[] | un
       AND: workWhereCondition(searchParams),
     },
   };
-  const searchResults = await prisma.works.findMany(searchCondition);
+  const searchResults = await prisma.work.findMany(searchCondition);
   const works: { [key:string]: Work[] } = { "ワークス": (await Promise.all(searchResults.map(async searchResult => getRecordById("work", searchResult.id)))).filter((work) => work !== null) };
   return works;
 }
@@ -253,8 +255,8 @@ function powerWhereCondition(searchParams: { [key: string]: string | string[] | 
     {OR: toArray(searchParams["type"], POWER_TYPES).map(type => ({type: type}))},
     {OR: toArray(searchParams["supplement"], POWER_SUPPLEMENTS).map(supplement => ({supplement: supplement}))},
     {OR: [
-      {update: null},
-      {NOT: toArray(searchParams["supplement"], POWER_SUPPLEMENTS).map(supplement => ({update: {contains: supplement}}))}
+      {update_supplement: null},
+      {NOT: toArray(searchParams["supplement"], POWER_SUPPLEMENTS).map(supplement => ({update_supplement: {contains: supplement}}))}
     ]},
     {name: {contains: toString(searchParams["name"], "")}},
     {OR: [
@@ -278,8 +280,8 @@ function itemWhereCondition(searchParams: { [key: string]: string | string[] | u
     { name: { contains: toString(searchParams["name"], "") } },
     { OR: toArray(searchParams["supplement"], ITEM_SUPPLEMENTS).map(supplement => ({ supplement: supplement })) },
     { OR: [
-        { update: null },
-        { NOT: toArray(searchParams["supplement"], ITEM_SUPPLEMENTS).map(supplement => ({ update: { contains: supplement } })) }
+        { update_supplement: null },
+        { NOT: toArray(searchParams["supplement"], ITEM_SUPPLEMENTS).map(supplement => ({ update_supplement: { contains: supplement } })) }
     ] },
     (searchParams["procure"]==null && searchParams["stock"]==null && searchParams["exp"]==null) ? {}
     : (searchParams["procure"]!=null && searchParams["stock"]==null && searchParams["exp"]==null) ? {AND: [{procure_int: {lte: parseInt(toString(searchParams["procure"], "0"))}}, {exp_int: null}]} 
@@ -347,8 +349,8 @@ function dloisWhereCondition(searchParams: { [key: string]: string | string[] | 
   return [
       {OR: toArray(searchParams["supplement"], DLOIS_SUPPLEMENTS).map(supplement => ({supplement: supplement}))},
       {OR: [
-        {update: null},
-        {NOT: toArray(searchParams["supplement"], DLOIS_SUPPLEMENTS).map(supplement => ({update: {contains: supplement}}))}
+        {update_supplement: null},
+        {NOT: toArray(searchParams["supplement"], DLOIS_SUPPLEMENTS).map(supplement => ({update_supplement: {contains: supplement}}))}
       ]},
       {OR: toArray(searchParams["type"], DLOIS_TYPES).map(type => ({type: type}))},
       {name: {contains: toString(searchParams["name"], "")}},
@@ -362,8 +364,8 @@ function eloisWhereCondition(searchParams: { [key: string]: string | string[] | 
   return [
     {OR: toArray(searchParams["supplement"], ELOIS_SUPPLEMENTS).map(supplement => ({supplement: supplement}))},
     {OR: [
-      {update: null},
-      {NOT: toArray(searchParams["supplement"], ELOIS_SUPPLEMENTS).map(supplement => ({update: {contains: supplement}}))}
+      {update_supplement: null},
+      {NOT: toArray(searchParams["supplement"], ELOIS_SUPPLEMENTS).map(supplement => ({update_supplement: {contains: supplement}}))}
     ]},
     {OR: toArray(searchParams["type"], ELOIS_TYPES).map(type => ({type: type}))},
     {name: {contains: toString(searchParams["name"], "")}},

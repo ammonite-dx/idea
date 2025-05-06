@@ -187,7 +187,7 @@ async function getInfoById(id: string) {
 
 // ワークスの取得
 async function getWorkById(id: string) {
-    const searchResult = await prisma.works.findUnique({where: {id: id}});
+    const searchResult = await prisma.work.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const work: Work = {
         kind: "work",
