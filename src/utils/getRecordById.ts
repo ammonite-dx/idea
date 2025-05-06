@@ -28,8 +28,8 @@ async function getPowerById(id:string) {
     const { ref_weapon_id, ref_armor_id, ref_faq_id, ref_info_id, ...base } = searchResult;
     const ref_weapon: Weapon|null = ref_weapon_id ? await getWeaponById(ref_weapon_id) : null;
     const ref_armor: Armor|null = ref_armor_id ? await getArmorById(ref_armor_id) : null;
-    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
-    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
+    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id:string) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
+    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id:string) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
     const power: Power = {
         kind: "power",
         ...base,
@@ -46,8 +46,8 @@ async function getWeaponById(id: string) {
     const searchResult = await prisma.weapon.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const { ref_faq_id, ref_info_id, ...base } = searchResult;
-    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
-    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
+    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id:string) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
+    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id:string) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
     const weapon: Weapon = {
         kind: "weapon",
         ...base,
@@ -63,8 +63,8 @@ async function getArmorById(id: string) {
     if (!searchResult) return null;
     const { ref_weapon_id, ref_faq_id, ref_info_id, ...base } = searchResult;
     const ref_weapon: Weapon|null = ref_weapon_id ? await getWeaponById(ref_weapon_id) : null;
-    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
-    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
+    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id:string) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
+    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id:string) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
     const armor: Armor = {
         kind: "armor",
         ...base,
@@ -80,8 +80,8 @@ async function getVehicleById(id: string) {
     const searchResult = await prisma.vehicle.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const { ref_faq_id, ref_info_id, ...base } = searchResult;
-    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
-    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
+    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id:string) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
+    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id:string) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
     const vehicle: Vehicle = {
         kind: "vehicle",
         ...base,
@@ -113,8 +113,8 @@ async function getGeneralById(id: string) {
     if (!searchResult) return null;
     const { ref_weapon_id, ref_faq_id, ref_info_id, ...base } = searchResult;
     const ref_weapon: Weapon|null = ref_weapon_id ? await getWeaponById(ref_weapon_id) : null;
-    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
-    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
+    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id:string) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
+    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id:string) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
     const general: General = {
         kind: "general",
         ...base,
@@ -131,8 +131,8 @@ async function getDloisById(id: string) {
     if (!searchResult) return null;
     const { ref_power_id, ref_faq_id, ref_info_id, ...base } = searchResult;
     const ref_power: Power|null = ref_power_id ? await getPowerById(ref_power_id) : null;
-    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
-    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
+    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id:string) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
+    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id:string) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
     const dlois: Dlois = {
         kind: "dlois",
         ...base,
@@ -148,8 +148,8 @@ async function getEloisById(id: string) {
     const searchResult = await prisma.elois.findUnique({where: {id: id}});
     if (!searchResult) return null;
     const { ref_faq_id, ref_info_id, ...base } = searchResult;
-    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
-    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
+    const ref_faqs: Faq[]|null = ref_faq_id ? (await Promise.all(ref_faq_id.split(" ").map(async (id:string) => getFaqById(id)))).filter((faq:Faq|null) => faq !== null) : null;
+    const ref_infos: Info[]|null = ref_info_id ? (await Promise.all(ref_info_id.split(" ").map(async (id:string) => getInfoById(id)))).filter((info:Info|null) => info !== null) : null;
     const elois: Elois = {
         kind: "elois",
         ...base,
