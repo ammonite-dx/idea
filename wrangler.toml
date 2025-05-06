@@ -1,0 +1,7 @@
+name = "dx3rd-idea"
+compatibility_date = "2025-05-04"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "idea-db"
+database_id = "64a38857-c1bd-48ba-a940-33bee5260bc3"

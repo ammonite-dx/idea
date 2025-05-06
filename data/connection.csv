@@ -1,4 +1,4 @@
-id,supplement,category,name,ruby,type,skill,procure,procure_int,stock,stock_int,exp,exp_int,rec,flavor,effect,price,rec_effect,ref_faq_id,ref_info_id,update,other_ver_id,rel_power_id,rel_weapon_id,rel_armor_id,rel_vehicle_id,rel_connection_id,rel_general_id,rel_dlois_id,cost_order
+id,supplement,category,name,ruby,type,skill,procure,procure_int,stock,stock_int,exp,exp_int,rec,flavor,effect,price,rec_effect,ref_faq_id,ref_info_id,update_supplement,other_ver_id,rel_power_id,rel_weapon_id,rel_armor_id,rel_vehicle_id,rel_connection_id,rel_general_id,rel_dlois_id,cost_order
 基本1-コネ:UGN幹部,基本1,ジェネラルアイテム,コネ:UGN幹部,コネUGNカンフ,コネ,〈情報:UGN〉,購入不可,,1,1,,,,情報に通じたUGNの幹部。,〈情報:UGN〉の判定のダイスに+2個する。,,,,,IA,IA-コネ:UGN幹部,,,,,,,,1
 基本1-コネ:噂好きの友人,基本1,ジェネラルアイテム,コネ:噂好きの友人,コネウワサスキノユウシン,コネ,〈情報:噂話〉,購入不可,,1,1,,,,噂話を仕入れてくる友人。,〈情報:噂話〉の判定のダイスに+2個する。,,,,,IA,IA-コネ:噂好きの友人,,,,,,,,1
 基本1-コネ:警察官,基本1,ジェネラルアイテム,コネ:警察官,コネケイサツカン,コネ,〈情報:警察〉,購入不可,,1,1,,,,内部に顔が利く警察官。,〈情報:警察〉の判定のダイスに+2個する。,,,,,IA,IA-コネ:警察官,,,,,,,,1

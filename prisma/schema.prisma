@@ -30,7 +30,7 @@ model power {
   ref_armor_id        String?
   ref_faq_id       String?
   ref_info_id      String?
-  update              String?
+  update_supplement              String?
   other_ver_id        String?
   rel_power_id        String?
   rel_weapon_id       String?
@@ -74,7 +74,7 @@ model weapon {
   refed_power_id   String?
   refed_armor_id   String?
   refed_general_id String?
-  update           String?
+  update_supplement           String?
   other_ver_id     String?
   rel_power_id     String?
   rel_weapon_id    String?
@@ -115,7 +115,7 @@ model armor {
   ref_faq_id       String?
   ref_info_id      String?
   refed_power_id String?
-  update         String?
+  update_supplement         String?
   other_ver_id   String?
   rel_power_id   String?
   rel_weapon_id  String?
@@ -149,7 +149,7 @@ model connection {
   rec_effect  String?
   ref_faq_id       String?
   ref_info_id      String?
-  update      String?
+  update_supplement      String?
   other_ver_id String?
   rel_power_id String?
   rel_weapon_id String?
@@ -182,7 +182,7 @@ model general {
   ref_weapon_id String?
   ref_faq_id       String?
   ref_info_id      String?
-  update        String?
+  update_supplement        String?
   other_ver_id  String?
   rel_power_id  String?
   rel_weapon_id String?
@@ -224,7 +224,7 @@ model vehicle {
   rec_effect     String?
   ref_faq_id       String?
   ref_info_id      String?
-  update         String?
+  update_supplement         String?
   other_ver_id   String?
   rel_power_id   String?
   rel_weapon_id  String?
@@ -252,7 +252,7 @@ model dlois {
   ref_power_id        String?
   ref_faq_id       String?
   ref_info_id      String?
-  update              String?
+  update_supplement              String?
   other_ver_id        String?
   rel_power_id        String?
   rel_weapon_id       String?
@@ -284,11 +284,20 @@ model elois {
   effect              String
   ref_faq_id       String?
   ref_info_id      String?
-  update              String?
+  update_supplement              String?
   other_ver_id        String?
   rel_elois_id        String?
   type_order          Int
   urge_order          Int
+}
+
+model work {
+  id                  String @id
+  supplement          String
+  name                String
+  stat                String
+  skills              String
+  emblems             String?
 }
 
 model faq {
@@ -324,13 +333,4 @@ model favorite {
   user_id             String
   record_kind         String
   record_id           String
-}
-
-model works {
-  id                  String @id
-  supplement          String
-  name                String
-  stat                String
-  skills              String
-  emblems             String?
 }

@@ -22,7 +22,7 @@ const FILES = [
   "power",
   "vehicle",
   "weapon",
-  "works",
+  "work",
 ];
 
 // DMMF キャッシュ用

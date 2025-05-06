@@ -1,0 +1,15 @@
+// tsconfig.script.json
+{
+    "extends": "./tsconfig.json", // メインの tsconfig.json を継承
+    "ts-node": {
+      // ts-node 実行時のみ CommonJS として扱うようにする
+      "compilerOptions": {
+        "module": "CommonJS",
+        "moduleResolution": "Node" // CommonJS に合わせる場合は Node が無難
+      },
+      "transpileOnly": true // 型チェックはスキップして高速化 (任意)
+    },
+    "include": [
+      "scripts/**/*.ts" // スクリプトファイルが含まれるように指定 (パスは適宜調整)
+    ]
+  }

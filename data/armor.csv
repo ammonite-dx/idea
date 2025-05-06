@@ -1,4 +1,4 @@
-id,supplement,category,name,ruby,type,dodge,dodge_int,initiative,initiative_int,armor,armor_int,procure,procure_int,stock,stock_int,exp,exp_int,rec,flavor,effect,price,rec_effect,ref_weapon_id,ref_faq_id,ref_info_id,refed_power_id,update,other_ver_id,rel_power_id,rel_weapon_id,rel_armor_id,rel_vehicle_id,rel_connection_id,rel_general_id,rel_dlois_id,type_order,cost_order
+id,supplement,category,name,ruby,type,dodge,dodge_int,initiative,initiative_int,armor,armor_int,procure,procure_int,stock,stock_int,exp,exp_int,rec,flavor,effect,price,rec_effect,ref_weapon_id,ref_faq_id,ref_info_id,refed_power_id,update_supplement,other_ver_id,rel_power_id,rel_weapon_id,rel_armor_id,rel_vehicle_id,rel_connection_id,rel_general_id,rel_dlois_id,type_order,cost_order
 基本1-強化服,基本1,ジェネラルアイテム,強化服,キョウカフク,防具,0,0,0,0,1,1,5,5,1,1,,,,衝撃に強い繊維で作った服。見た目は普通の服と変わらない。,,,,,,,,IA,IA-強化服,,,,,,,,0,1
 基本1-レザージャケット,基本1,ジェネラルアイテム,レザージャケット,レサーシャケット,防具,0,0,0,0,2,2,7,7,4,4,,,,革製の頑丈なジャケット。オシャレにも気をつける人が好む。,,,,,,,,IA,IA-レザージャケット,,,,,,,,0,4
 基本1-防弾防刃ジャケット,基本1,ジェネラルアイテム,防弾防刃ジャケット,ホウタンホウシンシャケット,防具,0,0,0,0,3,3,10,10,6,6,,,,上着の下に着込むタイプの、特殊なベスト。軽量で効果の高い優秀な防具。,,,,,,,,IA,IA-防弾防刃ジャケット,,,,,,,,0,6

@@ -1,4 +1,4 @@
-id,supplement,category,type,name,ruby,maxlv,maxlv_int,timing,skill,dfclty,target,rng,encroach,restrict,premise,flavor,effect,ref_weapon_id,ref_armor_id,ref_faq_id,ref_info_id,update,other_ver_id,rel_power_id,rel_weapon_id,rel_armor_id,rel_vehicle_id,rel_connection_id,rel_general_id,rel_dlois_id,type_restrict_order
+id,supplement,category,type,name,ruby,maxlv,maxlv_int,timing,skill,dfclty,target,rng,encroach,restrict,premise,flavor,effect,ref_weapon_id,ref_armor_id,ref_faq_id,ref_info_id,update_supplement,other_ver_id,rel_power_id,rel_weapon_id,rel_armor_id,rel_vehicle_id,rel_connection_id,rel_general_id,rel_dlois_id,type_restrict_order
 基本1-神の眼,基本1,エンジェルハィロゥ,一般,神の眼,カミノメ,1,1,リアクション,〈知覚〉,対決,自身,至近,2,—,,全知覚を使って攻撃を避けるエフェクト。,このエフェクトを組み合わせた判定で、あなたはドッジを行なえる。,,,,,EA,EA-神の眼,,,,,,,,0
 基本1-幻惑の光,基本1,エンジェルハィロゥ,一般,幻惑の光,ケンワクノヒカリ,1,1,メジャーアクション,〈RC〉,対決,—,視界,2,—,,光の信号によって、運動能力を低下させる催眠術をかけるエフェクト。,射撃攻撃を行なう。命中した場合、対象にバッドステータスの放心を与える。,,,,,EA,EA-幻惑の光,,,,,,,,0
 基本1-光芒の疾走,基本1,エンジェルハィロゥ,一般,光芒の疾走,コウホウノシッソウ,3,3,マイナーアクション,—,自動成功,自身,至近,1,—,,弱い光によって目くらましをかけ、その隙に移動するエフェクト。,あなたは戦闘移動を行なう。この移動では、離脱を行なえる。また、移動中に他のエンゲージに接触しても移動を終える必要はなく、封鎖の影響も受けない。このエフェクトは1シーンにLV回まで使用できる。,,,19,,EA,EA-光芒の疾走,,,,,,,,0

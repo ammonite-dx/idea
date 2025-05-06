@@ -1,4 +1,4 @@
-id,supplement,category,name,ruby,type,skill,atk,atk_int,initiative,initiative_int,armor,armor_int,dash,dash_int,procure,procure_int,stock,stock_int,exp,exp_int,rec,flavor,effect,price,rec_effect,ref_faq_id,ref_info_id,update,other_ver_id,rel_power_id,rel_weapon_id,rel_armor_id,rel_vehicle_id,rel_connection_id,rel_general_id,rel_dlois_id,cost_order
+id,supplement,category,name,ruby,type,skill,atk,atk_int,initiative,initiative_int,armor,armor_int,dash,dash_int,procure,procure_int,stock,stock_int,exp,exp_int,rec,flavor,effect,price,rec_effect,ref_faq_id,ref_info_id,update_supplement,other_ver_id,rel_power_id,rel_weapon_id,rel_armor_id,rel_vehicle_id,rel_connection_id,rel_general_id,rel_dlois_id,cost_order
 基本1-自転車,基本1,ジェネラルアイテム,自転車,シテンシャ,ヴィークル,〈運転:二輪〉,2,2,−1,,—,0,[【肉体】+40]m,,5,5,1,1,,,,ママチャリからMTBまで。愛用者は全国にいる。,,,,,,IA,IA-自転車,,,,,,,,1
 基本1-バイク,基本1,ジェネラルアイテム,バイク,ハイク,ヴィークル,〈運転:二輪〉,5,5,−3,,—,0,200m,200,12,12,5,5,,,,125~400cc、いわゆる中型バイクに区分される。,,,,,,IA,IA-バイク,,,,,,,,5
 基本1-乗用車,基本1,ジェネラルアイテム,乗用車,ショウヨウシャ,ヴィークル,〈運転:四輪〉,10,10,−4,,6,6,100m,100,22,22,8,8,,,,典型的な乗用車。ナンバーでも覚えない限り、特定は難しい。,,,,,,IA,IA-乗用車,,,,,,,,8
