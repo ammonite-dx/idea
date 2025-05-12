@@ -328,7 +328,9 @@ async function searchWorks(searchParams: { [key: string]: string | string[] | un
       },
     }),
   }).then((res) => res.json());
+  console.log("response: ", fetchResults);
   const works: {[key: string]: Work[]} = { "ワークス": (await Promise.all(fetchResults.map(async (fetchResult: WorkFetchResult) => parseFetchResult("work", fetchResult)))).filter((record) => record !== null) as Work[] };
+  console.log("works: ", works);
   return works;
 }
 
