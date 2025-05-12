@@ -17,8 +17,8 @@ export default async function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning>
       <body className={`${inter.className}`}>
-          <Header />
-          <main className="max-w-9xl mx-auto p-4 lg:p-8">{children}</main>
+        <Header />
+        <main className="max-w-9xl mx-auto p-4 lg:p-8">{children}</main>
       </body>
     </html>
   )

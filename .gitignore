@@ -45,6 +45,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# cloudflare pagesのビルド用に、ロックファイルを自動生成させる
-package-lock.json

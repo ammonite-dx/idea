@@ -1,5 +1,8 @@
-import type { NextConfig } from "next";
-import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev';
+import type { NextConfig } from 'next';
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
+import webpack from 'webpack';
+
+initOpenNextCloudflareForDev();
 
 const nextConfig: NextConfig = {};
 
