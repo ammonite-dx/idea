@@ -343,7 +343,7 @@ function powerWhereCondition(searchParams: { [key: string]: string | string[] | 
     {OR: toArray(searchParams["supplement"], POWER_SUPPLEMENTS).map(supplement => ({supplement: supplement}))},
     {OR: [
       {update_supplement: null},
-      {NOT: toArray(searchParams["supplement"], POWER_SUPPLEMENTS).map(supplement => ({update: {contains: supplement}}))}
+      {NOT: toArray(searchParams["supplement"], POWER_SUPPLEMENTS).map(supplement => ({update_supplement: {contains: supplement}}))}
     ]},
     {name: {contains: toString(searchParams["name"], "")}},
     {OR: [
@@ -368,7 +368,7 @@ function itemWhereCondition(searchParams: { [key: string]: string | string[] | u
     { OR: toArray(searchParams["supplement"], ITEM_SUPPLEMENTS).map(supplement => ({ supplement: supplement })) },
     { OR: [
         { update_supplement: null },
-        { NOT: toArray(searchParams["supplement"], ITEM_SUPPLEMENTS).map(supplement => ({ update: { contains: supplement } })) }
+        { NOT: toArray(searchParams["supplement"], ITEM_SUPPLEMENTS).map(supplement => ({ update_supplement: { contains: supplement } })) }
     ] },
     (searchParams["procure"]==null && searchParams["stock"]==null && searchParams["exp"]==null) ? {}
     : (searchParams["procure"]!=null && searchParams["stock"]==null && searchParams["exp"]==null) ? {AND: [{procure_int: {lte: parseInt(toString(searchParams["procure"], "0"))}}, {exp_int: null}]} 
@@ -437,7 +437,7 @@ function dloisWhereCondition(searchParams: { [key: string]: string | string[] | 
       {OR: toArray(searchParams["supplement"], DLOIS_SUPPLEMENTS).map(supplement => ({supplement: supplement}))},
       {OR: [
         {update_supplement: null},
-        {NOT: toArray(searchParams["supplement"], DLOIS_SUPPLEMENTS).map(supplement => ({update: {contains: supplement}}))}
+        {NOT: toArray(searchParams["supplement"], DLOIS_SUPPLEMENTS).map(supplement => ({update_supplement: {contains: supplement}}))}
       ]},
       {OR: toArray(searchParams["type"], DLOIS_TYPES).map(type => ({type: type}))},
       {name: {contains: toString(searchParams["name"], "")}},
@@ -452,7 +452,7 @@ function eloisWhereCondition(searchParams: { [key: string]: string | string[] | 
     {OR: toArray(searchParams["supplement"], ELOIS_SUPPLEMENTS).map(supplement => ({supplement: supplement}))},
     {OR: [
       {update_supplement: null},
-      {NOT: toArray(searchParams["supplement"], ELOIS_SUPPLEMENTS).map(supplement => ({update: {contains: supplement}}))}
+      {NOT: toArray(searchParams["supplement"], ELOIS_SUPPLEMENTS).map(supplement => ({update_supplement: {contains: supplement}}))}
     ]},
     {OR: toArray(searchParams["type"], ELOIS_TYPES).map(type => ({type: type}))},
     {name: {contains: toString(searchParams["name"], "")}},
