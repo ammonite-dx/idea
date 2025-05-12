@@ -1,9 +1,12 @@
-"use client";
 
-import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
+// "use client";
+
+// import { useState, useEffect } from "react";
+
 
 export default function FavoriteButton({ recordKind, recordId }: { recordKind:string, recordId:string }) {
+  console.log("FavoriteButton", recordKind, recordId);
+  /*
   const { data: session } = useSession();
   const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -43,10 +46,11 @@ export default function FavoriteButton({ recordKind, recordId }: { recordKind:st
 
   if (!session) return null;
   if (loading) return <span>...</span>;
+  */
 
   return (
-    <button onClick={toggleFavorite} className="base-text p-0">
-      {isFavorite ? <div className="w-[2ch] text-right">★</div> : <div className="w-[2ch] text-right">☆</div>}
+    <button className="base-text p-0">
+      <div className="w-[2ch] text-right">☆</div>
     </button>
   );
 }

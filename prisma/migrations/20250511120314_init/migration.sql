@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "power" (
+CREATE TABLE "Power" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "supplement" TEXT NOT NULL,
     "category" TEXT NOT NULL,
@@ -14,7 +14,6 @@ CREATE TABLE "power" (
     "target" TEXT NOT NULL,
     "rng" TEXT NOT NULL,
     "encroach" TEXT NOT NULL,
-    "encroach_int" INTEGER,
     "restrict" TEXT NOT NULL,
     "premise" TEXT,
     "flavor" TEXT,
@@ -36,7 +35,7 @@ CREATE TABLE "power" (
 );
 
 -- CreateTable
-CREATE TABLE "weapon" (
+CREATE TABLE "Weapon" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "supplement" TEXT NOT NULL,
     "category" TEXT NOT NULL,
@@ -82,7 +81,7 @@ CREATE TABLE "weapon" (
 );
 
 -- CreateTable
-CREATE TABLE "armor" (
+CREATE TABLE "Armor" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "supplement" TEXT NOT NULL,
     "category" TEXT NOT NULL,
@@ -124,7 +123,7 @@ CREATE TABLE "armor" (
 );
 
 -- CreateTable
-CREATE TABLE "connection" (
+CREATE TABLE "Connection" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "supplement" TEXT NOT NULL,
     "category" TEXT NOT NULL,
@@ -158,7 +157,7 @@ CREATE TABLE "connection" (
 );
 
 -- CreateTable
-CREATE TABLE "general" (
+CREATE TABLE "General" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "supplement" TEXT NOT NULL,
     "category" TEXT NOT NULL,
@@ -193,7 +192,7 @@ CREATE TABLE "general" (
 );
 
 -- CreateTable
-CREATE TABLE "vehicle" (
+CREATE TABLE "Vehicle" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "supplement" TEXT NOT NULL,
     "category" TEXT NOT NULL,
@@ -235,7 +234,7 @@ CREATE TABLE "vehicle" (
 );
 
 -- CreateTable
-CREATE TABLE "dlois" (
+CREATE TABLE "Dlois" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "supplement" TEXT NOT NULL,
     "no" TEXT NOT NULL,
@@ -268,7 +267,7 @@ CREATE TABLE "dlois" (
 );
 
 -- CreateTable
-CREATE TABLE "elois" (
+CREATE TABLE "Elois" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "supplement" TEXT NOT NULL,
     "type" TEXT NOT NULL,
@@ -292,7 +291,17 @@ CREATE TABLE "elois" (
 );
 
 -- CreateTable
-CREATE TABLE "faq" (
+CREATE TABLE "Work" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "supplement" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "stat" TEXT NOT NULL,
+    "skills" TEXT NOT NULL,
+    "emblems" TEXT
+);
+
+-- CreateTable
+CREATE TABLE "Faq" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "q" TEXT NOT NULL,
     "a" TEXT NOT NULL,
@@ -307,7 +316,7 @@ CREATE TABLE "faq" (
 );
 
 -- CreateTable
-CREATE TABLE "info" (
+CREATE TABLE "Info" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "content" TEXT NOT NULL,
@@ -322,9 +331,9 @@ CREATE TABLE "info" (
 );
 
 -- CreateTable
-CREATE TABLE "favorite" (
+CREATE TABLE "Favorite" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "user_id" TEXT NOT NULL,
-    "data_kind" TEXT NOT NULL,
-    "data_id" TEXT NOT NULL
+    "record_kind" TEXT NOT NULL,
+    "record_id" TEXT NOT NULL
 );

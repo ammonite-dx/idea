@@ -1,5 +1,4 @@
 import Link from "next/link"
-import FavoriteRecords from "@/features/main/FavoriteRecords"
 
 export const runtime = 'edge'
 
@@ -17,13 +16,6 @@ export default function Home() {
         <HomeLink href="/search/elois" label="Eロイスアーカイブ" />
         <HomeLink href="/search/work" label="ワークスアーカイブ" />
       </div>
-
-      {/* お気に入りレコード */}
-      <section>
-        <h2 className="headline-text font-bold">お気に入り</h2>
-        <hr className="border-neutral-900 dark:border-neutral-200 mb-4"/>
-        <FavoriteRecords />
-      </section>
     </div>
   )
 }

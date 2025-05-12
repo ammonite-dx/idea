@@ -1,5 +1,4 @@
-import prisma from '@/lib/prisma';
-import getRecordById from './getRecordById';
+import parseFetchResult from './parseFetchResult';
 import { toArray, toString } from '@/utils/utils';
 import { POWER_CATEGORIES, POWER_TYPES, POWER_SUPPLEMENTS, POWER_TIMINGS, POWER_SKILLS, POWER_DFCLTIES, POWER_TARGETS, POWER_RNGS, POWER_ENCROACHES, POWER_RESTRICTS } from '@/consts/power';
 import { ITEM_CATEGORIES, ITEM_SUPPLEMENTS } from '@/consts/item';
@@ -11,7 +10,7 @@ import { GENERAL_TYPES } from '@/consts/general';
 import { DLOIS_TYPES, DLOIS_RESTRICTS, DLOIS_SUPPLEMENTS } from '@/consts/dlois';
 import { ELOIS_TYPES, ELOIS_SUPPLEMENTS, ELOIS_TIMINGS, ELOIS_SKILLS, ELOIS_DFCLTIES, ELOIS_TARGETS, ELOIS_RNGS, ELOIS_URGES } from '@/consts/elois';
 import { WORK_SUPPLEMENTS, WORK_STATS, WORK_SKILLS } from '@/consts/work';
-import { TypeMap, Power, Item, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work } from '@/types/types';
+import { TypeMap, Power, Item, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work, PowerFetchResult, WeaponFetchResult, ArmorFetchResult, VehicleFetchResult, ConnectionFetchResult, GeneralFetchResult, DloisFetchResult, EloisFetchResult, WorkFetchResult } from '@/types/types';
 
 export default async function searchRecords<K extends keyof TypeMap>(
   kind: K,
@@ -33,21 +32,31 @@ export default async function searchRecords<K extends keyof TypeMap>(
 
 // エフェクト
 async function searchPowers(searchParams: { [key: string]: string | string[] | undefined }) {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+  const apiUrl = `${baseUrl}/api/prisma`;
   const powers: {[key: string]: Power[]} = Object.fromEntries(await Promise.all(toArray(searchParams["category"], POWER_CATEGORIES).map(async category => {
-    const searchCondition = {
-      where: {
-        AND: [
-          {category: category},
-          powerWhereCondition(searchParams),
-        ].flat()
-      },
-      orderBy: [
-        {type_restrict_order: 'asc' as const},
-        {ruby: 'asc' as const},
-      ],
-    };
-    const searchResultsInCategory = await prisma.power.findMany(searchCondition);
-    const powersInCategory = (await Promise.all(searchResultsInCategory.map(async searchResult => getRecordById("power", searchResult.id)))).filter((power) => power !== null);
+    const fetchResultsInCategory = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: "power",
+            findOptions: {
+              where: {
+                AND: [
+                  {category: category},
+                  powerWhereCondition(searchParams),
+                ].flat()
+              },
+              orderBy: [
+                {type_restrict_order: 'asc' as const},
+                {ruby: 'asc' as const},
+              ],
+            },
+        }),
+    }).then((res) => res.json());
+    const powersInCategory = (await Promise.all(fetchResultsInCategory.map(async (fetchResult: PowerFetchResult) => parseFetchResult("power", fetchResult)))).filter((record) => record !== null) as Power[];
     return [category, powersInCategory];
   })));
   return powers;
@@ -82,23 +91,33 @@ async function searchItems(searchParams: { [key: string]: string | string[] | un
 
 // 武器
 async function searchWeapons(searchParams: { [key: string]: string | string[] | undefined }) {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+  const apiUrl = `${baseUrl}/api/prisma`;
   const weapons: { [key: string]: Weapon[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const searchCondition = {
-      where: {
-        AND: [
-          {category: category},
-          itemWhereCondition(searchParams),
-          weaponWhereCondition(searchParams),
-        ].flat()
+    const fetchResultsInCategory = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      orderBy: [
-        {type_order: "asc" as const},
-        {cost_order: "asc" as const},
-        {ruby: "asc" as const}
-      ],
-    };
-    const searchResultsInCategory = await prisma.weapon.findMany(searchCondition);
-    const weaponsInCategory = (await Promise.all(searchResultsInCategory.map(async searchResult => getRecordById("weapon", searchResult.id)))).filter((weapon) => weapon !== null);
+      body: JSON.stringify({
+        model: "weapon",
+        findOptions: {
+          where: {
+            AND: [
+              {category: category},
+              itemWhereCondition(searchParams),
+              weaponWhereCondition(searchParams),
+            ].flat()
+          },
+          orderBy: [
+            {type_order: "asc" as const},
+            {cost_order: "asc" as const},
+            {ruby: "asc" as const}
+          ],
+        },
+      }),
+    }).then((res) => res.json());
+    const weaponsInCategory = (await Promise.all(fetchResultsInCategory.map(async (fetchResult: WeaponFetchResult) => parseFetchResult("weapon", fetchResult)))).filter((record) => record !== null) as Weapon[];
     return [category, weaponsInCategory]
   })));
   return weapons;
@@ -106,23 +125,33 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
 
 // 防具
 async function searchArmors(searchParams: { [key: string]: string | string[] | undefined }) {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+  const apiUrl = `${baseUrl}/api/prisma`;
   const armors: { [key: string]: Armor[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const searchCondition = {
-      where: {
-        AND: [
-          {category: category},
-          itemWhereCondition(searchParams),
-          armorWhereCondition(searchParams),
-        ].flat()
+    const fetchResultsInCategory = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      orderBy: [
-        {type_order: "asc" as const},
-        {cost_order: "asc" as const},
-        {ruby: "asc" as const}
-      ],
-    };
-    const searchResultsInCategory = await prisma.armor.findMany(searchCondition);
-    const armorsInCategory = (await Promise.all(searchResultsInCategory.map(async searchResult => getRecordById("armor", searchResult.id)))).filter((armor) => armor !== null);
+      body: JSON.stringify({
+        model: "armor",
+        findOptions: {
+          where: {
+            AND: [
+              {category: category},
+              itemWhereCondition(searchParams),
+              armorWhereCondition(searchParams),
+            ].flat()
+          },
+          orderBy: [
+            {type_order: "asc" as const},
+            {cost_order: "asc" as const},
+            {ruby: "asc" as const}
+          ],
+        },
+      }),
+    }).then((res) => res.json());
+    const armorsInCategory = (await Promise.all(fetchResultsInCategory.map(async (fetchResult: ArmorFetchResult) => parseFetchResult("armor", fetchResult)))).filter((record) => record !== null) as Armor[];
     return [category, armorsInCategory]
   })));
   return armors;
@@ -130,22 +159,32 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
 
 // ヴィークル
 async function searchVehicles(searchParams: { [key: string]: string | string[] | undefined }) {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+  const apiUrl = `${baseUrl}/api/prisma`;
   const vehicles: { [key: string]: Vehicle[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const searchCondition = {
-      where: {
-        AND: [
-          {category: category},
-          itemWhereCondition(searchParams),
-          vehicleWhereCondition(searchParams),
-        ].flat()
+    const fetchResultsInCategory = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      orderBy: [
-        {cost_order: "asc" as const},
-        {ruby: "asc" as const}
-      ],
-    };
-    const searchResultsInCategory = await prisma.vehicle.findMany(searchCondition);
-    const vehiclesInCategory = (await Promise.all(searchResultsInCategory.map(async searchResult => getRecordById("vehicle", searchResult.id)))).filter((vehicle) => vehicle !== null);
+      body: JSON.stringify({
+        model: "vehicle",
+        findOptions: {
+          where: {
+            AND: [
+              {category: category},
+              itemWhereCondition(searchParams),
+              vehicleWhereCondition(searchParams),
+            ].flat()
+          },
+          orderBy: [
+            {cost_order: "asc" as const},
+            {ruby: "asc" as const}
+          ],
+        },
+      }),
+    }).then((res) => res.json());
+    const vehiclesInCategory = (await Promise.all(fetchResultsInCategory.map(async (fetchResult: VehicleFetchResult) => parseFetchResult("vehicle", fetchResult)))).filter((record) => record !== null) as Vehicle[];
     return [category, vehiclesInCategory]
   })));
   return vehicles;
@@ -153,22 +192,32 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
 
 // コネ
 async function searchConnections(searchParams: { [key: string]: string | string[] | undefined }) {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+  const apiUrl = `${baseUrl}/api/prisma`;
   const connections: { [key: string]: Connection[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const searchCondition = {
-      where: {
-        AND: [
-          {category: category},
-          itemWhereCondition(searchParams),
-          connectionWhereCondition(searchParams),
-        ].flat()
+    const fetchResultsInCategory = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      orderBy: [
-        {cost_order: "asc" as const},
-        {ruby: "asc" as const}
-      ],
-    };
-    const searchResultsInCategory = await prisma.connection.findMany(searchCondition);
-    const connectionsInCategory = (await Promise.all(searchResultsInCategory.map(async searchResult => getRecordById("connection", searchResult.id)))).filter((connection) => connection !== null);
+      body: JSON.stringify({
+        model: "connection",
+        findOptions: {
+          where: {
+            AND: [
+              {category: category},
+              itemWhereCondition(searchParams),
+              connectionWhereCondition(searchParams),
+            ].flat()
+          },
+          orderBy: [
+            {cost_order: "asc" as const},
+            {ruby: "asc" as const}
+          ],
+        },
+      }),
+    }).then((res) => res.json());
+    const connectionsInCategory = (await Promise.all(fetchResultsInCategory.map(async (fetchResult: ConnectionFetchResult) => parseFetchResult("connection", fetchResult)))).filter((record) => record !== null) as Connection[];
     return [category, connectionsInCategory]
   })));
   return connections;
@@ -176,23 +225,33 @@ async function searchConnections(searchParams: { [key: string]: string | string[
 
 // 一般アイテム
 async function searchGenerals(searchParams: { [key: string]: string | string[] | undefined }) {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+  const apiUrl = `${baseUrl}/api/prisma`;
   const generals: { [key: string]: General[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const searchCondition = {
-      where: {
-        AND: [
-          {category: category},
-          itemWhereCondition(searchParams),
-          generalWhereCondition(searchParams),
-        ].flat()
+    const fetchResultsInCategory = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      orderBy: [
-        {type_order: "asc" as const},
-        {cost_order: "asc" as const},
-        {ruby: "asc" as const}
-      ],
-    };
-    const searchResultsInCategory = await prisma.general.findMany(searchCondition);
-    const generalsInCategory = (await Promise.all(searchResultsInCategory.map(async searchResult => getRecordById("general", searchResult.id)))).filter((general) => general !== null);
+      body: JSON.stringify({
+        model: "general",
+        findOptions: {
+          where: {
+            AND: [
+              {category: category},
+              itemWhereCondition(searchParams),
+              generalWhereCondition(searchParams),
+            ].flat()
+          },
+          orderBy: [
+            {type_order: "asc" as const},
+            {cost_order: "asc" as const},
+            {ruby: "asc" as const}
+          ],
+        },
+      }),
+    }).then((res) => res.json());
+    const generalsInCategory = (await Promise.all(fetchResultsInCategory.map(async (fetchResult: GeneralFetchResult) => parseFetchResult("general", fetchResult)))).filter((record) => record !== null) as General[];
     return [category, generalsInCategory]
   })));
   return generals;
@@ -200,46 +259,76 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
 
 // Dロイス
 async function searchDloises(searchParams: { [key: string]: string | string[] | undefined }) {
-  const searchCondition = {
-    where: {
-      AND: dloisWhereCondition(searchParams),
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+  const apiUrl = `${baseUrl}/api/prisma`;
+  const fetchResults = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
-    orderBy: [
-      {type_order: "asc" as const},
-      {restrict_order: "asc" as const},
-      {no: "asc" as const}
-    ],
-  };
-  const searchResults = await prisma.dlois.findMany(searchCondition);
-  const dloises: { [key: string]: Dlois[] } = { "Dロイス": (await Promise.all(searchResults.map(async searchResult => getRecordById("dlois", searchResult.id)))).filter((dlois) => dlois !== null) };
+    body: JSON.stringify({
+      model: "dlois",
+      findOptions: {
+        where: {
+          AND: dloisWhereCondition(searchParams),
+        },
+        orderBy: [
+          {type_order: "asc" as const},
+          {restrict_order: "asc" as const},
+          {no: "asc" as const}
+        ],
+      },
+    }),
+  }).then((res) => res.json());
+  const dloises: {[key: string]: Dlois[]} = { "Dロイス": (await Promise.all(fetchResults.map(async (fetchResult: DloisFetchResult) => parseFetchResult("dlois", fetchResult)))).filter((record) => record !== null) as Dlois[] };
   return dloises;
 }
 
 // Eロイス
 async function searchEloises(searchParams: { [key: string]: string | string[] | undefined }) {
-  const searchCondition = {
-    where: {
-      AND: eloisWhereCondition(searchParams),
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+  const apiUrl = `${baseUrl}/api/prisma`;
+  const fetchResults = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
-    orderBy: [
-      {urge_order: "asc" as const},
-      {type_order: "asc" as const},
-    ],
-  };
-  const searchResults = await prisma.elois.findMany(searchCondition);
-  const eloises: { [key: string]: Elois[] } = { "Eロイス": (await Promise.all(searchResults.map(async searchResult => getRecordById("elois", searchResult.id)))).filter((elois) => elois !== null) };
+    body: JSON.stringify({
+      model: "elois",
+      findOptions: {
+        where: {
+          AND: eloisWhereCondition(searchParams),
+        },
+        orderBy: [
+          {urge_order: "asc" as const},
+          {type_order: "asc" as const},
+        ],
+      },
+    }),
+  }).then((res) => res.json());
+  const eloises: {[key: string]: Elois[]} = { "Eロイス": (await Promise.all(fetchResults.map(async (fetchResult: EloisFetchResult) => parseFetchResult("elois", fetchResult)))).filter((record) => record !== null) as Elois[] };
   return eloises;
 }
 
 // ワークス
 async function searchWorks(searchParams: { [key: string]: string | string[] | undefined }) {
-  const searchCondition = {
-    where: {
-      AND: workWhereCondition(searchParams),
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+  const apiUrl = `${baseUrl}/api/prisma`;
+  const fetchResults = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
-  };
-  const searchResults = await prisma.works.findMany(searchCondition);
-  const works: { [key:string]: Work[] } = { "ワークス": (await Promise.all(searchResults.map(async searchResult => getRecordById("work", searchResult.id)))).filter((work) => work !== null) };
+    body: JSON.stringify({
+      model: "work",
+      findOptions: {
+        where: {
+          AND: workWhereCondition(searchParams),
+        },
+      },
+    }),
+  }).then((res) => res.json());
+  const works: {[key: string]: Work[]} = { "ワークス": (await Promise.all(fetchResults.map(async (fetchResult: WorkFetchResult) => parseFetchResult("work", fetchResult)))).filter((record) => record !== null) as Work[] };
   return works;
 }
 

@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -7,7 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model power {
+model Power {
   id                  String  @id
   supplement          String
   category            String
@@ -42,7 +43,7 @@ model power {
   type_restrict_order Int
 }
 
-model weapon {
+model Weapon {
   id               String  @id
   supplement       String
   category         String
@@ -87,7 +88,7 @@ model weapon {
   cost_order       Int
 }
 
-model armor {
+model Armor {
   id             String  @id
   supplement     String
   category       String
@@ -128,7 +129,7 @@ model armor {
   cost_order     Int
 }
 
-model connection {
+model Connection {
   id          String  @id
   supplement  String
   category    String
@@ -161,7 +162,7 @@ model connection {
   cost_order  Int
 }
 
-model general {
+model General {
   id            String  @id
   supplement    String
   category      String
@@ -195,7 +196,7 @@ model general {
   cost_order    Int
 }
 
-model vehicle {
+model Vehicle {
   id             String  @id
   supplement     String
   category       String
@@ -236,7 +237,7 @@ model vehicle {
   cost_order     Int
 }
 
-model dlois {
+model Dlois {
   id                  String @id
   supplement          String
   no                  String
@@ -268,7 +269,7 @@ model dlois {
   restrict_order      Int
 }
 
-model elois {
+model Elois {
   id                  String @id
   supplement          String
   type                String
@@ -291,7 +292,16 @@ model elois {
   urge_order          Int
 }
 
-model faq {
+model Work {
+  id                  String @id
+  supplement          String
+  name                String
+  stat                String
+  skills              String
+  emblems             String?
+}
+
+model Faq {
   id                  String @id
   q                   String
   a                   String
@@ -305,7 +315,7 @@ model faq {
   refed_elois_id        String?
 }
 
-model info {
+model Info {
   id                  String @id
   title               String
   content             String
@@ -319,18 +329,9 @@ model info {
   refed_elois_id        String?
 }
 
-model favorite {
+model Favorite {
   id                  String @id @default(cuid())
   user_id             String
   record_kind         String
   record_id           String
-}
-
-model works {
-  id                  String @id
-  supplement          String
-  name                String
-  stat                String
-  skills              String
-  emblems             String?
 }
