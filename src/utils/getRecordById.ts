@@ -5,7 +5,9 @@ export default async function getRecordById<K extends keyof TypeMap>(
     kind: K,
     id: string
 ): Promise<TypeMap[K] | null> {
-    const fetchResult = await fetch('/api/prisma', {
+    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/prisma`;
+    const fetchResult = await fetch(apiUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
