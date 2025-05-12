@@ -342,7 +342,7 @@ function powerWhereCondition(searchParams: { [key: string]: string | string[] | 
     {OR: toArray(searchParams["type"], POWER_TYPES).map(type => ({type: type}))},
     {OR: toArray(searchParams["supplement"], POWER_SUPPLEMENTS).map(supplement => ({supplement: supplement}))},
     {OR: [
-      {update: null},
+      {update_supplement: null},
       {NOT: toArray(searchParams["supplement"], POWER_SUPPLEMENTS).map(supplement => ({update: {contains: supplement}}))}
     ]},
     {name: {contains: toString(searchParams["name"], "")}},
@@ -367,7 +367,7 @@ function itemWhereCondition(searchParams: { [key: string]: string | string[] | u
     { name: { contains: toString(searchParams["name"], "") } },
     { OR: toArray(searchParams["supplement"], ITEM_SUPPLEMENTS).map(supplement => ({ supplement: supplement })) },
     { OR: [
-        { update: null },
+        { update_supplement: null },
         { NOT: toArray(searchParams["supplement"], ITEM_SUPPLEMENTS).map(supplement => ({ update: { contains: supplement } })) }
     ] },
     (searchParams["procure"]==null && searchParams["stock"]==null && searchParams["exp"]==null) ? {}
@@ -436,7 +436,7 @@ function dloisWhereCondition(searchParams: { [key: string]: string | string[] | 
   return [
       {OR: toArray(searchParams["supplement"], DLOIS_SUPPLEMENTS).map(supplement => ({supplement: supplement}))},
       {OR: [
-        {update: null},
+        {update_supplement: null},
         {NOT: toArray(searchParams["supplement"], DLOIS_SUPPLEMENTS).map(supplement => ({update: {contains: supplement}}))}
       ]},
       {OR: toArray(searchParams["type"], DLOIS_TYPES).map(type => ({type: type}))},
@@ -451,7 +451,7 @@ function eloisWhereCondition(searchParams: { [key: string]: string | string[] | 
   return [
     {OR: toArray(searchParams["supplement"], ELOIS_SUPPLEMENTS).map(supplement => ({supplement: supplement}))},
     {OR: [
-      {update: null},
+      {update_supplement: null},
       {NOT: toArray(searchParams["supplement"], ELOIS_SUPPLEMENTS).map(supplement => ({update: {contains: supplement}}))}
     ]},
     {OR: toArray(searchParams["type"], ELOIS_TYPES).map(type => ({type: type}))},

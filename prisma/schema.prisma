@@ -29,9 +29,9 @@ model Power {
   effect              String?
   ref_weapon_id       String?
   ref_armor_id        String?
-  ref_faq_id       String?
-  ref_info_id      String?
-  update              String?
+  ref_faq_id          String?
+  ref_info_id         String?
+  update_supplement   String?
   other_ver_id        String?
   rel_power_id        String?
   rel_weapon_id       String?
@@ -75,7 +75,7 @@ model Weapon {
   refed_power_id   String?
   refed_armor_id   String?
   refed_general_id String?
-  update           String?
+  update_supplement   String?
   other_ver_id     String?
   rel_power_id     String?
   rel_weapon_id    String?
@@ -116,7 +116,7 @@ model Armor {
   ref_faq_id       String?
   ref_info_id      String?
   refed_power_id String?
-  update         String?
+  update_supplement   String?
   other_ver_id   String?
   rel_power_id   String?
   rel_weapon_id  String?
@@ -150,7 +150,7 @@ model Connection {
   rec_effect  String?
   ref_faq_id       String?
   ref_info_id      String?
-  update      String?
+  update_supplement   String?
   other_ver_id String?
   rel_power_id String?
   rel_weapon_id String?
@@ -183,7 +183,7 @@ model General {
   ref_weapon_id String?
   ref_faq_id       String?
   ref_info_id      String?
-  update        String?
+  update_supplement   String?
   other_ver_id  String?
   rel_power_id  String?
   rel_weapon_id String?
@@ -225,7 +225,7 @@ model Vehicle {
   rec_effect     String?
   ref_faq_id       String?
   ref_info_id      String?
-  update         String?
+  update_supplement   String?
   other_ver_id   String?
   rel_power_id   String?
   rel_weapon_id  String?
@@ -253,7 +253,7 @@ model Dlois {
   ref_power_id        String?
   ref_faq_id       String?
   ref_info_id      String?
-  update              String?
+  update_supplement   String?
   other_ver_id        String?
   rel_power_id        String?
   rel_weapon_id       String?
@@ -285,7 +285,7 @@ model Elois {
   effect              String
   ref_faq_id       String?
   ref_info_id      String?
-  update              String?
+  update_supplement   String?
   other_ver_id        String?
   rel_elois_id        String?
   type_order          Int
