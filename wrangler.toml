@@ -3,14 +3,6 @@ compatibility_date = "2025-04-25"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
 
-[vars]
-NEXT_PUBLIC_DISCORD_CLIENT_ID = "1358085922570240191"
-REQUIRED_GUILD_ID = "1358094185848246363"
-NEXT_PUBLIC_DISCORD_REDIRECT_URI = "https://dx3rd-idea.pages.dev/auth/discord/callback"
-CLOUDFLARE_ACCOUNT_ID = "f8c21d8c7cb9d4350aeca7ff9dcd8bc4"
-CLOUDFLARE_DATABASE_ID = "64a38857-c1bd-48ba-a940-33bee5260bc3"
-CLOUDFLARE_D1_TOKEN = "F2S8jDd3YBdJlQ2FsYkaYVz-KkuV0FKQlhmJYm1y"
-
 [[d1_databases]]
 binding = "DB"
 database_name = "idea-db"
