@@ -136,10 +136,12 @@ async function parseElois(searchResult: unknown): Promise<Elois> {
 }
 
 async function parseWork(searchResult: unknown): Promise<Work> {
-    const { ...base } = searchResult as WorkFetchResult;
+    const { skills, emblems, ...base } = searchResult as WorkFetchResult;
     const work: Work = {
         kind: "work",
         ...base,
+        skills: skills.split(" "),
+        emblems: emblems ? emblems.split(" ") : [],
     };
     return work;
 }

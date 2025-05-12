@@ -516,8 +516,8 @@ export type WorkFetchResult = {
     supplement: string,
     name: string,
     stat: string,
-    skills: string[],
-    emblems: string[] | null,
+    skills: string,
+    emblems: string | null,
 }
 
 export type FaqFetchResult = {
