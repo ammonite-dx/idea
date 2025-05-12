@@ -17,11 +17,11 @@ export default async function searchRecords<K extends keyof TypeMap>(
   searchParams:{ [key:string]:string|string[] | undefined } 
 ): Promise<{ [key: string]: TypeMap[K][] } | null> {
   switch (kind) {
-    case "power": return searchPowers(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
-    case "item": return searchItems(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
-    case "dlois": return searchDloises(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
-    case "elois": return searchEloises(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
-    case "work": return searchWorks(searchParams) as Promise<{ [key: string]: TypeMap[K][] }>;
+    case "power": return await searchPowers(searchParams) as { [key: string]: TypeMap[K][] };
+    case "item": return await searchItems(searchParams) as { [key: string]: TypeMap[K][] };
+    case "dlois": return await searchDloises(searchParams) as { [key: string]: TypeMap[K][] };
+    case "elois": return await searchEloises(searchParams) as { [key: string]: TypeMap[K][] };
+    case "work": return await searchWorks(searchParams) as { [key: string]: TypeMap[K][] };
     default: return null;
   }
 }
@@ -328,9 +328,7 @@ async function searchWorks(searchParams: { [key: string]: string | string[] | un
       },
     }),
   }).then((res) => res.json());
-  console.log("response: ", fetchResults);
   const works: {[key: string]: Work[]} = { "ワークス": (await Promise.all(fetchResults.map(async (fetchResult: WorkFetchResult) => parseFetchResult("work", fetchResult)))).filter((record) => record !== null) as Work[] };
-  console.log("works: ", works);
   return works;
 }
 

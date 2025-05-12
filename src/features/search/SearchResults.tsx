@@ -15,6 +15,7 @@ export default async function SearchResults<K extends keyof TypeMap> ({
   }) {
 
     const records: { [key: string]: TypeMap[K][] } | null = await searchRecords(kind, searchParams);
+    console.log("SearchResults: ", records);
     if (!records) return notFound();
     // 全カテゴリーのレコードの数をカウントする
     const totalCount = Object.values(records).reduce((sum, items) => sum + items.length, 0);
