@@ -32,10 +32,8 @@ export default async function searchRecords<K extends keyof TypeMap>(
 
 // エフェクト
 async function searchPowers(searchParams: { [key: string]: string | string[] | undefined }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
-  const apiUrl = `${baseUrl}/api/prisma`;
   const powers: {[key: string]: Power[]} = Object.fromEntries(await Promise.all(toArray(searchParams["category"], POWER_CATEGORIES).map(async category => {
-    const fetchResultsInCategory = await fetch(apiUrl, {
+    const fetchResultsInCategory = await fetch('/api/prisma', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -91,10 +89,8 @@ async function searchItems(searchParams: { [key: string]: string | string[] | un
 
 // 武器
 async function searchWeapons(searchParams: { [key: string]: string | string[] | undefined }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
-  const apiUrl = `${baseUrl}/api/prisma`;
   const weapons: { [key: string]: Weapon[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const fetchResultsInCategory = await fetch(apiUrl, {
+    const fetchResultsInCategory = await fetch('/api/prisma', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -125,10 +121,8 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
 
 // 防具
 async function searchArmors(searchParams: { [key: string]: string | string[] | undefined }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
-  const apiUrl = `${baseUrl}/api/prisma`;
   const armors: { [key: string]: Armor[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const fetchResultsInCategory = await fetch(apiUrl, {
+    const fetchResultsInCategory = await fetch('/api/prisma', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -159,10 +153,8 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
 
 // ヴィークル
 async function searchVehicles(searchParams: { [key: string]: string | string[] | undefined }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
-  const apiUrl = `${baseUrl}/api/prisma`;
   const vehicles: { [key: string]: Vehicle[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const fetchResultsInCategory = await fetch(apiUrl, {
+    const fetchResultsInCategory = await fetch('/api/prisma', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -192,10 +184,8 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
 
 // コネ
 async function searchConnections(searchParams: { [key: string]: string | string[] | undefined }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
-  const apiUrl = `${baseUrl}/api/prisma`;
   const connections: { [key: string]: Connection[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const fetchResultsInCategory = await fetch(apiUrl, {
+    const fetchResultsInCategory = await fetch('/api/prisma', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -225,10 +215,8 @@ async function searchConnections(searchParams: { [key: string]: string | string[
 
 // 一般アイテム
 async function searchGenerals(searchParams: { [key: string]: string | string[] | undefined }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
-  const apiUrl = `${baseUrl}/api/prisma`;
   const generals: { [key: string]: General[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const fetchResultsInCategory = await fetch(apiUrl, {
+    const fetchResultsInCategory = await fetch('/api/prisma', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -259,9 +247,7 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
 
 // Dロイス
 async function searchDloises(searchParams: { [key: string]: string | string[] | undefined }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
-  const apiUrl = `${baseUrl}/api/prisma`;
-  const fetchResults = await fetch(apiUrl, {
+  const fetchResults = await fetch('/api/prisma', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -286,9 +272,7 @@ async function searchDloises(searchParams: { [key: string]: string | string[] | 
 
 // Eロイス
 async function searchEloises(searchParams: { [key: string]: string | string[] | undefined }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
-  const apiUrl = `${baseUrl}/api/prisma`;
-  const fetchResults = await fetch(apiUrl, {
+  const fetchResults = await fetch('/api/prisma', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -312,9 +296,7 @@ async function searchEloises(searchParams: { [key: string]: string | string[] | 
 
 // ワークス
 async function searchWorks(searchParams: { [key: string]: string | string[] | undefined }) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL
-  const apiUrl = `${baseUrl}/api/prisma`;
-  const fetchResults = await fetch(apiUrl, {
+  const fetchResults = await fetch('/api/prisma', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
