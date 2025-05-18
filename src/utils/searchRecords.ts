@@ -61,7 +61,7 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
                 rel_dloises: true,
                 rel_faqs: true,
                 rel_infos: true,
-                },
+              },
               select: {
                 id: true,
                 supplement: true,
