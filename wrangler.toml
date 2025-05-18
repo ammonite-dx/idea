@@ -6,7 +6,7 @@ pages_build_output_dir = ".vercel/output/static"
 [[d1_databases]]
 binding = "DB"
 database_name = "idea-db"
-database_id   = "64a38857-c1bd-48ba-a940-33bee5260bc3"
+database_id   = "5bf191d0-1a1e-4ed1-a8a1-d3c6c3e4accd"
 
 [vars]
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = "pk_test_Z3JhdGVmdWwtbmV3dC00LmNsZXJrLmFjY291bnRzLmRldiQ"

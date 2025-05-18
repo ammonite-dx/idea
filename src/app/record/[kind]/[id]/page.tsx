@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import RecordCard from "@/components/RecordCard";
 import CardList from "@/components/CardList";
 import getRecordById from "@/utils/getRecordById";
-import { CardRecord, CardRecordKind } from "@/types/types";
+import { CardRecordKind } from "@/types/types";
 
 export const runtime = 'edge';
 
@@ -23,19 +23,19 @@ export default async function Page({ params }: PageProps) {
     if (!record) return notFound();
 
     // 別バージョン
-    const otherVers = ("other_ver_id" in record && record.other_ver_id) ? await getRelRecord(record.kind, record.other_ver_id) : null;
+    const otherVers = "other_vers" in record && record.other_vers;
 
     // 関連データ
-    const relPowers = ("rel_power_id" in record && record.rel_power_id) ? await getRelRecord("power", record.rel_power_id) : null;
+    const relPowers = "rel_powers" in record && record.rel_powers;
     const relItems = [
-        ("rel_weapon_id" in record && record.rel_weapon_id) ? await getRelRecord("weapon", record.rel_weapon_id) : null,
-        ("rel_armor_id" in record && record.rel_armor_id) ? await getRelRecord("armor", record.rel_armor_id) : null,
-        ("rel_vehicle_id" in record && record.rel_vehicle_id) ? await getRelRecord("vehicle", record.rel_vehicle_id) : null,
-        ("rel_connection_id" in record && record.rel_connection_id) ? await getRelRecord("connection", record.rel_connection_id) : null,
-        ("rel_general_id" in record && record.rel_general_id) ? await getRelRecord("general", record.rel_general_id) : null,
+        "rel_weapons" in record ? record.rel_weapons : null,
+        "rel_armors" in record ? record.rel_armors : null,
+        "rel_vehicles" in record ? record.rel_vehicles : null,
+        "rel_connections" in record ? record.rel_connections : null,
+        "rel_generals" in record ? record.rel_generals : null,
     ].filter((item) => item !== null).flat();
-    const relDlois = ("rel_dlois_id" in record && record.rel_dlois_id) ? await getRelRecord("dlois", record.rel_dlois_id) : null;
-    const relElois = ("rel_elois_id" in record && record.rel_elois_id) ? await getRelRecord("elois", record.rel_elois_id) : null;
+    const relDlois = "rel_dloises" in record ? record.rel_dloises : null;
+    const relElois = "rel_eloises" in record ? record.rel_eloises : null;
 
     return (
         <div>
@@ -47,12 +47,4 @@ export default async function Page({ params }: PageProps) {
             {relElois && relElois.length>0 && <CardList title="関連Eロイス" records={relElois} category />}
         </div>
     );
-}
-
-async function getRelRecord(kind: CardRecordKind, ids?: string): Promise<CardRecord[]> {
-    if (!ids) return [];
-    return (await Promise.all(
-        ids.split(" ").map(id => getRecordById(kind, id))
-    )).filter((d): d is NonNullable<typeof d> => d !== null);
-}
-  
+} 

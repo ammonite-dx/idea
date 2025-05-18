@@ -5,11 +5,11 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  //url      = env("DATABASE_URL")
 }
 
 model Power {
-  id                  String  @id
+  id                  String @id
   supplement          String
   category            String
   type                String
@@ -27,214 +27,237 @@ model Power {
   premise             String?
   flavor              String?
   effect              String?
-  ref_weapon_id       String?
-  ref_armor_id        String?
-  ref_faq_id          String?
-  ref_info_id         String?
+  ref_weapon_id       String? @unique
+  ref_weapon          Weapon? @relation(fields: [ref_weapon_id], references: [id])
+  ref_armor_id        String? @unique
+  ref_armor           Armor?  @relation(fields: [ref_armor_id], references: [id])
+  refed_dlois         Dlois?
   update_supplement   String?
-  other_ver_id        String?
-  rel_power_id        String?
-  rel_weapon_id       String?
-  rel_armor_id        String?
-  rel_vehicle_id      String?
-  rel_connection_id   String?
-  rel_general_id      String?
-  rel_dlois_id        String?
+  other_vers          Power[] @relation("PowerOtherVers")
+  other_vers_inv      Power[] @relation("PowerOtherVers")
+  rel_powers          Power[] @relation("RelPowerPower")
+  rel_powers_inv      Power[] @relation("RelPowerPower")
+  rel_weapons         Weapon[] @relation("RelPowerWeapon")
+  rel_armors          Armor[] @relation("RelPowerArmor")
+  rel_vehicles        Vehicle[] @relation("RelPowerVehicle")
+  rel_connections     Connection[] @relation("RelPowerConnection")
+  rel_generals        General[] @relation("RelPowerGeneral")
+  rel_dloises         Dlois[] @relation("RelPowerDlois")
+  rel_faqs            Faq[] @relation("RelPowerFaq")
+  rel_infos           Info[] @relation("RelPowerInfo")
+  favorited_by        User[] @relation("FavPower")
   type_restrict_order Int
 }
 
 model Weapon {
-  id               String  @id
-  supplement       String
-  category         String
-  name             String
-  ruby             String
-  type             String
-  skill            String
-  acc              String
-  acc_int          Int?
-  atk              String
-  atk_int          Int?
-  guard            String
-  guard_int        Int?
-  rng              String
-  rng_int          Int?
-  procure          String?
-  procure_int      Int?
-  stock            String?
-  stock_int        Int?
-  exp              String?
-  exp_int          Int?
-  rec              String?
-  flavor           String?
-  effect           String?
-  price            String?
-  rec_effect       String?
-  ref_faq_id       String?
-  ref_info_id      String?
-  refed_power_id   String?
-  refed_armor_id   String?
-  refed_general_id String?
+  id                  String  @id
+  supplement          String
+  category            String
+  name                String
+  ruby                String
+  type                String
+  skill               String
+  acc                 String
+  acc_int             Int?
+  atk                 String
+  atk_int             Int?
+  guard               String
+  guard_int           Int?
+  rng                 String
+  rng_int             Int?
+  procure             String?
+  procure_int         Int?
+  stock               String?
+  stock_int           Int?
+  exp                 String?
+  exp_int             Int?
+  rec                 String?
+  flavor              String?
+  effect              String?
+  price               String?
+  rec_effect          String?
+  refed_power         Power?
+  refed_armor         Armor?
+  refed_general       General?
   update_supplement   String?
-  other_ver_id     String?
-  rel_power_id     String?
-  rel_weapon_id    String?
-  rel_armor_id     String?
-  rel_vehicle_id   String?
-  rel_connection_id String?
-  rel_general_id   String?
-  rel_dlois_id     String?
-  type_order       Int
-  cost_order       Int
+  other_vers          Weapon[] @relation("WeaponOtherVers")
+  other_vers_inv      Weapon[] @relation("WeaponOtherVers")
+  rel_powers          Power[] @relation("RelPowerWeapon")
+  rel_weapons         Weapon[] @relation("RelWeaponWeapon")
+  rel_weapons_inv     Weapon[] @relation("RelWeaponWeapon")
+  rel_armors          Armor[] @relation("RelWeaponArmor")
+  rel_vehicles        Vehicle[] @relation("RelWeaponVehicle")
+  rel_connections     Connection[] @relation("RelWeaponConnection")
+  rel_generals        General[] @relation("RelWeaponGeneral")
+  rel_dloises         Dlois[] @relation("RelWeaponDlois")
+  rel_faqs            Faq[] @relation("RelWeaponFaq")
+  rel_infos           Info[] @relation("RelWeaponInfo")
+  favorited_by        User[] @relation("FavWeapon")
+  type_order          Int
+  cost_order          Int
 }
 
 model Armor {
-  id             String  @id
-  supplement     String
-  category       String
-  name           String
-  ruby           String
-  type           String
-  dodge          String
-  dodge_int      Int?
-  initiative     String
-  initiative_int Int?
-  armor          String
-  armor_int      Int?
-  procure        String?
-  procure_int    Int?
-  stock          String?
-  stock_int      Int?
-  exp            String?
-  exp_int        Int?
-  rec            String?
-  flavor         String?
-  effect         String?
-  price          String?
-  rec_effect     String?
-  ref_weapon_id  String?
-  ref_faq_id       String?
-  ref_info_id      String?
-  refed_power_id String?
+  id                  String  @id
+  supplement          String
+  category            String
+  name                String
+  ruby                String
+  type                String
+  dodge               String
+  dodge_int           Int?
+  initiative          String
+  initiative_int      Int?
+  armor               String
+  armor_int           Int?
+  procure             String?
+  procure_int         Int?
+  stock               String?
+  stock_int           Int?
+  exp                 String?
+  exp_int             Int?
+  rec                 String?
+  flavor              String?
+  effect              String?
+  price               String?
+  rec_effect          String?
+  ref_weapon_id       String? @unique
+  ref_weapon          Weapon? @relation(fields: [ref_weapon_id], references: [id])
+  refed_power         Power?
   update_supplement   String?
-  other_ver_id   String?
-  rel_power_id   String?
-  rel_weapon_id  String?
-  rel_armor_id   String?
-  rel_vehicle_id String?
-  rel_connection_id String?
-  rel_general_id String?
-  rel_dlois_id   String?
-  type_order     Int
-  cost_order     Int
-}
-
-model Connection {
-  id          String  @id
-  supplement  String
-  category    String
-  name        String
-  ruby        String
-  type        String
-  skill       String
-  procure     String?
-  procure_int Int?
-  stock       String?
-  stock_int   Int?
-  exp         String?
-  exp_int     Int?
-  rec         String?
-  flavor      String?
-  effect      String?
-  price       String?
-  rec_effect  String?
-  ref_faq_id       String?
-  ref_info_id      String?
-  update_supplement   String?
-  other_ver_id String?
-  rel_power_id String?
-  rel_weapon_id String?
-  rel_armor_id String?
-  rel_vehicle_id String?
-  rel_connection_id String?
-  rel_general_id String?
-  rel_dlois_id String?
-  cost_order  Int
-}
-
-model General {
-  id            String  @id
-  supplement    String
-  category      String
-  name          String
-  ruby          String
-  type          String
-  procure       String?
-  procure_int   Int?
-  stock         String?
-  stock_int     Int?
-  exp           String?
-  exp_int       Int?
-  rec           String?
-  flavor        String?
-  effect        String?
-  price         String?
-  rec_effect    String?
-  ref_weapon_id String?
-  ref_faq_id       String?
-  ref_info_id      String?
-  update_supplement   String?
-  other_ver_id  String?
-  rel_power_id  String?
-  rel_weapon_id String?
-  rel_armor_id  String?
-  rel_vehicle_id String?
-  rel_connection_id String?
-  rel_general_id String?
-  rel_dlois_id  String?
-  type_order    Int
-  cost_order    Int
+  other_vers          Armor[] @relation("ArmorOtherVers")
+  other_vers_inv      Armor[] @relation("ArmorOtherVers")
+  rel_powers          Power[] @relation("RelPowerArmor")
+  rel_weapons         Weapon[] @relation("RelWeaponArmor")
+  rel_armors          Armor[] @relation("RelArmorArmor")
+  rel_armors_inv      Armor[] @relation("RelArmorArmor")
+  rel_vehicles        Vehicle[] @relation("RelArmorVehicle")
+  rel_connections     Connection[] @relation("RelArmorConnection")
+  rel_generals        General[] @relation("RelArmorGeneral")
+  rel_dloises         Dlois[] @relation("RelArmorDlois")
+  rel_faqs            Faq[] @relation("RelArmorFaq")
+  rel_infos           Info[] @relation("RelArmorInfo")
+  favorited_by        User[] @relation("FavArmor")
+  type_order          Int
+  cost_order          Int
 }
 
 model Vehicle {
-  id             String  @id
-  supplement     String
-  category       String
-  name           String
-  ruby           String
-  type           String
-  skill          String
-  atk            String
-  atk_int        Int?
-  initiative     String
-  initiative_int Int?
-  armor          String
-  armor_int      Int?
-  dash           String
-  dash_int       Int?
-  procure        String?
-  procure_int    Int?
-  stock          String?
-  stock_int      Int?
-  exp            String?
-  exp_int        Int?
-  rec            String?
-  flavor         String?
-  effect         String?
-  price          String?
-  rec_effect     String?
-  ref_faq_id       String?
-  ref_info_id      String?
+  id                  String  @id
+  supplement          String
+  category            String
+  name                String
+  ruby                String
+  type                String
+  skill               String
+  atk                 String
+  atk_int             Int?
+  initiative          String
+  initiative_int      Int?
+  armor               String
+  armor_int           Int?
+  dash                String
+  dash_int            Int?
+  procure             String?
+  procure_int         Int?
+  stock               String?
+  stock_int           Int?
+  exp                 String?
+  exp_int             Int?
+  rec                 String?
+  flavor              String?
+  effect              String?
+  price               String?
+  rec_effect          String?
   update_supplement   String?
-  other_ver_id   String?
-  rel_power_id   String?
-  rel_weapon_id  String?
-  rel_armor_id   String?
-  rel_vehicle_id String?
-  rel_connection_id String?
-  rel_general_id String?
-  rel_dlois_id   String?
-  cost_order     Int
+  other_vers          Vehicle[] @relation("VehicleOtherVers")
+  other_vers_inv      Vehicle[] @relation("VehicleOtherVers")
+  rel_powers          Power[] @relation("RelPowerVehicle")
+  rel_weapons         Weapon[] @relation("RelWeaponVehicle")
+  rel_armors          Armor[] @relation("RelArmorVehicle")
+  rel_vehicles        Vehicle[] @relation("RelVehicleVehicle")
+  rel_vehicles_inv    Vehicle[] @relation("RelVehicleVehicle")
+  rel_connections     Connection[] @relation("RelVehicleConnection")
+  rel_generals        General[] @relation("RelVehicleGeneral")
+  rel_dloises         Dlois[] @relation("RelVehicleDlois")
+  rel_faqs            Faq[] @relation("RelVehicleFaq")
+  rel_infos           Info[] @relation("RelVehicleInfo")
+  favorited_by        User[] @relation("FavVehicle")
+  cost_order          Int
+}
+
+model Connection {
+  id                  String  @id
+  supplement          String
+  category            String
+  name                String
+  ruby                String
+  type                String
+  skill               String
+  procure             String?
+  procure_int         Int?
+  stock               String?
+  stock_int           Int?
+  exp                 String?
+  exp_int             Int?
+  rec                 String?
+  flavor              String?
+  effect              String?
+  price               String?
+  rec_effect          String?
+  update_supplement   String?
+  other_vers          Connection[] @relation("ConnectionOtherVers")
+  other_vers_inv      Connection[] @relation("ConnectionOtherVers")
+  rel_powers          Power[] @relation("RelPowerConnection")
+  rel_weapons         Weapon[] @relation("RelWeaponConnection")
+  rel_armors          Armor[] @relation("RelArmorConnection")
+  rel_vehicles        Vehicle[] @relation("RelVehicleConnection")
+  rel_connections     Connection[] @relation("RelConnectionConnection")
+  rel_connections_inv Connection[] @relation("RelConnectionConnection")
+  rel_generals        General[] @relation("RelConnectionGeneral")
+  rel_dloises         Dlois[] @relation("RelConnectionDlois")
+  rel_faqs            Faq[] @relation("RelConnectionFaq")
+  rel_infos           Info[] @relation("RelConnectionInfo")
+  favorited_by        User[] @relation("FavConnection")
+  cost_order          Int
+}
+
+model General {
+  id                  String  @id
+  supplement          String
+  category            String
+  name                String
+  ruby                String
+  type                String
+  procure             String?
+  procure_int         Int?
+  stock               String?
+  stock_int           Int?
+  exp                 String?
+  exp_int             Int?
+  rec                 String?
+  flavor              String?
+  effect              String?
+  price               String?
+  rec_effect          String?
+  ref_weapon_id       String? @unique
+  ref_weapon          Weapon? @relation(fields: [ref_weapon_id], references: [id])
+  update_supplement   String?
+  other_vers          General[] @relation("GeneralOtherVers")
+  other_vers_inv      General[] @relation("GeneralOtherVers")
+  rel_powers          Power[] @relation("RelPowerGeneral")
+  rel_weapons         Weapon[] @relation("RelWeaponGeneral")
+  rel_armors          Armor[] @relation("RelArmorGeneral")
+  rel_vehicles        Vehicle[] @relation("RelVehicleGeneral")
+  rel_connections     Connection[] @relation("RelConnectionGeneral")
+  rel_generals        General[] @relation("RelGeneralGeneral")
+  rel_generals_inv    General[] @relation("RelGeneralGeneral")
+  rel_dloises         Dlois[] @relation("RelGeneralDlois")
+  rel_faqs            Faq[] @relation("RelGeneralFaq")
+  rel_infos           Info[] @relation("RelGeneralInfo")
+  favorited_by        User[] @relation("FavGeneral")
+  type_order          Int
+  cost_order          Int
 }
 
 model Dlois {
@@ -250,18 +273,22 @@ model Dlois {
   rec                 String?
   effect              String
   rec_effect          String?
-  ref_power_id        String?
-  ref_faq_id       String?
-  ref_info_id      String?
+  ref_power_id        String? @unique
+  ref_power           Power?  @relation(fields: [ref_power_id], references: [id])
   update_supplement   String?
-  other_ver_id        String?
-  rel_power_id        String?
-  rel_weapon_id       String?
-  rel_armor_id        String?
-  rel_vehicle_id      String?
-  rel_connection_id   String?
-  rel_general_id      String?
-  rel_dlois_id        String?
+  other_vers          Dlois[] @relation("DloisOtherVers")
+  other_vers_inv      Dlois[] @relation("DloisOtherVers")
+  rel_powers          Power[] @relation("RelPowerDlois")
+  rel_weapons         Weapon[] @relation("RelWeaponDlois")
+  rel_armors          Armor[] @relation("RelArmorDlois")
+  rel_vehicles        Vehicle[] @relation("RelVehicleDlois")
+  rel_connections     Connection[] @relation("RelConnectionDlois")
+  rel_generals        General[] @relation("RelGeneralDlois")
+  rel_dloises         Dlois[] @relation("RelDloisDlois")
+  rel_dloises_inv     Dlois[] @relation("RelDloisDlois")
+  rel_faqs            Faq[] @relation("RelDloisFaq")
+  rel_infos           Info[] @relation("RelDloisInfo")
+  favorited_by        User[] @relation("FavDlois")
   flavor_summary      String
   effect_summary      String
   rec_effect_summary  String?
@@ -283,11 +310,14 @@ model Elois {
   urge                String
   flavor              String
   effect              String
-  ref_faq_id       String?
-  ref_info_id      String?
   update_supplement   String?
-  other_ver_id        String?
-  rel_elois_id        String?
+  other_vers          Elois[] @relation("EloisOtherVers")
+  other_vers_inv      Elois[] @relation("EloisOtherVers")
+  rel_eloises         Elois[] @relation("RelEloisElois")
+  rel_eloises_inv     Elois[] @relation("RelEloisElois")
+  rel_faqs            Faq[] @relation("RelEloisFaq")
+  rel_infos           Info[] @relation("RelEloisInfo")
+  favorited_by        User[] @relation("FavElois")
   type_order          Int
   urge_order          Int
 }
@@ -305,33 +335,38 @@ model Faq {
   id                  String @id
   q                   String
   a                   String
-  refed_power_id        String?
-  refed_weapon_id       String?
-  refed_armor_id        String?
-  refed_vehicle_id      String?
-  refed_connection_id   String?
-  refed_general_id      String?
-  refed_dlois_id        String?
-  refed_elois_id        String?
+  rel_power           Power[] @relation("RelPowerFaq")
+  rel_weapon          Weapon[] @relation("RelWeaponFaq")
+  rel_armor           Armor[] @relation("RelArmorFaq")
+  rel_vehicle         Vehicle[] @relation("RelVehicleFaq")
+  rel_connection      Connection[] @relation("RelConnectionFaq")
+  rel_general         General[] @relation("RelGeneralFaq")
+  rel_dlois           Dlois[] @relation("RelDloisFaq")
+  rel_elois           Elois[] @relation("RelEloisFaq")
 }
 
 model Info {
   id                  String @id
   title               String
   content             String
-  refed_power_id        String?
-  refed_weapon_id       String?
-  refed_armor_id        String?
-  refed_vehicle_id      String?
-  refed_connection_id   String?
-  refed_general_id      String?
-  refed_dlois_id        String?
-  refed_elois_id        String?
+  rel_power           Power[] @relation("RelPowerInfo")
+  rel_weapon          Weapon[] @relation("RelWeaponInfo")
+  rel_armor           Armor[] @relation("RelArmorInfo")
+  rel_vehicle         Vehicle[] @relation("RelVehicleInfo")
+  rel_connection      Connection[] @relation("RelConnectionInfo")
+  rel_general         General[] @relation("RelGeneralInfo")
+  rel_dlois           Dlois[] @relation("RelDloisInfo")
+  rel_elois           Elois[] @relation("RelEloisInfo")
 }
 
-model Favorite {
+model User {
   id                  String @id @default(cuid())
-  user_id             String
-  record_kind         String
-  record_id           String
+  fav_power           Power[] @relation("FavPower")
+  fav_weapon          Weapon[] @relation("FavWeapon")
+  fav_armor           Armor[] @relation("FavArmor")
+  fav_vehicle         Vehicle[] @relation("FavVehicle")
+  fav_connection      Connection[] @relation("FavConnection")
+  fav_general         General[] @relation("FavGeneral")
+  fav_dlois           Dlois[] @relation("FavDlois")
+  fav_elois           Elois[] @relation("FavElois")
 }

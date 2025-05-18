@@ -67,31 +67,22 @@ async function PowerCard ({ power, category, details }: { power:Power, category:
           <CardBodyRow><PropDict name="装甲値" value={power.ref_armor.armor} /></CardBodyRow>
         </CardBody>
       }
-      {details && power.ref_faqs && <FaqBody faqs={power.ref_faqs} />}
-      {details && power.ref_infos && <InfoBody infos={power.ref_infos} />}
+      {details && power.rel_faqs && <FaqBody faqs={power.rel_faqs} />}
+      {details && power.rel_infos && <InfoBody infos={power.rel_infos} />}
     </Card>
   );
 }
 
 // 武器カード
 async function WeaponCard ({ weapon, category, details }: { weapon:Weapon, category:boolean, details:boolean }) {
-  if (weapon.refed_power_id) {
-    const refed_power = await getDataById("power", weapon.refed_power_id)
-    if (refed_power) {
-      return PowerCard({ power:refed_power, category, details });
-    }
+  if (weapon.refed_power) {
+    return PowerCard({ power:weapon.refed_power, category, details });
   }
-  if (weapon.refed_armor_id) {
-    const refed_armor = await getDataById("armor", weapon.refed_armor_id)
-    if (refed_armor) {
-      return ArmorCard({ armor:refed_armor, category, details });
-    }
+  if (weapon.refed_armor) {
+    return ArmorCard({ armor:weapon.refed_armor, category, details });
   }
-  if (weapon.refed_general_id) {
-    const refed_general = await getDataById("general", weapon.refed_general_id)
-    if (refed_general) {
-      return GeneralCard({ general:refed_general, category, details });
-    }
+  if (weapon.refed_general) {
+    return GeneralCard({ general:weapon.refed_general, category, details });
   }
   return (
     <Card>
@@ -112,19 +103,16 @@ async function WeaponCard ({ weapon, category, details }: { weapon:Weapon, categ
         {weapon.rec_effect && <EffectDict name="強化効果" value={weapon.rec_effect} />}
         {weapon.price && <EffectDict name="代償" value={weapon.price} />}
       </CardBody>
-      {details && weapon.ref_faqs && <FaqBody faqs={weapon.ref_faqs} />}
-      {details && weapon.ref_infos && <InfoBody infos={weapon.ref_infos} />}
+      {details && weapon.rel_faqs && <FaqBody faqs={weapon.rel_faqs} />}
+      {details && weapon.rel_infos && <InfoBody infos={weapon.rel_infos} />}
     </Card>
   );
 }
 
 // 防具カード
 async function ArmorCard ({ armor, category, details }: { armor:Armor, category:boolean, details:boolean }) {
-  if (armor.refed_power_id) {
-    const refed_power = await getDataById("power", armor.refed_power_id)
-    if (refed_power) {
-      return PowerCard({ power:refed_power, category, details });
-    }
+  if (armor.refed_power) {
+    return PowerCard({ power:armor.refed_power, category, details });
   }
   return (
     <Card>
@@ -152,8 +140,8 @@ async function ArmorCard ({ armor, category, details }: { armor:Armor, category:
         {armor.rec_effect && <EffectDict name="強化効果" value={armor.rec_effect} />}
         {armor.price && <EffectDict name="代償" value={armor.price} />}
       </CardBody>
-      {details && armor.ref_faqs && <FaqBody faqs={armor.ref_faqs} />}
-      {details && armor.ref_infos && <InfoBody infos={armor.ref_infos} />}
+      {details && armor.rel_faqs && <FaqBody faqs={armor.rel_faqs} />}
+      {details && armor.rel_infos && <InfoBody infos={armor.rel_infos} />}
     </Card>
   );
 }
@@ -179,8 +167,8 @@ async function VehicleCard ({ vehicle, category, details }: { vehicle:Vehicle, c
         {vehicle.rec_effect && <EffectDict name="強化効果" value={vehicle.rec_effect} />}
         {vehicle.price && <EffectDict name="代償" value={vehicle.price} />}
       </CardBody>
-      {details && vehicle.ref_faqs && <FaqBody faqs={vehicle.ref_faqs} />}
-      {details && vehicle.ref_infos && <InfoBody infos={vehicle.ref_infos} />}
+      {details && vehicle.rel_faqs && <FaqBody faqs={vehicle.rel_faqs} />}
+      {details && vehicle.rel_infos && <InfoBody infos={vehicle.rel_infos} />}
     </Card>
   );
 }
@@ -203,8 +191,8 @@ async function ConnectionCard ({ connection, category, details }: { connection:C
         {connection.rec_effect && <EffectDict name="強化効果" value={connection.rec_effect} />}
         {connection.price && <EffectDict name="代償" value={connection.price} />}
       </CardBody>
-      {details && connection.ref_faqs && <FaqBody faqs={connection.ref_faqs} />}
-      {details && connection.ref_infos && <InfoBody infos={connection.ref_infos} />}
+      {details && connection.rel_faqs && <FaqBody faqs={connection.rel_faqs} />}
+      {details && connection.rel_infos && <InfoBody infos={connection.rel_infos} />}
     </Card>
   );
 }
@@ -235,8 +223,8 @@ async function GeneralCard ({ general, category, details }: { general:General, c
         {general.rec_effect && <EffectDict name="強化効果" value={general.rec_effect} />}
         {general.price && <EffectDict name="代償" value={general.price} />}
       </CardBody>
-      {details && general.ref_faqs && <FaqBody faqs={general.ref_faqs} />}
-      {details && general.ref_infos && <InfoBody infos={general.ref_infos} />}
+      {details && general.rel_faqs && <FaqBody faqs={general.rel_faqs} />}
+      {details && general.rel_infos && <InfoBody infos={general.rel_infos} />}
     </Card>
   );
 }
@@ -285,8 +273,8 @@ async function DloisCard ({ dlois, details }: { dlois:Dlois, details:boolean }) 
           </CardBody>
         </>
       }
-      {details && dlois.ref_faqs && <FaqBody faqs={dlois.ref_faqs} />}
-      {details && dlois.ref_infos && <InfoBody infos={dlois.ref_infos} />}
+      {details && dlois.rel_faqs && <FaqBody faqs={dlois.rel_faqs} />}
+      {details && dlois.rel_infos && <InfoBody infos={dlois.rel_infos} />}
     </Card>
   );
 }
@@ -306,8 +294,8 @@ async function EloisCard ({ elois, details }: { elois:Elois, details:boolean }) 
         <EffectDict name="解説" value={elois.flavor} />
         <EffectDict name="効果" value={elois.effect} />
       </CardBody>
-      {details && elois.ref_faqs && <FaqBody faqs={elois.ref_faqs} />}
-      {details && elois.ref_infos && <InfoBody infos={elois.ref_infos} />}
+      {details && elois.rel_faqs && <FaqBody faqs={elois.rel_faqs} />}
+      {details && elois.rel_infos && <InfoBody infos={elois.rel_infos} />}
     </Card>
   );
 }

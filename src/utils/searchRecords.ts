@@ -1,4 +1,3 @@
-import parseFetchResult from './parseFetchResult';
 import { toArray, toString } from '@/utils/utils';
 import { POWER_CATEGORIES, POWER_TYPES, POWER_SUPPLEMENTS, POWER_TIMINGS, POWER_SKILLS, POWER_DFCLTIES, POWER_TARGETS, POWER_RNGS, POWER_ENCROACHES, POWER_RESTRICTS } from '@/consts/power';
 import { ITEM_CATEGORIES, ITEM_SUPPLEMENTS } from '@/consts/item';
@@ -10,7 +9,7 @@ import { GENERAL_TYPES } from '@/consts/general';
 import { DLOIS_TYPES, DLOIS_RESTRICTS, DLOIS_SUPPLEMENTS } from '@/consts/dlois';
 import { ELOIS_TYPES, ELOIS_SUPPLEMENTS, ELOIS_TIMINGS, ELOIS_SKILLS, ELOIS_DFCLTIES, ELOIS_TARGETS, ELOIS_RNGS, ELOIS_URGES } from '@/consts/elois';
 import { WORK_SUPPLEMENTS, WORK_STATS, WORK_SKILLS } from '@/consts/work';
-import { TypeMap, Power, Item, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work, PowerFetchResult, WeaponFetchResult, ArmorFetchResult, VehicleFetchResult, ConnectionFetchResult, GeneralFetchResult, DloisFetchResult, EloisFetchResult, WorkFetchResult } from '@/types/types';
+import { TypeMap, Power, Item, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work } from '@/types/types';
 
 export default async function searchRecords<K extends keyof TypeMap>(
   kind: K,
@@ -35,7 +34,7 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
   const powers: {[key: string]: Power[]} = Object.fromEntries(await Promise.all(toArray(searchParams["category"], POWER_CATEGORIES).map(async category => {
     const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
     const apiUrl = `${baseUrl}/api/prisma`;
-    const fetchResultsInCategory = await fetch(apiUrl, {
+    const powersInCategory = await fetch(apiUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -49,14 +48,57 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
                   powerWhereCondition(searchParams),
                 ].flat()
               },
+              include: {
+                ref_weapon: true,
+                ref_armor: true,
+                refed_dlois: true,
+                other_vers: true,
+                rel_weapons: true,
+                rel_armors: true,
+                rel_vehicles: true,
+                rel_connections: true,
+                rel_generals: true,
+                rel_dloises: true,
+                rel_faqs: true,
+                rel_infos: true,
+                },
+              select: {
+                id: true,
+                supplement: true,
+                category: true,
+                type: true,
+                name: true,
+                maxlv: true,
+                timing: true,
+                skill: true,
+                dfclty: true,
+                target: true,
+                rng: true,
+                encroach: true,
+                restrict: true,
+                premise: true,
+                flavor: true,
+                effect: true,
+                ref_weapon: true,
+                ref_armor: true,
+                other_vers: true,
+                rel_powers: true,
+                rel_weapons: true,
+                rel_armors: true,
+                rel_vehicles: true,
+                rel_connections: true,
+                rel_generals: true,
+                rel_dloises: true,
+                rel_faqs: true,
+                rel_infos: true,
+              },
               orderBy: [
                 {type_restrict_order: 'asc' as const},
                 {ruby: 'asc' as const},
               ],
             },
         }),
-    }).then((res) => res.json());
-    const powersInCategory = (await Promise.all(fetchResultsInCategory.map(async (fetchResult: PowerFetchResult) => parseFetchResult("power", fetchResult)))).filter((record) => record !== null) as Power[];
+    }).then((res) => res.json()) as Power[];
     return [category, powersInCategory];
   })));
   return powers;
@@ -94,7 +136,7 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
   const weapons: { [key: string]: Weapon[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
     const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
     const apiUrl = `${baseUrl}/api/prisma`;
-    const fetchResultsInCategory = await fetch(apiUrl, {
+    const weaponsInCategory = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -109,6 +151,54 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
               weaponWhereCondition(searchParams),
             ].flat()
           },
+          include: {
+            refed_power: true,
+            refed_armor: true,
+            refed_general: true,
+            other_vers: true,
+            rel_powers: true,
+            rel_weapons: true,
+            rel_armors: true,
+            rel_vehicles: true,
+            rel_connections: true,
+            rel_generals: true,
+            rel_dloises: true,
+            rel_faqs: true,
+            rel_infos: true,
+          },
+          select: {
+            id: true,
+            supplement: true,
+            category: true,
+            name: true,
+            type: true,
+            skill: true,
+            acc: true,
+            atk: true,
+            guard: true,
+            rng: true,
+            procure: true,
+            stock: true,
+            exp: true,
+            rec: true,
+            flavor: true,
+            effect: true,
+            price: true,
+            rec_effect: true,
+            refed_power: true,
+            refed_armor: true,
+            refed_general: true,
+            other_vers: true,
+            rel_powers: true,
+            rel_weapons: true,
+            rel_armors: true,
+            rel_vehicles: true,
+            rel_connections: true,
+            rel_generals: true,
+            rel_dloises: true,
+            rel_faqs: true,
+            rel_infos: true,
+          },
           orderBy: [
             {type_order: "asc" as const},
             {cost_order: "asc" as const},
@@ -116,8 +206,7 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
           ],
         },
       }),
-    }).then((res) => res.json());
-    const weaponsInCategory = (await Promise.all(fetchResultsInCategory.map(async (fetchResult: WeaponFetchResult) => parseFetchResult("weapon", fetchResult)))).filter((record) => record !== null) as Weapon[];
+    }).then((res) => res.json()) as Weapon[];
     return [category, weaponsInCategory]
   })));
   return weapons;
@@ -128,7 +217,7 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
   const armors: { [key: string]: Armor[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
     const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
     const apiUrl = `${baseUrl}/api/prisma`;
-    const fetchResultsInCategory = await fetch(apiUrl, {
+    const armorsInCategory = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -143,6 +232,50 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
               armorWhereCondition(searchParams),
             ].flat()
           },
+          include: {
+            ref_weapon: true,
+            refed_power: true,
+            other_vers: true,
+            rel_powers: true,
+            rel_weapons: true,
+            rel_armors: true,
+            rel_vehicles: true,
+            rel_connections: true,
+            rel_generals: true,
+            rel_dloises: true,
+            rel_faqs: true,
+            rel_infos: true,
+          },
+          select: {
+            id: true,
+            supplement: true,
+            category: true,
+            name: true,
+            type: true,
+            dodge: true,
+            initiative: true,
+            armor: true,
+            procure: true,
+            stock: true,
+            exp: true,
+            rec: true,
+            flavor: true,
+            effect: true,
+            price: true,
+            rec_effect: true,
+            ref_weapon: true,
+            refed_power: true,
+            other_vers: true,
+            rel_powers: true,
+            rel_weapons: true,
+            rel_armors: true,
+            rel_vehicles: true,
+            rel_connections: true,
+            rel_generals: true,
+            rel_dloises: true,
+            rel_faqs: true,
+            rel_infos: true,
+          },
           orderBy: [
             {type_order: "asc" as const},
             {cost_order: "asc" as const},
@@ -150,8 +283,7 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
           ],
         },
       }),
-    }).then((res) => res.json());
-    const armorsInCategory = (await Promise.all(fetchResultsInCategory.map(async (fetchResult: ArmorFetchResult) => parseFetchResult("armor", fetchResult)))).filter((record) => record !== null) as Armor[];
+    }).then((res) => res.json()) as Armor[];
     return [category, armorsInCategory]
   })));
   return armors;
@@ -162,7 +294,7 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
   const vehicles: { [key: string]: Vehicle[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
     const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
     const apiUrl = `${baseUrl}/api/prisma`;    
-    const fetchResultsInCategory = await fetch(apiUrl, {
+    const vehiclesInCategory = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -177,14 +309,55 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
               vehicleWhereCondition(searchParams),
             ].flat()
           },
+          include: {
+            other_vers: true,
+            rel_powers: true,
+            rel_weapons: true,
+            rel_armors: true,
+            rel_vehicles: true,
+            rel_connections: true,
+            rel_generals: true,
+            rel_dloises: true,
+            rel_faqs: true,
+            rel_infos: true,
+          },
+          select: {
+            id: true,
+            supplement: true,
+            category: true,
+            name: true,
+            type: true,
+            skill: true,
+            atk: true,
+            initiative: true,
+            armor: true,
+            dash: true,
+            procure: true,
+            stock: true,
+            exp: true,
+            rec: true,
+            flavor: true,
+            effect: true,
+            price: true,
+            rec_effect: true,
+            other_vers: true,
+            rel_powers: true,
+            rel_weapons: true,
+            rel_armors: true,
+            rel_vehicles: true,
+            rel_connections: true,
+            rel_generals: true,
+            rel_dloises: true,
+            rel_faqs: true,
+            rel_infos: true,
+          },
           orderBy: [
             {cost_order: "asc" as const},
             {ruby: "asc" as const}
           ],
         },
       }),
-    }).then((res) => res.json());
-    const vehiclesInCategory = (await Promise.all(fetchResultsInCategory.map(async (fetchResult: VehicleFetchResult) => parseFetchResult("vehicle", fetchResult)))).filter((record) => record !== null) as Vehicle[];
+    }).then((res) => res.json()) as Vehicle[];
     return [category, vehiclesInCategory]
   })));
   return vehicles;
@@ -195,7 +368,7 @@ async function searchConnections(searchParams: { [key: string]: string | string[
   const connections: { [key: string]: Connection[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
     const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
     const apiUrl = `${baseUrl}/api/prisma`;    
-    const fetchResultsInCategory = await fetch(apiUrl, {
+    const connectionsInCategory: Connection[] = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -210,6 +383,44 @@ async function searchConnections(searchParams: { [key: string]: string | string[
               connectionWhereCondition(searchParams),
             ].flat()
           },
+          include: {
+            other_vers: true,
+            rel_powers: true,
+            rel_weapons: true,
+            rel_armors: true,
+            rel_vehicles: true,
+            rel_connections: true,
+            rel_generals: true,
+            rel_dloises: true,
+            rel_faqs: true,
+            rel_infos: true,
+          },
+          select: {
+            id: true,
+            supplement: true,
+            category: true,
+            name: true,
+            type: true,
+            skill: true,
+            procure: true,
+            stock: true,
+            exp: true,
+            rec: true,
+            flavor: true,
+            effect: true,
+            price: true,
+            rec_effect: true,
+            other_vers: true,
+            rel_powers: true,
+            rel_weapons: true,
+            rel_armors: true,
+            rel_vehicles: true,
+            rel_connections: true,
+            rel_generals: true,
+            rel_dloises: true,
+            rel_faqs: true,
+            rel_infos: true,
+          },
           orderBy: [
             {cost_order: "asc" as const},
             {ruby: "asc" as const}
@@ -217,7 +428,6 @@ async function searchConnections(searchParams: { [key: string]: string | string[
         },
       }),
     }).then((res) => res.json());
-    const connectionsInCategory = (await Promise.all(fetchResultsInCategory.map(async (fetchResult: ConnectionFetchResult) => parseFetchResult("connection", fetchResult)))).filter((record) => record !== null) as Connection[];
     return [category, connectionsInCategory]
   })));
   return connections;
@@ -228,7 +438,7 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
   const generals: { [key: string]: General[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
     const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
     const apiUrl = `${baseUrl}/api/prisma`;    
-    const fetchResultsInCategory = await fetch(apiUrl, {
+    const generalsInCategory = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -243,6 +453,45 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
               generalWhereCondition(searchParams),
             ].flat()
           },
+          include: {
+            ref_weapon: true,
+            other_vers: true,
+            rel_powers: true,
+            rel_weapons: true,
+            rel_armors: true,
+            rel_vehicles: true,
+            rel_connections: true,
+            rel_generals: true,
+            rel_dloises: true,
+            rel_faqs: true,
+            rel_infos: true,
+          },
+          select: {
+            id: true,
+            supplement: true,
+            category: true,
+            name: true,
+            type: true,
+            procure: true,
+            stock: true,
+            exp: true,
+            rec: true,
+            flavor: true,
+            effect: true,
+            price: true,
+            rec_effect: true,
+            ref_weapon: true,
+            other_vers: true,
+            rel_powers: true,
+            rel_weapons: true,
+            rel_armors: true,
+            rel_vehicles: true,
+            rel_connections: true,
+            rel_generals: true,
+            rel_dloises: true,
+            rel_faqs: true,
+            rel_infos: true,
+          },
           orderBy: [
             {type_order: "asc" as const},
             {cost_order: "asc" as const},
@@ -250,8 +499,7 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
           ],
         },
       }),
-    }).then((res) => res.json());
-    const generalsInCategory = (await Promise.all(fetchResultsInCategory.map(async (fetchResult: GeneralFetchResult) => parseFetchResult("general", fetchResult)))).filter((record) => record !== null) as General[];
+    }).then((res) => res.json()) as General[];
     return [category, generalsInCategory]
   })));
   return generals;
@@ -261,7 +509,7 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
 async function searchDloises(searchParams: { [key: string]: string | string[] | undefined }) {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;  
-  const fetchResults = await fetch(apiUrl, {
+  const dloises: {[key: string]: Dlois[]} = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -272,6 +520,45 @@ async function searchDloises(searchParams: { [key: string]: string | string[] | 
         where: {
           AND: dloisWhereCondition(searchParams),
         },
+        include: {
+          ref_power: true,
+          other_vers: true,
+          rel_powers: true,
+          rel_weapons: true,
+          rel_armors: true,
+          rel_vehicles: true,
+          rel_connections: true,
+          rel_generals: true,
+          rel_dloises: true,
+          rel_faqs: true,
+          rel_infos: true,
+        },
+        select: {
+          id: true,
+          supplement: true,
+          type: true,
+          name: true,
+          restrict: true,
+          flavor: true,
+          description: true,
+          rec: true,
+          effect: true,
+          rec_effect: true,
+          ref_power: true,
+          flavor_summary: true,
+          effect_summary: true,
+          rec_effect_summary: true,
+          other_vers: true,
+          rel_powers: true,
+          rel_weapons: true,
+          rel_armors: true,
+          rel_vehicles: true,
+          rel_connections: true,
+          rel_generals: true,
+          rel_dloises: true,
+          rel_faqs: true,
+          rel_infos: true,
+        },
         orderBy: [
           {type_order: "asc" as const},
           {restrict_order: "asc" as const},
@@ -279,8 +566,7 @@ async function searchDloises(searchParams: { [key: string]: string | string[] | 
         ],
       },
     }),
-  }).then((res) => res.json());
-  const dloises: {[key: string]: Dlois[]} = { "Dロイス": (await Promise.all(fetchResults.map(async (fetchResult: DloisFetchResult) => parseFetchResult("dlois", fetchResult)))).filter((record) => record !== null) as Dlois[] };
+  }).then((res) => res.json()).then((data) => ({"Dロイス": data}));
   return dloises;
 }
 
@@ -288,7 +574,7 @@ async function searchDloises(searchParams: { [key: string]: string | string[] | 
 async function searchEloises(searchParams: { [key: string]: string | string[] | undefined }) {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;
-  const fetchResults = await fetch(apiUrl, {
+  const eloises: {[key: string]: Elois[]} = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -299,14 +585,37 @@ async function searchEloises(searchParams: { [key: string]: string | string[] | 
         where: {
           AND: eloisWhereCondition(searchParams),
         },
+        include: {
+          other_vers: true,
+          rel_eloises: true,
+          rel_faqs: true,
+          rel_infos: true,
+        },
+        select: {
+          id: true,
+          supplement: true,
+          type: true,
+          name: true,
+          timing: true,
+          skill: true,
+          dfclty: true,
+          target: true,
+          rng: true,
+          urge: true,
+          flavor: true,
+          effect: true,
+          other_vers: true,
+          rel_eloises: true,
+          rel_faqs: true,
+          rel_infos: true,
+        },
         orderBy: [
           {urge_order: "asc" as const},
           {type_order: "asc" as const},
         ],
       },
     }),
-  }).then((res) => res.json());
-  const eloises: {[key: string]: Elois[]} = { "Eロイス": (await Promise.all(fetchResults.map(async (fetchResult: EloisFetchResult) => parseFetchResult("elois", fetchResult)))).filter((record) => record !== null) as Elois[] };
+  }).then((res) => res.json()).then((data) => ({"Eロイス": data}));
   return eloises;
 }
 
@@ -314,7 +623,7 @@ async function searchEloises(searchParams: { [key: string]: string | string[] | 
 async function searchWorks(searchParams: { [key: string]: string | string[] | undefined }) {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;  
-  const fetchResults = await fetch(apiUrl, {
+  const works: {[key: string]: Work[]} = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -325,10 +634,17 @@ async function searchWorks(searchParams: { [key: string]: string | string[] | un
         where: {
           AND: workWhereCondition(searchParams),
         },
+        select: {
+          id: true,
+          supplement: true,
+          name: true,
+          stat: true,
+          skills: true,
+          emblems: true,
+        },
       },
     }),
-  }).then((res) => res.json());
-  const works: {[key: string]: Work[]} = { "ワークス": (await Promise.all(fetchResults.map(async (fetchResult: WorkFetchResult) => parseFetchResult("work", fetchResult)))).filter((record) => record !== null) as Work[] };
+  }).then((res) => res.json()).then((data) => ({"ワークス": data}));
   return works;
 }
 

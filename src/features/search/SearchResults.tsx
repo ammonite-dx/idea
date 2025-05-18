@@ -80,7 +80,7 @@ function SearchResultsTable<K extends keyof TypeMap> ({
             <Fragment key={work.id}>
               <div className="col-span-3 text-center base-text"><ScaledText text={work.name}/></div>
               <div className="col-span-2 text-center base-text"><ScaledText text={work.stat}/></div>
-              <div className="col-span-7 text-left base-text"><ScaledText text={work.skills.join(" ")}/></div>
+              <div className="col-span-7 text-left base-text"><ScaledText text={work.skills}/></div>
             </Fragment>
           ))}
         </div>
