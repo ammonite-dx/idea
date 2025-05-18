@@ -153,19 +153,19 @@ function getDefaultValues(kind: SearchKind, searchParams: { [key: string]: strin
 function PowerSearchForm({ control }: { control:any }) {
     return (
         <>
-            <div className="grid-item col-span-4 lg:col-span-2"><TextInput label="名称" name="name" control={control}/></div>
-            <div className="grid-item col-span-4 lg:col-span-2"><SelectBox label="分類" name="type" control={control} options={POWER_TYPES.map((s)=>({value:s,label:s}))} isMulti/></div>
-            <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="カテゴリ" name="category" control={control} options={POWER_CATEGORIES.map((s)=>({value:s,label:s}))} isMulti/></div>
-            <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="サプリメント" name="supplement" control={control} options={POWER_SUPPLEMENTS.map((s)=>({value:s,label:s}))} isMulti/></div>
-            <div className="grid-item col-span-2 lg:col-span-1"><TextInput label="最大レベル" name="maxlv" control={control} isNumber suffix='以上'/></div>
-            <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="タイミング" name="timing" control={control} options={POWER_TIMINGS.map((s)=>({value:s,label:s}))} isMulti/></div>
-            <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="技能" name="skill" control={control} options={POWER_SKILLS.map((s)=>({value:s,label:s}))} isMulti/></div>
-            <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="難易度" name="dfclty" control={control} options={POWER_DFCLTIES.map((s)=>({value:s,label:s}))} isMulti/></div>
-            <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="対象" name="target" control={control} options={POWER_TARGETS.map((s)=>({value:s,label:s}))} isMulti/></div>
-            <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="射程" name="rng" control={control} options={POWER_RNGS.map((s)=>({value:s,label:s}))} isMulti/></div>
-            <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="侵蝕値" name="encroach" control={control} options={POWER_ENCROACHES.map((s)=>({value:s,label:s}))} isMulti/></div>
-            <div className="grid-item col-span-2 lg:col-span-1"><SelectBox label="制限" name="restrict" control={control} options={POWER_RESTRICTS.map((s)=>({value:s,label:s}))} isMulti/></div>
-            <div className="grid-item col-span-4 lg:col-span-2"><TextInput label="効果" name="effect" control={control}/></div>
+            <div className="grid-item col-span-12 lg:col-span-12"><TextInput label="名称" name="name" control={control}/></div>
+            <div className="grid-item col-span-12 lg:col-span-4"><SelectBox label="分類" name="type" control={control} options={POWER_TYPES.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-4"><SelectBox label="カテゴリ" name="category" control={control} options={POWER_CATEGORIES.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-4"><SelectBox label="サプリメント" name="supplement" control={control} options={POWER_SUPPLEMENTS.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-3"><TextInput label="最大レベル" name="maxlv" control={control} isNumber suffix='以上'/></div>
+            <div className="grid-item col-span-12 lg:col-span-3"><SelectBox label="タイミング" name="timing" control={control} options={POWER_TIMINGS.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-3"><SelectBox label="技能" name="skill" control={control} options={POWER_SKILLS.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-3"><SelectBox label="難易度" name="dfclty" control={control} options={POWER_DFCLTIES.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-3"><SelectBox label="対象" name="target" control={control} options={POWER_TARGETS.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-3"><SelectBox label="射程" name="rng" control={control} options={POWER_RNGS.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-3"><SelectBox label="侵蝕値" name="encroach" control={control} options={POWER_ENCROACHES.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-3"><SelectBox label="制限" name="restrict" control={control} options={POWER_RESTRICTS.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-12"><TextInput label="効果" name="effect" control={control}/></div>
         </>
     )
 }
