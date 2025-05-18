@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import ScaledText from "./ScaledText";
 import FavoriteButton from "./FavoriteButton";
-import getDataById from "@/utils/getRecordById";
 import { Card, CardHeader, CardBody, CardBodyRow, CardDivider } from "./Card";
 import { CardRecord, Power, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Faq, Info } from "@/types/types";
 
