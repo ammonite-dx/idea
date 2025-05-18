@@ -49,20 +49,6 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
                 ].flat()
               },
               include: {
-                ref_weapon: true,
-                ref_armor: true,
-                refed_dlois: true,
-                other_vers: true,
-                rel_weapons: true,
-                rel_armors: true,
-                rel_vehicles: true,
-                rel_connections: true,
-                rel_generals: true,
-                rel_dloises: true,
-                rel_faqs: true,
-                rel_infos: true,
-              },
-              select: {
                 id: true,
                 supplement: true,
                 category: true,
@@ -152,21 +138,6 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
             ].flat()
           },
           include: {
-            refed_power: true,
-            refed_armor: true,
-            refed_general: true,
-            other_vers: true,
-            rel_powers: true,
-            rel_weapons: true,
-            rel_armors: true,
-            rel_vehicles: true,
-            rel_connections: true,
-            rel_generals: true,
-            rel_dloises: true,
-            rel_faqs: true,
-            rel_infos: true,
-          },
-          select: {
             id: true,
             supplement: true,
             category: true,
@@ -233,20 +204,6 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
             ].flat()
           },
           include: {
-            ref_weapon: true,
-            refed_power: true,
-            other_vers: true,
-            rel_powers: true,
-            rel_weapons: true,
-            rel_armors: true,
-            rel_vehicles: true,
-            rel_connections: true,
-            rel_generals: true,
-            rel_dloises: true,
-            rel_faqs: true,
-            rel_infos: true,
-          },
-          select: {
             id: true,
             supplement: true,
             category: true,
@@ -310,18 +267,6 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
             ].flat()
           },
           include: {
-            other_vers: true,
-            rel_powers: true,
-            rel_weapons: true,
-            rel_armors: true,
-            rel_vehicles: true,
-            rel_connections: true,
-            rel_generals: true,
-            rel_dloises: true,
-            rel_faqs: true,
-            rel_infos: true,
-          },
-          select: {
             id: true,
             supplement: true,
             category: true,
@@ -384,18 +329,6 @@ async function searchConnections(searchParams: { [key: string]: string | string[
             ].flat()
           },
           include: {
-            other_vers: true,
-            rel_powers: true,
-            rel_weapons: true,
-            rel_armors: true,
-            rel_vehicles: true,
-            rel_connections: true,
-            rel_generals: true,
-            rel_dloises: true,
-            rel_faqs: true,
-            rel_infos: true,
-          },
-          select: {
             id: true,
             supplement: true,
             category: true,
@@ -454,19 +387,6 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
             ].flat()
           },
           include: {
-            ref_weapon: true,
-            other_vers: true,
-            rel_powers: true,
-            rel_weapons: true,
-            rel_armors: true,
-            rel_vehicles: true,
-            rel_connections: true,
-            rel_generals: true,
-            rel_dloises: true,
-            rel_faqs: true,
-            rel_infos: true,
-          },
-          select: {
             id: true,
             supplement: true,
             category: true,
@@ -521,19 +441,6 @@ async function searchDloises(searchParams: { [key: string]: string | string[] | 
           AND: dloisWhereCondition(searchParams),
         },
         include: {
-          ref_power: true,
-          other_vers: true,
-          rel_powers: true,
-          rel_weapons: true,
-          rel_armors: true,
-          rel_vehicles: true,
-          rel_connections: true,
-          rel_generals: true,
-          rel_dloises: true,
-          rel_faqs: true,
-          rel_infos: true,
-        },
-        select: {
           id: true,
           supplement: true,
           type: true,
@@ -586,12 +493,6 @@ async function searchEloises(searchParams: { [key: string]: string | string[] | 
           AND: eloisWhereCondition(searchParams),
         },
         include: {
-          other_vers: true,
-          rel_eloises: true,
-          rel_faqs: true,
-          rel_infos: true,
-        },
-        select: {
           id: true,
           supplement: true,
           type: true,
@@ -634,7 +535,7 @@ async function searchWorks(searchParams: { [key: string]: string | string[] | un
         where: {
           AND: workWhereCondition(searchParams),
         },
-        select: {
+        include: {
           id: true,
           supplement: true,
           name: true,

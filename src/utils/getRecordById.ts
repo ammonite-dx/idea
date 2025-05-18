@@ -29,20 +29,6 @@ function getFindOptions( kind: string, id: string ) {
             return { 
                 where: { id: id },
                 include: {
-                    ref_weapon: true,
-                    ref_armor: true,
-                    refed_dlois: true,
-                    other_vers: true,
-                    rel_weapons: true,
-                    rel_armors: true,
-                    rel_vehicles: true,
-                    rel_connections: true,
-                    rel_generals: true,
-                    rel_dloises: true,
-                    rel_faqs: true,
-                    rel_infos: true,
-                },
-                select: {
                     id: true,
                     supplement: true,
                     category: true,
@@ -77,21 +63,6 @@ function getFindOptions( kind: string, id: string ) {
             return {
                 where: { id: id },
                 include: {
-                    refed_power: true,
-                    refed_armor: true,
-                    refed_general: true,
-                    other_vers: true,
-                    rel_powers: true,
-                    rel_weapons: true,
-                    rel_armors: true,
-                    rel_vehicles: true,
-                    rel_connections: true,
-                    rel_generals: true,
-                    rel_dloises: true,
-                    rel_faqs: true,
-                    rel_infos: true,
-                },
-                select: {
                     id: true,
                     supplement: true,
                     category: true,
@@ -129,20 +100,6 @@ function getFindOptions( kind: string, id: string ) {
             return {
                 where: { id: id },
                 include: {
-                    ref_weapon: true,
-                    refed_power: true,
-                    other_vers: true,
-                    rel_powers: true,
-                    rel_weapons: true,
-                    rel_armors: true,
-                    rel_vehicles: true,
-                    rel_connections: true,
-                    rel_generals: true,
-                    rel_dloises: true,
-                    rel_faqs: true,
-                    rel_infos: true,
-                },
-                select: {
                     id: true,
                     supplement: true,
                     category: true,
@@ -177,18 +134,6 @@ function getFindOptions( kind: string, id: string ) {
             return {
                 where: { id: id },
                 include: {
-                    other_vers: true,
-                    rel_powers: true,
-                    rel_weapons: true,
-                    rel_armors: true,
-                    rel_vehicles: true,
-                    rel_connections: true,
-                    rel_generals: true,
-                    rel_dloises: true,
-                    rel_faqs: true,
-                    rel_infos: true,
-                },
-                select: {
                     id: true,
                     supplement: true,
                     category: true,
@@ -223,18 +168,6 @@ function getFindOptions( kind: string, id: string ) {
             return {
                 where: { id: id },
                 include: {
-                    other_vers: true,
-                    rel_powers: true,
-                    rel_weapons: true,
-                    rel_armors: true,
-                    rel_vehicles: true,
-                    rel_connections: true,
-                    rel_generals: true,
-                    rel_dloises: true,
-                    rel_faqs: true,
-                    rel_infos: true,
-                },
-                select: {
                     id: true,
                     supplement: true,
                     category: true,
@@ -265,19 +198,6 @@ function getFindOptions( kind: string, id: string ) {
             return {
                 where: { id: id },
                 include: {
-                    ref_weapon: true,
-                    other_vers: true,
-                    rel_powers: true,
-                    rel_weapons: true,
-                    rel_armors: true,
-                    rel_vehicles: true,
-                    rel_connections: true,
-                    rel_generals: true,
-                    rel_dloises: true,
-                    rel_faqs: true,
-                    rel_infos: true,
-                },
-                select: {
                     id: true,
                     supplement: true,
                     category: true,
@@ -308,19 +228,6 @@ function getFindOptions( kind: string, id: string ) {
             return {
                 where: { id: id },
                 include: {
-                    ref_power: true,
-                    other_vers: true,
-                    rel_powers: true,
-                    rel_weapons: true,
-                    rel_armors: true,
-                    rel_vehicles: true,
-                    rel_connections: true,
-                    rel_generals: true,
-                    rel_dloises: true,
-                    rel_faqs: true,
-                    rel_infos: true,
-                },
-                select: {
                     id: true,
                     supplement: true,
                     type: true,
@@ -351,12 +258,6 @@ function getFindOptions( kind: string, id: string ) {
             return {
                 where: { id: id },
                 include: {
-                    other_vers: true,
-                    rel_eloises: true,
-                    rel_faqs: true,
-                    rel_infos: true,
-                },
-                select: {
                     id: true,
                     supplement: true,
                     type: true,
@@ -378,7 +279,7 @@ function getFindOptions( kind: string, id: string ) {
         case "work":
             return {
                 where: { id: id },
-                select: {
+                include: {
                     id: true,
                     supplement: true,
                     name: true,
