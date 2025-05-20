@@ -8,6 +8,7 @@ export default async function searchRecords<K extends keyof TypeMap>(
   searchParams:{ [key:string]:string|string[] | undefined } 
 ): Promise<{ [key: string]: TypeMap[K][] } | null> {
   console.log("searchParams", searchParams);
+  console.log("supplement", searchParams["supplement"]);
   switch (kind) {
     case "power": return await searchPowers(searchParams) as { [key: string]: TypeMap[K][] };
     case "item": return await searchItems(searchParams) as { [key: string]: TypeMap[K][] };
