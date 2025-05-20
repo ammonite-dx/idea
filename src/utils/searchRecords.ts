@@ -1,14 +1,6 @@
 import { toArray, toString } from '@/utils/utils';
-import { POWER_CATEGORIES, POWER_TYPES, POWER_SUPPLEMENTS, POWER_TIMINGS, POWER_SKILLS, POWER_DFCLTIES, POWER_TARGETS, POWER_RNGS, POWER_ENCROACHES, POWER_RESTRICTS } from '@/consts/power';
-import { ITEM_CATEGORIES, ITEM_SUPPLEMENTS } from '@/consts/item';
-import { WEAPON_TYPES, WEAPON_SKILLS } from '@/consts/weapon';
-import { ARMOR_TYPES } from '@/consts/armor';
-import { VEHICLE_SKILLS } from '@/consts/vehicle';
-import { CONNECTION_SKILLS } from '@/consts/connection';
-import { GENERAL_TYPES } from '@/consts/general';
-import { DLOIS_TYPES, DLOIS_RESTRICTS, DLOIS_SUPPLEMENTS } from '@/consts/dlois';
-import { ELOIS_TYPES, ELOIS_SUPPLEMENTS, ELOIS_TIMINGS, ELOIS_SKILLS, ELOIS_DFCLTIES, ELOIS_TARGETS, ELOIS_RNGS, ELOIS_URGES } from '@/consts/elois';
-import { WORK_SUPPLEMENTS, WORK_STATS, WORK_SKILLS } from '@/consts/work';
+import { POWER_CATEGORIES } from '@/consts/power';
+import { ITEM_CATEGORIES } from '@/consts/item';
 import { TypeMap, Power, Item, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work } from '@/types/types';
 
 export default async function searchRecords<K extends keyof TypeMap>(
@@ -555,140 +547,153 @@ async function searchWorks(searchParams: { [key: string]: string | string[] | un
 
 // エフェクト
 function powerWhereCondition(searchParams: { [key: string]: string | string[] | undefined }) {
-  return [
-    {OR: toArray(searchParams["type"], POWER_TYPES).map(type => ({type: type}))},
-    {OR: toArray(searchParams["supplement"], POWER_SUPPLEMENTS).map(supplement => ({supplement: supplement}))},
-    {OR: [
-      {update_supplement: null},
-      {NOT: toArray(searchParams["supplement"], POWER_SUPPLEMENTS).map(supplement => ({update_supplement: {contains: supplement}}))}
-    ]},
-    {name: {contains: toString(searchParams["name"], "")}},
-    {OR: [
-      {maxlv_int: null},
-      {maxlv_int: {gte: parseInt(toString(searchParams["maxlv"], "0"))}},
-    ]},
-    {OR: toArray(searchParams["timing"], POWER_TIMINGS).map(timing => ({timing: {contains: timing}}))}, 
-    {OR: toArray(searchParams["skill"], POWER_SKILLS).map(skill => ({skill: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))},
-    {OR: toArray(searchParams["dfclty"], POWER_DFCLTIES).map(dfclty => ({dfclty: dfclty}))},
-    {OR: toArray(searchParams["target"], POWER_TARGETS).map(target => ({target: target}))},
-    {OR: toArray(searchParams["rng"], POWER_RNGS).map(rng => ({rng: rng}))},
-    {OR: toArray(searchParams["encroach"], POWER_ENCROACHES).map(encroach => ({encroach: encroach}))},
-    {OR: toArray(searchParams["restrict"], POWER_RESTRICTS).map(restrict => ({restrict: {contains: restrict}}))},
-    {effect: searchParams["effect"] && {contains: toString(searchParams["effect"], "")}},
-  ];
+  const conditions = [];
+  if (searchParams["type"] !== undefined) {conditions.push({OR: toArray(searchParams["type"], []).map(type => ({type: type}))});}
+  if (searchParams["supplement"] !== undefined) {
+    conditions.push({OR: toArray(searchParams["supplement"], []).map(supplement => ({supplement: supplement}))});
+    conditions.push({NOT: toArray(searchParams["supplement"], []).map(supplement => ({update_supplement: {contains: supplement}}))});
+  } else {
+    conditions.push({update_supplement: null});
+  }
+  if (searchParams["name"] !== undefined) {conditions.push({name: {contains: toString(searchParams["name"], "")}});}
+  if (searchParams["maxlv"] !== undefined) {conditions.push({OR: [{maxlv_int: null}, {maxlv_int: {gte: parseInt(toString(searchParams["maxlv"], "0"))}}]});}
+  if (searchParams["timing"] !== undefined) {conditions.push({OR: toArray(searchParams["timing"], []).map(timing => ({timing: {contains: timing}}))});}
+  if (searchParams["skill"] !== undefined) {conditions.push({OR: toArray(searchParams["skill"], []).map(skill => ({skill: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))});}
+  if (searchParams["dfclty"] !== undefined) {conditions.push({OR: toArray(searchParams["dfclty"], []).map(dfclty => ({dfclty: dfclty}))});}
+  if (searchParams["target"] !== undefined) {conditions.push({OR: toArray(searchParams["target"], []).map(target => ({target: target}))});}
+  if (searchParams["rng"] !== undefined) {conditions.push({OR: toArray(searchParams["rng"], []).map(rng => ({rng: rng}))});}
+  if (searchParams["encroach"] !== undefined) {conditions.push({OR: toArray(searchParams["encroach"], []).map(encroach => ({encroach: encroach}))});}
+  if (searchParams["restrict"] !== undefined) {conditions.push({OR: toArray(searchParams["restrict"], []).map(restrict => ({restrict: {contains: restrict}}))});}
+  if (searchParams["effect"] !== undefined) {conditions.push({effect: {contains: toString(searchParams["effect"], "")}});}
+  return conditions;
 }
 
 // アイテム
 function itemWhereCondition(searchParams: { [key: string]: string | string[] | undefined }) {
-  return [
-    { name: { contains: toString(searchParams["name"], "") } },
-    { OR: toArray(searchParams["supplement"], ITEM_SUPPLEMENTS).map(supplement => ({ supplement: supplement })) },
-    { OR: [
-        { update_supplement: null },
-        { NOT: toArray(searchParams["supplement"], ITEM_SUPPLEMENTS).map(supplement => ({ update_supplement: { contains: supplement } })) }
-    ] },
-    (searchParams["procure"]==null && searchParams["stock"]==null && searchParams["exp"]==null) ? {}
-    : (searchParams["procure"]!=null && searchParams["stock"]==null && searchParams["exp"]==null) ? {AND: [{procure_int: {lte: parseInt(toString(searchParams["procure"], "0"))}}, {exp_int: null}]} 
-    : (searchParams["procure"]==null && searchParams["stock"]!=null && searchParams["exp"]==null) ? {AND: [{stock_int: {lte: parseInt(toString(searchParams["stock"], "0"))}}, {exp_int: null}]} 
-    : (searchParams["procure"]!=null && searchParams["stock"]!=null && searchParams["exp"]==null) ? {AND: [{procure_int: {lte: parseInt(toString(searchParams["procure"], "0"))}}, {stock_int: {lte: parseInt(toString(searchParams["stock"], "0"))}}, {exp_int: null}]} 
-    : (searchParams["procure"]==null && searchParams["stock"]==null && searchParams["exp"]!=null) ? {exp_int: {lte: parseInt(toString(searchParams["exp"], "0"))}} 
-    : (searchParams["procure"]!=null && searchParams["stock"]==null && searchParams["exp"]!=null) ? {OR: [{procure_int: {lte: parseInt(toString(searchParams["procure"], "0"))}}, {exp_int: {lte: parseInt(toString(searchParams["exp"], "0"))}}]} 
-    : (searchParams["procure"]==null && searchParams["stock"]!=null && searchParams["exp"]!=null) ? {OR: [{stock_int: {lte: parseInt(toString(searchParams["stock"], "0"))}}, {exp_int: {lte: parseInt(toString(searchParams["exp"], "0"))}}]} 
-    : {OR: [{AND: [{procure_int: {lte: parseInt(toString(searchParams["procure"], "0"))}}, {stock_int: {lte: parseInt(toString(searchParams["stock"], "0"))}}]}, {exp_int: {lte: parseInt(toString(searchParams["exp"], "0"))}}]},
-    { effect: searchParams["effect"] && { contains: toString(searchParams["effect"], "") } },
-  ];
+  const conditions = [];
+  if (searchParams["name"] !== undefined) {conditions.push({name: {contains: toString(searchParams["name"], "")}});}
+  if (searchParams["supplement"] !== undefined) {
+    conditions.push({OR: toArray(searchParams["supplement"], []).map(supplement => ({supplement: supplement}))});
+    conditions.push({NOT: toArray(searchParams["supplement"], []).map(supplement => ({update_supplement: {contains: supplement}}))});
+  } else {
+    conditions.push({update_supplement: null});
+  }
+  if (searchParams["procure"] !== undefined && searchParams["stock"] === undefined && searchParams["exp"] === undefined) {
+    conditions.push({procure_int: {lte: parseInt(toString(searchParams["procure"], "0"))}});
+    conditions.push({exp_int: null});
+  } else if (searchParams["procure"] === undefined && searchParams["stock"] !== undefined && searchParams["exp"] === undefined) {
+    conditions.push({stock_int: {lte: parseInt(toString(searchParams["stock"], "0"))}});
+    conditions.push({exp_int: null});
+  } else if (searchParams["procure"] !== undefined && searchParams["stock"] !== undefined && searchParams["exp"] === undefined) {
+    conditions.push({procure_int: {lte: parseInt(toString(searchParams["procure"], "0"))}});
+    conditions.push({stock_int: {lte: parseInt(toString(searchParams["stock"], "0"))}});
+    conditions.push({exp_int: null});
+  } else if (searchParams["procure"] === undefined && searchParams["stock"] === undefined && searchParams["exp"] !== undefined) {
+    conditions.push({exp_int: {lte: parseInt(toString(searchParams["exp"], "0"))}});
+  } else if (searchParams["procure"] !== undefined && searchParams["stock"] === undefined && searchParams["exp"] !== undefined) {
+    conditions.push({OR: [{procure_int: {lte: parseInt(toString(searchParams["procure"], "0"))}}, {exp_int: {lte: parseInt(toString(searchParams["exp"], "0"))}}]});
+  } else if (searchParams["procure"] === undefined && searchParams["stock"] !== undefined && searchParams["exp"] !== undefined) {
+    conditions.push({OR: [{stock_int: {lte: parseInt(toString(searchParams["stock"], "0"))}}, {exp_int: {lte: parseInt(toString(searchParams["exp"], "0"))}}]});
+  } else if (searchParams["procure"] !== undefined && searchParams["stock"] !== undefined && searchParams["exp"] !== undefined) {
+    conditions.push({OR: [{AND: [{procure_int: {lte: parseInt(toString(searchParams["procure"], "0"))}}, {stock_int: {lte: parseInt(toString(searchParams["stock"], "0"))}}]}, {exp_int: {lte: parseInt(toString(searchParams["exp"], "0"))}}]});
+  }
+  if (searchParams["effect"] !== undefined) {conditions.push({effect: {contains: toString(searchParams["effect"], "")}});}
+  return conditions;
 }
 
 // 武器
 function weaponWhereCondition(searchParams: { [key: string]: string | string[] | undefined }) {
-  return [
-    { OR: toArray(searchParams["weapon-type"], WEAPON_TYPES).map(type => ({ type: { contains: type }})) },
-    { OR: toArray(searchParams["weapon-skill"], WEAPON_SKILLS).map(skill => ({ skill: { contains: skill.replace("〈","").replace("〉","").replace(":","") } })) },
-    { OR: [{ acc_int: null }, { acc_int: { gte: parseInt(toString(searchParams["weapon-acc"], "-999")) } }] },
-    { OR: [{ atk_int: null }, { atk_int: { gte: parseInt(toString(searchParams["weapon-atk"], "-999")) } }] },
-    { OR: [{ guard_int: null }, { guard_int: { gte: parseInt(toString(searchParams["weapon-guard"], "0")) } }] },
-    { OR: [{ rng_int: null }, { rng_int: { gte: parseInt(toString(searchParams["weapon-rng"], "0")) } }] },
-    (toString(searchParams["item-type"], "指定なし") == "指定なし") ? { refed_armor_id: null } : {},
-    (toString(searchParams["item-type"], "指定なし") == "指定なし") ? { refed_general_id: null } : {},
-  ];
+  const conditions = [];
+  if (searchParams["weapon-type"] !== undefined) {conditions.push({OR: toArray(searchParams["weapon-type"], []).map(type => ({type: {contains: type}}))});}
+  if (searchParams["weapon-skill"] !== undefined) {conditions.push({OR: toArray(searchParams["weapon-skill"], []).map(skill => ({skill: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))});}
+  if (searchParams["weapon-acc"] !== undefined) {conditions.push({OR: [{acc_int: null}, {acc_int: {gte: parseInt(toString(searchParams["weapon-acc"], "-999"))}}]});}
+  if (searchParams["weapon-atk"] !== undefined) {conditions.push({OR: [{atk_int: null}, {atk_int: {gte: parseInt(toString(searchParams["weapon-atk"], "-999"))}}]});}
+  if (searchParams["weapon-guard"] !== undefined) {conditions.push({OR: [{guard_int: null}, {guard_int: {gte: parseInt(toString(searchParams["weapon-guard"], "0"))}}]});}
+  if (searchParams["weapon-rng"] !== undefined) {conditions.push({OR: [{rng_int: null}, {rng_int: {gte: parseInt(toString(searchParams["weapon-rng"], "0"))}}]});}
+  if (toString(searchParams["item-type"], "指定なし") === "指定なし") {conditions.push({refed_armor: null});}
+  if (toString(searchParams["item-type"], "指定なし") === "指定なし") {conditions.push({refed_general: null});}
+  return conditions;
 }
 
 // 防具
 function armorWhereCondition(searchParams: { [key: string]: string | string[] | undefined }) {
-  return [
-      { OR: toArray(searchParams["armor-type"], ARMOR_TYPES).map(type => (type==="防具" ? { type: { not: { contains: "補助" } } } : { type: { contains: "補助" } })) },
-      { OR: [{ dodge_int: null }, { dodge_int: { gte: parseInt(toString(searchParams["armor-dodge"], "-999")) } }] },
-      { OR: [{ initiative_int: null }, { initiative_int: { gte: parseInt(toString(searchParams["armor-initiative"], "-999")) } }] },
-      { OR: [{ armor_int: null }, { armor_int: { gte: parseInt(toString(searchParams["armor-armor"], "0")) } }] },
-  ];
+  const conditions = [];
+  if (searchParams["armor-type"] !== undefined) {conditions.push({OR: toArray(searchParams["armor-type"], []).map(type => (type==="防具" ? { type: { not: { contains: "補助" } } } : { type: { contains: "補助" } }))});}
+  if (searchParams["armor-dodge"] !== undefined) {conditions.push({OR: [{dodge_int: null}, {dodge_int: {gte: parseInt(toString(searchParams["armor-dodge"], "-999"))}}]});}
+  if (searchParams["armor-initiative"] !== undefined) {conditions.push({OR: [{initiative_int: null}, {initiative_int: {gte: parseInt(toString(searchParams["armor-initiative"], "-999"))}}]});}
+  if (searchParams["armor-armor"] !== undefined) {conditions.push({OR: [{armor_int: null}, {armor_int: {gte: parseInt(toString(searchParams["armor-armor"], "0"))}}]});}
+  return conditions;
 }
 
 // ヴィークル
 function vehicleWhereCondition(searchParams: { [key: string]: string | string[] | undefined }) {
-  return [
-    { OR: toArray(searchParams["vehicle-skill"], VEHICLE_SKILLS).map(skill => ({ skill: { contains: skill.replace("〈","").replace("〉","").replace(":","") } })) },
-    { OR: [{ atk_int: null }, { atk_int: { gte: parseInt(toString(searchParams["vehicle-atk"], "-999")) } }] },
-    { OR: [{ initiative_int: null }, { initiative_int: { gte: parseInt(toString(searchParams["vehicle-initiative"], "-999")) } }] },
-    { OR: [{ armor_int: null }, { armor_int: { gte: parseInt(toString(searchParams["vehicle-armor"], "0")) } }] },
-    { OR: [{ dash_int: null }, { dash_int: { gte: parseInt(toString(searchParams["vehicle-dash"], "0")) } }] },
-  ];
+  const conditions = [];
+  if (searchParams["vehicle-type"] !== undefined) {conditions.push({OR: toArray(searchParams["vehicle-type"], []).map(type => ({type: {contains: type}}))});}
+  if (searchParams["vehicle-skill"] !== undefined) {conditions.push({OR: toArray(searchParams["vehicle-skill"], []).map(skill => ({skill: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))});}
+  if (searchParams["vehicle-atk"] !== undefined) {conditions.push({OR: [{atk_int: null}, {atk_int: {gte: parseInt(toString(searchParams["vehicle-atk"], "-999"))}}]});}
+  if (searchParams["vehicle-initiative"] !== undefined) {conditions.push({OR: [{initiative_int: null}, {initiative_int: {gte: parseInt(toString(searchParams["vehicle-initiative"], "-999"))}}]});}
+  if (searchParams["vehicle-armor"] !== undefined) {conditions.push({OR: [{armor_int: null}, {armor_int: {gte: parseInt(toString(searchParams["vehicle-armor"], "0"))}}]});}
+  if (searchParams["vehicle-dash"] !== undefined) {conditions.push({OR: [{dash_int: null}, {dash_int: {gte: parseInt(toString(searchParams["vehicle-dash"], "0"))}}]});}
+  return conditions;
 }
 
 // コネ
 function connectionWhereCondition(searchParams: { [key: string]: string | string[] | undefined }) {
-  return [
-    { OR: toArray(searchParams["connection-skill"], CONNECTION_SKILLS).map(skill => ({ skill: { contains: skill } })) }
-  ];
+  const conditions = [];
+  if (searchParams["connection-skill"] !== undefined) {conditions.push({OR: toArray(searchParams["connection-skill"], []).map(skill => ({skill: {contains: skill}}))});}
+  return conditions;
 }
 
 // 一般アイテム
 function generalWhereCondition(searchParams: { [key: string]: string | string[] | undefined }) {
-  return [
-    { OR: toArray(searchParams["general-type"], GENERAL_TYPES).map(type => ({ type: { contains: type } })) }
-  ];
+  const conditions = [];
+  if (searchParams["general-type"] !== undefined) {conditions.push({OR: toArray(searchParams["general-type"], []).map(type => ({type: {contains: type}}))});}
+  return conditions;
 }
 
 // Dロイス
 function dloisWhereCondition(searchParams: { [key: string]: string | string[] | undefined }) {
-  return [
-      {OR: toArray(searchParams["supplement"], DLOIS_SUPPLEMENTS).map(supplement => ({supplement: supplement}))},
-      {OR: [
-        {update_supplement: null},
-        {NOT: toArray(searchParams["supplement"], DLOIS_SUPPLEMENTS).map(supplement => ({update_supplement: {contains: supplement}}))}
-      ]},
-      {OR: toArray(searchParams["type"], DLOIS_TYPES).map(type => ({type: type}))},
-      {name: {contains: toString(searchParams["name"], "")}},
-      {OR: toArray(searchParams["restrict"], DLOIS_RESTRICTS).map(restrict => ({restrict: {contains: restrict}}))},
-      {effect: searchParams["effect"] && {contains: toString(searchParams["effect"], "")}},
-  ];
+  const conditions = [];
+  if (searchParams["name"] !== undefined) {conditions.push({name: {contains: toString(searchParams["name"], "")}});}
+  if (searchParams["supplement"] !== undefined) {
+    conditions.push({OR: toArray(searchParams["supplement"], []).map(supplement => ({supplement: supplement}))});
+    conditions.push({NOT: toArray(searchParams["supplement"], []).map(supplement => ({update_supplement: {contains: supplement}}))});
+  } else {
+    conditions.push({update_supplement: null});
+  }
+  if (searchParams["type"] !== undefined) {conditions.push({OR: toArray(searchParams["type"], []).map(type => ({type: type}))});}
+  if (searchParams["restrict"] !== undefined) {conditions.push({OR: toArray(searchParams["restrict"], []).map(restrict => ({restrict: {contains: restrict}}))});}
+  if (searchParams["effect"] !== undefined) {conditions.push({effect: {contains: toString(searchParams["effect"], "")}});}
+  return conditions;
 }
 
 // Eロイス
 function eloisWhereCondition(searchParams: { [key: string]: string | string[] | undefined }) {
-  return [
-    {OR: toArray(searchParams["supplement"], ELOIS_SUPPLEMENTS).map(supplement => ({supplement: supplement}))},
-    {OR: [
-      {update_supplement: null},
-      {NOT: toArray(searchParams["supplement"], ELOIS_SUPPLEMENTS).map(supplement => ({update_supplement: {contains: supplement}}))}
-    ]},
-    {OR: toArray(searchParams["type"], ELOIS_TYPES).map(type => ({type: type}))},
-    {name: {contains: toString(searchParams["name"], "")}},
-    {OR: toArray(searchParams["restrict"], ELOIS_TIMINGS).map(timing => ({timing: {contains: timing}}))},
-    {OR: toArray(searchParams["skill"], ELOIS_SKILLS).map(skill => ({skill: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))},
-    {OR: toArray(searchParams["dfclty"], ELOIS_DFCLTIES).map(dfclty => ({dfclty: {contains: dfclty}}))},
-    {OR: toArray(searchParams["target"], ELOIS_TARGETS).map(target => ({target: {contains: target}}))},
-    {OR: toArray(searchParams["rng"], ELOIS_RNGS).map(rng => ({rng: {contains: rng}}))},
-    {OR: toArray(searchParams["urge"], ELOIS_URGES).map(urge => ({urge: {contains: urge}}))},
-    {effect: searchParams["effect"] && {contains: toString(searchParams["effect"], "")}},
-  ];
+  const conditions = [];
+  if (searchParams["name"] !== undefined) {conditions.push({name: {contains: toString(searchParams["name"], "")}});}
+  if (searchParams["supplement"] !== undefined) {
+    conditions.push({OR: toArray(searchParams["supplement"], []).map(supplement => ({supplement: supplement}))});
+    conditions.push({NOT: toArray(searchParams["supplement"], []).map(supplement => ({update_supplement: {contains: supplement}}))});
+  } else {
+    conditions.push({update_supplement: null});
+  }
+  if (searchParams["type"] !== undefined) {conditions.push({OR: toArray(searchParams["type"], []).map(type => ({type: type}))});}
+  if (searchParams["timing"] !== undefined) {conditions.push({OR: toArray(searchParams["timing"], []).map(timing => ({timing: {contains: timing}}))});}
+  if (searchParams["skill"] !== undefined) {conditions.push({OR: toArray(searchParams["skill"], []).map(skill => ({skill: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))});}
+  if (searchParams["dfclty"] !== undefined) {conditions.push({OR: toArray(searchParams["dfclty"], []).map(dfclty => ({dfclty: {contains: dfclty}}))});}
+  if (searchParams["target"] !== undefined) {conditions.push({OR: toArray(searchParams["target"], []).map(target => ({target: {contains: target}}))});}
+  if (searchParams["rng"] !== undefined) {conditions.push({OR: toArray(searchParams["rng"], []).map(rng => ({rng: {contains: rng}}))});}
+  if (searchParams["urge"] !== undefined) {conditions.push({OR: toArray(searchParams["urge"], []).map(urge => ({urge: {contains: urge}}))});}
+  if (searchParams["effect"] !== undefined) {conditions.push({effect: {contains: toString(searchParams["effect"], "")}});}
+  return conditions;
 }
 
 // ワークス
 function workWhereCondition(searchParams: { [key: string]: string | string[] | undefined }) {
-  return [
-    { name: { contains: toString(searchParams["name"], "") } },
-    {OR: toArray(searchParams["supplement"], WORK_SUPPLEMENTS).map(supplement => ({supplement: supplement}))},
-    {OR: toArray(searchParams["stat"], WORK_STATS).map(stat => ({stat: {contains: stat}}))},
-    {OR: toArray(searchParams["skill"], WORK_SKILLS).map(skill => ({skills: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))},
-  ];
+  const conditions = [];
+  if (searchParams["name"] !== undefined) {conditions.push({name: {contains: toString(searchParams["name"], "")}});}
+  if (searchParams["supplement"] !== undefined) {conditions.push({OR: toArray(searchParams["supplement"], []).map(supplement => ({supplement: supplement}))});}
+  if (searchParams["stat"] !== undefined) {conditions.push({OR: toArray(searchParams["stat"], []).map(stat => ({stat: {contains: stat}}))});}
+  if (searchParams["skill"] !== undefined) {conditions.push({OR: toArray(searchParams["skill"], []).map(skill => ({skills: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))});}
+  return conditions;
 }
