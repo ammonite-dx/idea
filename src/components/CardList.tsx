@@ -3,7 +3,6 @@ import RecordCard from "@/components/RecordCard";
 import { CardRecord } from "@/types/types";
 
 export default async function CardList ({title, records, category=false}: {title:string, records:CardRecord[], category?:boolean}) {
-    console.log("CardList", title, records);
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 2xl:grid-cols-5 gap-4 mb-4">
             <CategoryCard title={title} hitNumber={records.length} />

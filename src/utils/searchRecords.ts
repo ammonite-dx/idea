@@ -78,7 +78,7 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
               ],
             },
         }),
-    }).then((res) => res.json()) as Power[];
+    }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"power", ...record}))) as Power[];
     return [category, powersInCategory];
   })));
   return powers;
@@ -171,7 +171,7 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
           ],
         },
       }),
-    }).then((res) => res.json()) as Weapon[];
+    }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"weapon", ...record}))) as Weapon[];
     return [category, weaponsInCategory]
   })));
   return weapons;
@@ -234,7 +234,7 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
           ],
         },
       }),
-    }).then((res) => res.json()) as Armor[];
+    }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"armor", ...record}))) as Armor[];
     return [category, armorsInCategory]
   })));
   return armors;
@@ -296,7 +296,7 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
           ],
         },
       }),
-    }).then((res) => res.json()) as Vehicle[];
+    }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"vehicle", ...record}))) as Vehicle[];
     return [category, vehiclesInCategory]
   })));
   return vehicles;
@@ -354,7 +354,7 @@ async function searchConnections(searchParams: { [key: string]: string | string[
           ],
         },
       }),
-    }).then((res) => res.json());
+    }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"connection", ...record})));
     return [category, connectionsInCategory]
   })));
   return connections;
@@ -413,7 +413,7 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
           ],
         },
       }),
-    }).then((res) => res.json()) as General[];
+    }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"general", ...record}))) as General[];
     return [category, generalsInCategory]
   })));
   return generals;
@@ -467,7 +467,7 @@ async function searchDloises(searchParams: { [key: string]: string | string[] | 
         ],
       },
     }),
-  }).then((res) => res.json()).then((data) => ({"Dロイス": data}));
+  }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"dlois", ...record}))).then((data) => ({"Dロイス": data}));
   return dloises;
 }
 
@@ -510,7 +510,7 @@ async function searchEloises(searchParams: { [key: string]: string | string[] | 
         ],
       },
     }),
-  }).then((res) => res.json()).then((data) => ({"Eロイス": data}));
+  }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"elois", ...record}))).then((data) => ({"Eロイス": data}));
   return eloises;
 }
 
@@ -539,7 +539,7 @@ async function searchWorks(searchParams: { [key: string]: string | string[] | un
         },
       },
     }),
-  }).then((res) => res.json()).then((data) => ({"ワークス": data}));
+  }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"work", ...record}))).then((data) => ({"ワークス": data}));
   return works;
 }
 
