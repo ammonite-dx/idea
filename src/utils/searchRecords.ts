@@ -77,7 +77,6 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
 // アイテム
 async function searchItems(searchParams: { [key: string]: string | string[] | undefined }) {
   switch (toString(searchParams["item-type"], "指定なし")) {
-    case "武器": return await searchWeapons(searchParams) as { [key: string]: Item[] };
     case "防具": return await searchArmors(searchParams) as { [key: string]: Item[] } ;
     case "ヴィークル": return await searchVehicles(searchParams) as { [key: string]: Item[] };
     case "コネ": return await searchConnections(searchParams) as { [key: string]: Item[] };
@@ -89,12 +88,11 @@ async function searchItems(searchParams: { [key: string]: string | string[] | un
       const connections = await searchConnections(searchParams);
       const generals = await searchGenerals(searchParams);
       const items = Object.fromEntries(toArray(searchParams["category"], ITEM_CATEGORIES).map(category => {
-          const weaponsInCategory: Item[] = weapons[category] || [];
           const armorsInCategory: Item[] = armors[category] || [];
           const vehiclesInCategory: Item[] = vehicles[category] || [];
           const connectionsInCategory: Item[] = connections[category] || [];
           const generalsInCategory: Item[] = generals[category] || [];
-          const itemsInCategory: Item[] = weaponsInCategory.concat(armorsInCategory).concat(vehiclesInCategory).concat(connectionsInCategory).concat(generalsInCategory);
+          const itemsInCategory: Item[] = armorsInCategory.concat(vehiclesInCategory).concat(connectionsInCategory).concat(generalsInCategory);
           return [category, itemsInCategory]
       }));
       return items;
@@ -103,54 +101,50 @@ async function searchItems(searchParams: { [key: string]: string | string[] | un
 
 // 武器
 async function searchWeapons(searchParams: { [key: string]: string | string[] | undefined }) {
-  const weapons: { [key: string]: Weapon[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-    const apiUrl = `${baseUrl}/api/prisma`;
-    const weaponsInCategory = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: "weapon",
-        findOptions: {
-          where: {
-            AND: [
-              {category: category},
-              itemWhereCondition(searchParams),
-              weaponWhereCondition(searchParams),
-            ].flat()
-          },
-          select: {
-            id: true,
-            supplement: true,
-            category: true,
-            name: true,
-            type: true,
-            skill: true,
-            acc: true,
-            atk: true,
-            guard: true,
-            rng: true,
-            procure: true,
-            stock: true,
-            exp: true,
-            rec: true,
-            flavor: true,
-            effect: true,
-            price: true,
-            rec_effect: true,
-          },
-          orderBy: [
-            {type_order: "asc" as const},
-            {cost_order: "asc" as const},
-            {ruby: "asc" as const}
-          ],
+  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+  const apiUrl = `${baseUrl}/api/prisma`;
+  const weapons: { [key: string]: Weapon[] } = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: "weapon",
+      findOptions: {
+        where: {
+          AND: [
+            itemWhereCondition(searchParams),
+            weaponWhereCondition(searchParams),
+          ].flat()
         },
-      }),
-    }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"weapon", ...record}))) as Weapon[];
-    return [category, weaponsInCategory]
-  })));
+        select: {
+          id: true,
+          supplement: true,
+          category: true,
+          name: true,
+          type: true,
+          skill: true,
+          acc: true,
+          atk: true,
+          guard: true,
+          rng: true,
+          procure: true,
+          stock: true,
+          exp: true,
+          rec: true,
+          flavor: true,
+          effect: true,
+          price: true,
+          rec_effect: true,
+        },
+        orderBy: [
+          {type_order: "asc" as const},
+          {cost_order: "asc" as const},
+          {ruby: "asc" as const}
+        ],
+      },
+    }),
+  }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"weapon", ...record}))).then((data) => ({"武器": data}));
   return weapons;
 }
 
