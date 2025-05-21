@@ -144,6 +144,7 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
       },
     }),
   }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"weapon", ...record}))).then((data) => ({"武器": data}));
+  console.log("weapons", weapons);
   return weapons;
 }
 
