@@ -82,7 +82,6 @@ async function searchItems(searchParams: { [key: string]: string | string[] | un
     case "コネ": return await searchConnections(searchParams) as { [key: string]: Item[] };
     case "一般アイテム": return await searchGenerals(searchParams) as { [key: string]: Item[] };
     default:
-      const weapons = await searchWeapons(searchParams);
       const armors = await searchArmors(searchParams);
       const vehicles = await searchVehicles(searchParams);
       const connections = await searchConnections(searchParams);
