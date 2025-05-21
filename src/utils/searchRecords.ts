@@ -77,11 +77,11 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
 // アイテム
 async function searchItems(searchParams: { [key: string]: string | string[] | undefined }) {
   switch (toString(searchParams["item-type"], "指定なし")) {
-    case "武器": return searchWeapons(searchParams) as Promise<{ [key: string]: Item[] }>;
-    case "防具": return searchArmors(searchParams) as Promise<{ [key: string]: Item[] }> ;
-    case "ヴィークル": return searchVehicles(searchParams) as Promise<{ [key: string]: Item[] }>;
-    case "コネ": return searchConnections(searchParams) as Promise<{ [key: string]: Item[] }>;
-    case "一般アイテム": return searchGenerals(searchParams) as Promise<{ [key: string]: Item[] }>;
+    case "武器": return await searchWeapons(searchParams) as { [key: string]: Item[] };
+    case "防具": return await searchArmors(searchParams) as { [key: string]: Item[] } ;
+    case "ヴィークル": return await searchVehicles(searchParams) as { [key: string]: Item[] };
+    case "コネ": return await searchConnections(searchParams) as { [key: string]: Item[] };
+    case "一般アイテム": return await searchGenerals(searchParams) as { [key: string]: Item[] };
     default:
       const weapons = await searchWeapons(searchParams);
       const armors = await searchArmors(searchParams);
