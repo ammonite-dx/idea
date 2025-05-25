@@ -67,7 +67,7 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
       },
     }),
   })
-  .then((res) => res.json())
+  .then((response) => response.json())
   .then((records) => records.map((record:object) => ({kind:"power", ...record})))
   .then((powers) => powers.map((power:Power) => (
     power.refed_dlois ? {...power, refed_dlois:{...power.refed_dlois, ref_power:power}} :

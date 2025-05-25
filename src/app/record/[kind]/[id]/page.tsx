@@ -19,10 +19,7 @@ export default async function Page({ params }: PageProps) {
     const { kind, id } = await params;
     const decodedKind = decodeURIComponent(kind) as CardRecordKind;
     const decodedId = decodeURIComponent(id);
-    console.log("kind: ", decodedKind);
-    console.log("id: ", decodedId);
     const record = await getRecordById(decodedKind, decodedId);
-    console.log("record: ", record);
     if (!record) return notFound();
 
     // 別バージョン

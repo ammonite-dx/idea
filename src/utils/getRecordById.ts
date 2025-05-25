@@ -6,7 +6,7 @@ export default async function getRecordById<K extends keyof TypeMap>(
 ): Promise<TypeMap[K] | null> {
     const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
     const apiUrl = `${baseUrl}/api/prisma`;
-    const response = await fetch(apiUrl, {
+    const response: TypeMap[K] = await fetch(apiUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -16,11 +16,12 @@ export default async function getRecordById<K extends keyof TypeMap>(
             findOptions: JSON.stringify(getFindOptions(kind, id)),
         }),
     })
-    .then((res) => res.json())
-    .then((data) => data[0])
-    .then((data) => ({kind:kind, ...data}));
+    .then((response) => response.json())
+    .then((records) => records[0])
+    .then((record) => ({kind:kind, ...record}));
+    console.log(response);
     if (!response) return null;
-    return response as TypeMap[K];
+    return response;
 }
 
 function getFindOptions( kind: string, id: string ) {
