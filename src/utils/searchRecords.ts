@@ -136,6 +136,7 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
           effect: true,
           price: true,
           rec_effect: true,
+          refed_power: true,
         },
         orderBy: [
           {type_order: "asc" as const},
