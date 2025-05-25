@@ -7,7 +7,6 @@ export const runtime = 'edge';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        console.log("requestBody: ",body);
         const model = body.model;
         const findOptions = body.findOptions;
 
@@ -25,6 +24,7 @@ export async function POST(request: Request) {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const data = await (prisma[model] as any).findMany(findOptions);
+        console.log("data: ", data)
         return NextResponse.json(data);
     } catch (error: unknown) {
         console.error('Error in API route:', error);
