@@ -41,11 +41,11 @@ export default async function Page({ params }: PageProps) {
     return (
         <div>
             <div className="mb-4 lg:mb-8"><RecordCard record={record} category details/></div>
-            {otherVers && otherVers.length && <CardList title="別バージョン" records={otherVers} category />}
-            {relPowers && relPowers.length && <CardList title="関連エフェクト" records={relPowers} category />}
-            {relItems && relItems.length && <CardList title="関連アイテム" records={relItems} category />}
-            {relDlois && relDlois.length && <CardList title="関連Dロイス" records={relDlois} category />}
-            {relElois && relElois.length && <CardList title="関連Eロイス" records={relElois} category />}
+            {otherVers && otherVers.length>0 && <CardList title="別バージョン" records={otherVers} category />}
+            {relPowers && relPowers.length>0 && <CardList title="関連エフェクト" records={relPowers} category />}
+            {relItems && relItems.length>0 && <CardList title="関連アイテム" records={relItems} category />}
+            {relDlois && relDlois.length>0 && <CardList title="関連Dロイス" records={relDlois} category />}
+            {relElois && relElois.length>0 && <CardList title="関連Eロイス" records={relElois} category />}
         </div>
     );
 } 

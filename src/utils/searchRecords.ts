@@ -1,7 +1,8 @@
 import { toArray, toString } from '@/utils/utils';
 import { POWER_CATEGORIES } from '@/consts/power';
 import { ITEM_CATEGORIES } from '@/consts/item';
-import { TypeMap, Power, Item, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work } from '@/types/types';
+import { TypeMap, Power, Item, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work, PowerResponse, WeaponResponse, ArmorResponse, VehicleResponse, ConnectionResponse, GeneralResponse, DloisResponse, EloisResponse, WorkResponse } from '@/types/types';
+import { parsePower, parseWeapon, parseArmor, parseVehicle, parseConnection, parseGeneral, parseDlois, parseElois, parseWork } from './parseRecord';
  
 export default async function searchRecords<K extends keyof TypeMap>(
   kind: K,
@@ -26,7 +27,7 @@ export default async function searchRecords<K extends keyof TypeMap>(
 async function searchPowers(searchParams: { [key: string]: string | string[] | undefined }) {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;
-  const powers = await fetch(apiUrl, {
+  const powers: {[key:string]: Power[]} = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -39,23 +40,7 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
             powerWhereCondition(searchParams),
           ].flat()
         },
-        select: {
-          id: true,
-          supplement: true,
-          category: true,
-          type: true,
-          name: true,
-          maxlv: true,
-          timing: true,
-          skill: true,
-          dfclty: true,
-          target: true,
-          rng: true,
-          encroach: true,
-          restrict: true,
-          premise: true,
-          flavor: true,
-          effect: true,
+        include: {
           ref_weapon: true,
           ref_armor: true,
           refed_dlois: true,
@@ -68,12 +53,8 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
     }),
   })
   .then((response) => response.json())
-  .then((records) => records.map((record:object) => ({kind:"power", ...record})))
-  .then((powers) => powers.map((power:Power) => (
-    power.refed_dlois ? {...power, refed_dlois:{...power.refed_dlois, ref_power:power}} :
-    power
-  )))
-  .then((powers) => CategorizeRecords(POWER_CATEGORIES, powers)) as { [key: string]: Power[] };
+  .then((records:PowerResponse[]) => records.map((record) => parsePower(record)))
+  .then((powers:Power[]) => CategorizeRecords(POWER_CATEGORIES, powers));
   return powers;
 };
 
@@ -121,25 +102,7 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
             weaponWhereCondition(searchParams),
           ].flat()
         },
-        select: {
-          id: true,
-          supplement: true,
-          category: true,
-          name: true,
-          type: true,
-          skill: true,
-          acc: true,
-          atk: true,
-          guard: true,
-          rng: true,
-          procure: true,
-          stock: true,
-          exp: true,
-          rec: true,
-          flavor: true,
-          effect: true,
-          price: true,
-          rec_effect: true,
+        include: {
           refed_power: true,
           refed_armor: true,
           refed_general: true,
@@ -153,14 +116,8 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
     }),
   })
   .then((response) => response.json())
-  .then((records) => records.map((record:object) => ({kind:"weapon", ...record})))
-  .then((weapons) => weapons.map((weapon:Weapon) => (
-    weapon.refed_power ? {...weapon, refed_power:{...weapon.refed_power, ref_weapon:weapon}} :
-    weapon.refed_armor ? {...weapon, refed_armor:{...weapon.refed_armor, ref_weapon:weapon}} :
-    weapon.refed_general ? {...weapon, refed_general:{...weapon.refed_general, ref_weapon:weapon}} :
-    weapon
-  )))
-  .then((weapons) => CategorizeRecords(ITEM_CATEGORIES, weapons));
+  .then((records:WeaponResponse[]) => records.map((record) => parseWeapon(record)))
+  .then((weapons:Weapon[]) => CategorizeRecords(ITEM_CATEGORIES, weapons));
   return weapons;
 }
 
@@ -182,23 +139,7 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
             armorWhereCondition(searchParams),
           ].flat()
         },
-        select: {
-          id: true,
-          supplement: true,
-          category: true,
-          name: true,
-          type: true,
-          dodge: true,
-          initiative: true,
-          armor: true,
-          procure: true,
-          stock: true,
-          exp: true,
-          rec: true,
-          flavor: true,
-          effect: true,
-          price: true,
-          rec_effect: true,
+        include: {
           ref_weapon: true,
           refed_power: true,
         },
@@ -211,12 +152,8 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
     }),
   })
   .then((response) => response.json())
-  .then((records) => records.map((record:object) => ({kind:"armor", ...record})))
-  .then((armors) => armors.map((armor:Armor) => (
-    armor.refed_power ? {...armor, refed_power:{...armor.refed_power, ref_weapon:armor}} :
-    armor
-  )))
-  .then((armors) => CategorizeRecords(ITEM_CATEGORIES, armors));
+  .then((records:ArmorResponse[]) => records.map((record) => parseArmor(record)))
+  .then((armors:Armor[]) => CategorizeRecords(ITEM_CATEGORIES, armors));
   return armors;
 }
 
@@ -238,26 +175,6 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
             vehicleWhereCondition(searchParams),
           ].flat()
         },
-        select: {
-          id: true,
-          supplement: true,
-          category: true,
-          name: true,
-          type: true,
-          skill: true,
-          atk: true,
-          initiative: true,
-          armor: true,
-          dash: true,
-          procure: true,
-          stock: true,
-          exp: true,
-          rec: true,
-          flavor: true,
-          effect: true,
-          price: true,
-          rec_effect: true,
-        },
         orderBy: [
           {cost_order: "asc" as const},
           {ruby: "asc" as const}
@@ -266,8 +183,8 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
     }),
   })
   .then((response) => response.json())
-  .then((records) => records.map((record:object) => ({kind:"vehicle", ...record})))
-  .then((vehicles) => CategorizeRecords(ITEM_CATEGORIES, vehicles));
+  .then((records:VehicleResponse[]) => records.map((record) => parseVehicle(record)))
+  .then((vehicles:Vehicle[]) => CategorizeRecords(ITEM_CATEGORIES, vehicles));
   return vehicles;
 }
 
@@ -289,22 +206,6 @@ async function searchConnections(searchParams: { [key: string]: string | string[
             connectionWhereCondition(searchParams),
           ].flat()
         },
-        select: {
-          id: true,
-          supplement: true,
-          category: true,
-          name: true,
-          type: true,
-          skill: true,
-          procure: true,
-          stock: true,
-          exp: true,
-          rec: true,
-          flavor: true,
-          effect: true,
-          price: true,
-          rec_effect: true,
-        },
         orderBy: [
           {cost_order: "asc" as const},
           {ruby: "asc" as const}
@@ -313,8 +214,8 @@ async function searchConnections(searchParams: { [key: string]: string | string[
     }),
   })
   .then((res) => res.json())
-  .then((records) => records.map((record:object) => ({kind:"connection", ...record})))
-  .then((connections) => CategorizeRecords(ITEM_CATEGORIES, connections));
+  .then((records:ConnectionResponse[]) => records.map((record) => parseConnection(record)))
+  .then((connections:Connection[]) => CategorizeRecords(ITEM_CATEGORIES, connections));
   return connections;
 }
 
@@ -336,20 +237,7 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
             generalWhereCondition(searchParams),
           ].flat()
         },
-        select: {
-          id: true,
-          supplement: true,
-          category: true,
-          name: true,
-          type: true,
-          procure: true,
-          stock: true,
-          exp: true,
-          rec: true,
-          flavor: true,
-          effect: true,
-          price: true,
-          rec_effect: true,
+        include: {
           ref_weapon: true,
         },
         orderBy: [
@@ -361,8 +249,8 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
     }),
   })
   .then((res) => res.json())
-  .then((records) => records.map((record:object) => ({kind:"general", ...record})))
-  .then((generals) => CategorizeRecords(ITEM_CATEGORIES, generals));
+  .then((records:GeneralResponse[]) => records.map((record) => parseGeneral(record)))
+  .then((generals:General[]) => CategorizeRecords(ITEM_CATEGORIES, generals));
   return generals;
 }
 
@@ -381,21 +269,8 @@ async function searchDloises(searchParams: { [key: string]: string | string[] | 
         where: {
           AND: dloisWhereCondition(searchParams),
         },
-        select: {
-          id: true,
-          supplement: true,
-          type: true,
-          name: true,
-          restrict: true,
-          flavor: true,
-          description: true,
-          rec: true,
-          effect: true,
-          rec_effect: true,
+        include: {
           ref_power: true,
-          flavor_summary: true,
-          effect_summary: true,
-          rec_effect_summary: true,
         },
         orderBy: [
           {type_order: "asc" as const},
@@ -406,8 +281,8 @@ async function searchDloises(searchParams: { [key: string]: string | string[] | 
     }),
   })
   .then((res) => res.json())
-  .then((records) => records.map((record:object) => ({kind:"dlois", ...record})))
-  .then((dloises) => ({"Dロイス": dloises}));
+  .then((records:DloisResponse[]) => records.map((record) => parseDlois(record)))
+  .then((dloises:Dlois[]) => ({"Dロイス": dloises}));
   return dloises;
 }
 
@@ -426,20 +301,6 @@ async function searchEloises(searchParams: { [key: string]: string | string[] | 
         where: {
           AND: eloisWhereCondition(searchParams),
         },
-        select: {
-          id: true,
-          supplement: true,
-          type: true,
-          name: true,
-          timing: true,
-          skill: true,
-          dfclty: true,
-          target: true,
-          rng: true,
-          urge: true,
-          flavor: true,
-          effect: true,
-        },
         orderBy: [
           {urge_order: "asc" as const},
           {type_order: "asc" as const},
@@ -448,8 +309,8 @@ async function searchEloises(searchParams: { [key: string]: string | string[] | 
     }),
   })
   .then((res) => res.json())
-  .then((records) => records.map((record:object) => ({kind:"elois", ...record})))
-  .then((eloises) => ({"Eロイス": eloises}));
+  .then((records:EloisResponse[]) => records.map((record) => parseElois(record)))
+  .then((eloises:Elois[]) => ({"Eロイス": eloises}));
   return eloises;
 }
 
@@ -468,20 +329,12 @@ async function searchWorks(searchParams: { [key: string]: string | string[] | un
         where: {
           AND: workWhereCondition(searchParams),
         },
-        select: {
-          id: true,
-          supplement: true,
-          name: true,
-          stat: true,
-          skills: true,
-          emblems: true,
-        },
       },
     }),
   })
   .then((res) => res.json())
-  .then((records) => records.map((record:object) => ({kind:"work", ...record})))
-  .then((works) => ({"ワークス": works}));
+  .then((records:WorkResponse[]) => records.map((record) => parseWork(record)))
+  .then((works:Work[]) => ({"ワークス": works}));
   return works;
 }
 

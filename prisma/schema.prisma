@@ -335,38 +335,38 @@ model Faq {
   id                  String @id
   q                   String
   a                   String
-  rel_power           Power[] @relation("RelPowerFaq")
-  rel_weapon          Weapon[] @relation("RelWeaponFaq")
-  rel_armor           Armor[] @relation("RelArmorFaq")
-  rel_vehicle         Vehicle[] @relation("RelVehicleFaq")
-  rel_connection      Connection[] @relation("RelConnectionFaq")
-  rel_general         General[] @relation("RelGeneralFaq")
-  rel_dlois           Dlois[] @relation("RelDloisFaq")
-  rel_elois           Elois[] @relation("RelEloisFaq")
+  rel_powers          Power[] @relation("RelPowerFaq")
+  rel_weapons         Weapon[] @relation("RelWeaponFaq")
+  rel_armors          Armor[] @relation("RelArmorFaq")
+  rel_vehicles        Vehicle[] @relation("RelVehicleFaq")
+  rel_connections     Connection[] @relation("RelConnectionFaq")
+  rel_generals        General[] @relation("RelGeneralFaq")
+  rel_dloises         Dlois[] @relation("RelDloisFaq")
+  rel_eloises         Elois[] @relation("RelEloisFaq")
 }
 
 model Info {
   id                  String @id
   title               String
   content             String
-  rel_power           Power[] @relation("RelPowerInfo")
-  rel_weapon          Weapon[] @relation("RelWeaponInfo")
-  rel_armor           Armor[] @relation("RelArmorInfo")
-  rel_vehicle         Vehicle[] @relation("RelVehicleInfo")
-  rel_connection      Connection[] @relation("RelConnectionInfo")
-  rel_general         General[] @relation("RelGeneralInfo")
-  rel_dlois           Dlois[] @relation("RelDloisInfo")
-  rel_elois           Elois[] @relation("RelEloisInfo")
+  rel_powers          Power[] @relation("RelPowerInfo")
+  rel_weapons         Weapon[] @relation("RelWeaponInfo")
+  rel_armors          Armor[] @relation("RelArmorInfo")
+  rel_vehicles        Vehicle[] @relation("RelVehicleInfo")
+  rel_connections     Connection[] @relation("RelConnectionInfo")
+  rel_generals        General[] @relation("RelGeneralInfo")
+  rel_dloises         Dlois[] @relation("RelDloisInfo")
+  rel_eloises         Elois[] @relation("RelEloisInfo")
 }
 
 model User {
   id                  String @id @default(cuid())
-  fav_power           Power[] @relation("FavPower")
-  fav_weapon          Weapon[] @relation("FavWeapon")
-  fav_armor           Armor[] @relation("FavArmor")
-  fav_vehicle         Vehicle[] @relation("FavVehicle")
-  fav_connection      Connection[] @relation("FavConnection")
-  fav_general         General[] @relation("FavGeneral")
-  fav_dlois           Dlois[] @relation("FavDlois")
-  fav_elois           Elois[] @relation("FavElois")
+  fav_powers          Power[] @relation("FavPower")
+  fav_weapons         Weapon[] @relation("FavWeapon")
+  fav_armors          Armor[] @relation("FavArmor")
+  fav_vehicles        Vehicle[] @relation("FavVehicle")
+  fav_connections     Connection[] @relation("FavConnection")
+  fav_generals        General[] @relation("FavGeneral")
+  fav_dloises         Dlois[] @relation("FavDlois")
+  fav_eloises         Elois[] @relation("FavElois")
 }

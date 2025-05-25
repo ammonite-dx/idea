@@ -43,9 +43,9 @@ export type Power = {
     premise: string | null,
     flavor: string | null,
     effect: string | null,
-    ref_weapon: Weapon | null,
-    ref_armor: Armor | null,
-    refed_dlois: Dlois | null,
+    ref_weapon?: Weapon | null,
+    ref_armor?: Armor | null,
+    refed_dlois?: Dlois | null,
     other_vers?: Power[],
     rel_powers?: Power[],
     rel_weapons?: Weapon[],
@@ -78,9 +78,9 @@ export type Weapon = {
     effect: string | null,
     price: string | null,
     rec_effect: string | null,
-    refed_power: Power | null,
-    refed_armor: Armor | null,
-    refed_general: General | null,
+    refed_power?: Power | null,
+    refed_armor?: Armor | null,
+    refed_general?: General | null,
     other_vers?: Weapon[],
     rel_powers?: Power[],
     rel_weapons?: Weapon[],
@@ -111,8 +111,8 @@ export type Armor = {
     effect: string | null,
     price: string | null,
     rec_effect: string | null,
-    ref_weapon: Weapon | null,
-    refed_power: Power | null,
+    ref_weapon?: Weapon | null,
+    refed_power?: Power | null,
     other_vers?: Armor[],
     rel_powers?: Power[],
     rel_weapons?: Weapon[],
@@ -200,7 +200,7 @@ export type General = {
     effect: string | null,
     price: string | null,
     rec_effect: string | null,
-    ref_weapon: Weapon | null,
+    ref_weapon?: Weapon | null,
     other_vers?: General[],
     rel_powers?: Power[],
     rel_weapons?: Weapon[],
@@ -225,7 +225,7 @@ export type Dlois = {
     rec: string | null,
     effect: string,
     rec_effect: string | null,
-    ref_power: Power | null,
+    ref_power?: Power | null,
     flavor_summary: string,
     effect_summary: string,
     rec_effect_summary: string | null,
@@ -299,4 +299,358 @@ export type Info = {
     rel_generals?: General[],
     rel_dloises?: Dlois[],
     rel_eloises?: Elois[],
+};
+
+export type User = {
+    id: string;
+    fav_powers?: Power[];
+    fav_weapons?: Weapon[];
+    fav_armors?: Armor[];
+    fav_vehicles?: Vehicle[];
+    fav_connections?: Connection[];
+    fav_generals?: General[];
+    fav_dloises?: Dlois[];
+    fav_eloises?: Elois[];
+};
+
+export type PowerResponse = {
+    id: string;
+    supplement: string;
+    category: string;
+    type: string;
+    name: string;
+    ruby: string;
+    maxlv: string;
+    maxlv_int: number | null;
+    timing: string;
+    skill: string;
+    dfclty: string;
+    target: string;
+    rng: string;
+    encroach: string;
+    restrict: string;
+    premise: string | null;
+    flavor: string | null;
+    effect: string | null;
+    ref_weapon?: WeaponResponse | null;
+    ref_armor?: ArmorResponse | null;
+    refed_dlois?: DloisResponse | null;
+    other_vers?: PowerResponse[];
+    update_supplement: string | null;
+    rel_powers?: PowerResponse[];
+    rel_weapons?: WeaponResponse[];
+    rel_armors?: ArmorResponse[];
+    rel_vehicles?: VehicleResponse[];
+    rel_connections?: ConnectionResponse[];
+    rel_generals?: GeneralResponse[];
+    rel_dloises?: DloisResponse[];
+    rel_faqs?: FaqResponse[];
+    rel_infos?: InfoResponse[];
+    favorited_by?: UserResponse[];
+    type_restrict_order: number;
+};
+
+export type WeaponResponse = {
+    id: string;
+    supplement: string;
+    category: string;
+    name: string;
+    ruby: string;
+    type: string;
+    skill: string;
+    acc: string;
+    acc_int: number | null;
+    atk: string;
+    atk_int: number | null;
+    guard: string;
+    guard_int: number | null;
+    rng: string;
+    rng_int: number | null;
+    procure: string | null;
+    procure_int: number | null;
+    stock: string | null;
+    stock_int: number | null;
+    exp: string | null;
+    exp_int: number | null;
+    rec: string | null;
+    flavor: string | null;
+    effect: string | null;
+    price: string | null;
+    rec_effect: string | null;
+    refed_power?: PowerResponse | null;
+    refed_armor?: ArmorResponse | null;
+    refed_general?: GeneralResponse | null;
+    update_supplement: string | null;
+    other_vers?: WeaponResponse[];
+    rel_powers?: PowerResponse[];
+    rel_weapons?: WeaponResponse[];
+    rel_armors?: ArmorResponse[];
+    rel_vehicles?: VehicleResponse[];
+    rel_connections?: ConnectionResponse[];
+    rel_generals?: GeneralResponse[];
+    rel_dloises?: DloisResponse[];
+    rel_faqs?: FaqResponse[];
+    rel_infos?: InfoResponse[];
+    favorited_by?: UserResponse[];
+    type_order: number;
+    cost_order: number;
+};
+
+export type ArmorResponse = {
+    id: string;
+    supplement: string;
+    category: string;
+    name: string;
+    ruby: string;
+    type: string;
+    dodge: string;
+    dodge_int: number | null;
+    initiative: string;
+    initiative_int: number | null;
+    armor: string;
+    armor_int: number | null;
+    procure: string | null;
+    procure_int: number | null;
+    stock: string | null;
+    stock_int: number | null;
+    exp: string | null;
+    exp_int: number | null;
+    rec: string | null;
+    flavor: string | null;
+    effect: string | null;
+    price: string | null;
+    rec_effect: string | null;
+    ref_weapon?: WeaponResponse | null;
+    refed_power?: PowerResponse | null;
+    update_supplement: string | null;
+    other_vers?: ArmorResponse[];
+    rel_powers?: PowerResponse[];
+    rel_weapons?: WeaponResponse[];
+    rel_armors?: ArmorResponse[];
+    rel_vehicles?: VehicleResponse[];
+    rel_connections?: ConnectionResponse[];
+    rel_generals?: GeneralResponse[];
+    rel_dloises?: DloisResponse[];
+    rel_faqs?: FaqResponse[];
+    rel_infos?: InfoResponse[];
+    favorited_by?: UserResponse[];
+    type_order: number;
+    cost_order: number;
+};
+
+export type VehicleResponse = {
+    id: string;
+    supplement: string;
+    category: string;
+    name: string;
+    ruby: string;
+    type: string;
+    skill: string;
+    atk: string;
+    atk_int: number | null;
+    initiative: string;
+    initiative_int: number | null;
+    armor: string;
+    armor_int: number | null;
+    dash: string;
+    dash_int: number | null;
+    procure: string | null;
+    procure_int: number | null;
+    stock: string | null;
+    stock_int: number | null;
+    exp: string | null;
+    exp_int: number | null;
+    rec: string | null;
+    flavor: string | null;
+    effect: string | null;
+    price: string | null;
+    rec_effect: string | null;
+    update_supplement: string | null;
+    other_vers?: VehicleResponse[];
+    rel_powers?: PowerResponse[];
+    rel_weapons?: WeaponResponse[];
+    rel_armors?: ArmorResponse[];
+    rel_vehicles?: VehicleResponse[];
+    rel_connections?: ConnectionResponse[];
+    rel_generals?: GeneralResponse[];
+    rel_dloises?: DloisResponse[];
+    rel_faqs?: FaqResponse[];
+    rel_infos?: InfoResponse[];
+    favorited_by?: UserResponse[];
+    cost_order: number;
+};
+
+export type ConnectionResponse = {
+    id: string;
+    supplement: string;
+    category: string;
+    name: string;
+    ruby: string;
+    type: string;
+    skill: string;
+    procure: string | null;
+    procure_int: number | null;
+    stock: string | null;
+    stock_int: number | null;
+    exp: string | null;
+    exp_int: number | null;
+    rec: string | null;
+    flavor: string | null;
+    effect: string | null;
+    price: string | null;
+    rec_effect: string | null;
+    update_supplement: string | null;
+    other_vers?: ConnectionResponse[];
+    rel_powers?: PowerResponse[];
+    rel_weapons?: WeaponResponse[];
+    rel_armors?: ArmorResponse[];
+    rel_vehicles?: VehicleResponse[];
+    rel_connections?: ConnectionResponse[];
+    rel_generals?: GeneralResponse[];
+    rel_dloises?: DloisResponse[];
+    rel_faqs?: FaqResponse[];
+    rel_infos?: InfoResponse[];
+    favorited_by?: UserResponse[];
+    cost_order: number;
+};
+
+export type GeneralResponse = {
+    id: string;
+    supplement: string;
+    category: string;
+    name: string;
+    ruby: string;
+    type: string;
+    procure: string | null;
+    procure_int: number | null;
+    stock: string | null;
+    stock_int: number | null;
+    exp: string | null;
+    exp_int: number | null;
+    rec: string | null;
+    flavor: string | null;
+    effect: string | null;
+    price: string | null;
+    rec_effect: string | null;
+    ref_weapon?: WeaponResponse | null;
+    update_supplement: string | null;
+    other_vers?: GeneralResponse[];
+    rel_powers?: PowerResponse[];
+    rel_weapons?: WeaponResponse[];
+    rel_armors?: ArmorResponse[];
+    rel_vehicles?: VehicleResponse[];
+    rel_connections?: ConnectionResponse[];
+    rel_generals?: GeneralResponse[];
+    rel_dloises?: DloisResponse[];
+    rel_faqs?: FaqResponse[];
+    rel_infos?: InfoResponse[];
+    favorited_by?: UserResponse[];
+    type_order: number;
+    cost_order: number;
+};
+
+export type DloisResponse = {
+    id: string;
+    supplement: string;
+    no: string;
+    type: string;
+    name: string;
+    ruby: string;
+    restrict: string;
+    flavor: string;
+    description: string;
+    rec: string | null;
+    effect: string;
+    rec_effect: string | null;
+    ref_power?: PowerResponse | null;
+    update_supplement: string | null;
+    other_vers?: DloisResponse[];
+    rel_powers?: PowerResponse[];
+    rel_weapons?: WeaponResponse[];
+    rel_armors?: ArmorResponse[];
+    rel_vehicles?: VehicleResponse[];
+    rel_connections?: ConnectionResponse[];
+    rel_generals?: GeneralResponse[];
+    rel_dloises?: DloisResponse[];
+    rel_faqs?: FaqResponse[];
+    rel_infos?: InfoResponse[];
+    favorited_by?: UserResponse[];
+    flavor_summary: string;
+    effect_summary: string;
+    rec_effect_summary: string | null;
+    type_order: number;
+    restrict_order: number;
+};
+
+export type EloisResponse = {
+    id: string;
+    supplement: string;
+    type: string;
+    name: string;
+    ruby: string;
+    timing: string;
+    skill: string;
+    dfclty: string;
+    target: string;
+    rng: string;
+    urge: string;
+    flavor: string;
+    effect: string;
+    update_supplement: string | null;
+    other_vers?: EloisResponse[];
+    rel_eloises?: EloisResponse[];
+    rel_faqs?: FaqResponse[];
+    rel_infos?: InfoResponse[];
+    favorited_by?: UserResponse[];
+    type_order: number;
+    urge_order: number;
+};
+
+export type WorkResponse = {
+    id: string;
+    supplement: string;
+    name: string;
+    stat: string;
+    skills: string;
+    emblems: string | null;
+};
+
+export type FaqResponse = {
+    id: string;
+    q: string;
+    a: string;
+    rel_powers?: PowerResponse[];
+    rel_weapons?: WeaponResponse[];
+    rel_armors?: ArmorResponse[];
+    rel_vehicles?: VehicleResponse[];
+    rel_connections?: ConnectionResponse[];
+    rel_generals?: GeneralResponse[];
+    rel_dloises?: DloisResponse[];
+    rel_eloises?: EloisResponse[];
+};
+
+export type InfoResponse = {
+    id: string;
+    title: string;
+    content: string;
+    rel_powers?: PowerResponse[];
+    rel_weapons?: WeaponResponse[];
+    rel_armors?: ArmorResponse[];
+    rel_vehicles?: VehicleResponse[];
+    rel_connections?: ConnectionResponse[];
+    rel_generals?: GeneralResponse[];
+    rel_dloises?: DloisResponse[];
+    rel_eloises?: EloisResponse[];
+};
+
+export type UserResponse = {
+    id: string;
+    fav_powers?: PowerResponse[];
+    fav_weapons?: WeaponResponse[];
+    fav_armors?: ArmorResponse[];
+    fav_vehicles?: VehicleResponse[];
+    fav_connections?: ConnectionResponse[];
+    fav_generals?: GeneralResponse[];
+    fav_dloises?: DloisResponse[];
+    fav_eloises?: EloisResponse[];
 };
