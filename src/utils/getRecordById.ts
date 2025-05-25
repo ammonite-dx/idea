@@ -19,7 +19,6 @@ export default async function getRecordById<K extends keyof TypeMap>(
     .then((response) => response.json())
     .then((records) => records[0])
     .then((record) => ({kind:kind, ...record}));
-    console.log(response);
     if (!response) return null;
     return response;
 }

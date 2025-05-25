@@ -6,7 +6,8 @@ export const runtime = 'edge';
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json()
+        const body = await request.json();
+        console.log("requestBody: ",body);
         const model = body.model;
         const findOptions = body.findOptions;
 
