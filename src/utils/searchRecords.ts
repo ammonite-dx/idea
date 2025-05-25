@@ -103,7 +103,7 @@ async function searchItems(searchParams: { [key: string]: string | string[] | un
 async function searchWeapons(searchParams: { [key: string]: string | string[] | undefined }) {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;
-  const weapons: { [key: string]: Weapon[] } = await fetch(apiUrl, {
+  const weapons: {[key:string]: Weapon[]} = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -137,6 +137,8 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
           price: true,
           rec_effect: true,
           refed_power: true,
+          refed_armor: true,
+          refed_general: true,
         },
         orderBy: [
           {type_order: "asc" as const},
@@ -146,9 +148,15 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
       },
     }),
   })
-  .then((res) => res.json())
+  .then((response) => response.json())
   .then((records) => records.map((record:object) => ({kind:"weapon", ...record})))
-  .then((records) => CategorizeRecords(ITEM_CATEGORIES, records)) as { [key: string]: Weapon[] };
+  .then((weapons) => weapons.map((weapon:Weapon) => (
+    weapon.refed_power ? {...weapon, refed_power:{...weapon.refed_power, ref_weapon:weapon}} :
+    weapon.refed_armor ? {...weapon, refed_armor:{...weapon.refed_armor, ref_weapon:weapon}} :
+    weapon.refed_general ? {...weapon, refed_general:{...weapon.refed_general, ref_weapon:weapon}} :
+    weapon
+  )))
+  .then((weapons) => CategorizeRecords(ITEM_CATEGORIES, weapons));
   return weapons;
 }
 
@@ -156,7 +164,7 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
 async function searchArmors(searchParams: { [key: string]: string | string[] | undefined }) {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;
-  const armors = await fetch(apiUrl, {
+  const armors: {[key:string]: Armor[]} = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -198,9 +206,13 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
       },
     }),
   })
-  .then((res) => res.json())
+  .then((response) => response.json())
   .then((records) => records.map((record:object) => ({kind:"armor", ...record})))
-  .then((records) => CategorizeRecords(ITEM_CATEGORIES, records)) as { [key: string]: Armor[] };
+  .then((armors) => armors.map((armor:Weapon) => (
+    armor.refed_power ? {...armor, refed_power:{...armor.refed_power, ref_weapon:armor}} :
+    armor
+  )))
+  .then((armors) => CategorizeRecords(ITEM_CATEGORIES, armors));
   return armors;
 }
 
@@ -208,7 +220,7 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
 async function searchVehicles(searchParams: { [key: string]: string | string[] | undefined }) {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;  
-  const vehicles = await fetch(apiUrl, {
+  const vehicles: {[key:string]: Vehicle[]} = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -249,9 +261,9 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
       },
     }),
   })
-  .then((res) => res.json())
+  .then((response) => response.json())
   .then((records) => records.map((record:object) => ({kind:"vehicle", ...record})))
-  .then((records) => CategorizeRecords(ITEM_CATEGORIES, records)) as { [key: string]: Vehicle[] };
+  .then((records) => CategorizeRecords(ITEM_CATEGORIES, records));
   return vehicles;
 }
 
@@ -650,18 +662,4 @@ export function CategorizeRecords<T extends RecordWithCategory>(
   return categorizedRecords;
 }
 
-// カテゴライズされたレコードをマージする関数
-export function MergeCategorizedRecords<T extends RecordWithCategory>(
-  categorizedRecords: { [key: string]: T[] }[]
-): { [key: string]: T[] } {
-  const mergedRecords: { [key: string]: T[] } = {};
-  for (const records of categorizedRecords) {
-    for (const category in records) {
-      if (!mergedRecords[category]) {
-        mergedRecords[category] = [];
-      }
-      mergedRecords[category] = mergedRecords[category].concat(records[category]);
-    }
-  }
-  return mergedRecords;
-}
+// 自身への参照を追加する関数
