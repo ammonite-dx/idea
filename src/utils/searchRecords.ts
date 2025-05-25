@@ -7,7 +7,6 @@ export default async function searchRecords<K extends keyof TypeMap>(
   kind: K,
   searchParams:{ [key:string]:string|string[] | undefined } 
 ): Promise<{ [key: string]: TypeMap[K][] } | null> {
-  console.log("searchParams", searchParams);
   switch (kind) {
     case "power": return await searchPowers(searchParams) as { [key: string]: TypeMap[K][] };
     case "weapon": return await searchWeapons(searchParams) as { [key: string]: TypeMap[K][] };
@@ -59,6 +58,7 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
           effect: true,
           ref_weapon: true,
           ref_armor: true,
+          refed_dlois: true,
         },
         orderBy: [
           {type_restrict_order: 'asc' as const},
@@ -69,7 +69,11 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
   })
   .then((res) => res.json())
   .then((records) => records.map((record:object) => ({kind:"power", ...record})))
-  .then((records) => CategorizeRecords(POWER_CATEGORIES, records)) as { [key: string]: Power[] };
+  .then((powers) => powers.map((power:Power) => (
+    power.refed_dlois ? {...power, refed_dlois:{...power.refed_dlois, ref_power:power}} :
+    power
+  )))
+  .then((powers) => CategorizeRecords(POWER_CATEGORIES, powers)) as { [key: string]: Power[] };
   return powers;
 };
 
@@ -208,7 +212,7 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
   })
   .then((response) => response.json())
   .then((records) => records.map((record:object) => ({kind:"armor", ...record})))
-  .then((armors) => armors.map((armor:Weapon) => (
+  .then((armors) => armors.map((armor:Armor) => (
     armor.refed_power ? {...armor, refed_power:{...armor.refed_power, ref_weapon:armor}} :
     armor
   )))
@@ -263,7 +267,7 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
   })
   .then((response) => response.json())
   .then((records) => records.map((record:object) => ({kind:"vehicle", ...record})))
-  .then((records) => CategorizeRecords(ITEM_CATEGORIES, records));
+  .then((vehicles) => CategorizeRecords(ITEM_CATEGORIES, vehicles));
   return vehicles;
 }
 
@@ -271,7 +275,7 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
 async function searchConnections(searchParams: { [key: string]: string | string[] | undefined }) {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;    
-  const connections = await fetch(apiUrl, {
+  const connections: {[key:string]: Connection[]} = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -310,7 +314,7 @@ async function searchConnections(searchParams: { [key: string]: string | string[
   })
   .then((res) => res.json())
   .then((records) => records.map((record:object) => ({kind:"connection", ...record})))
-  .then((records) => CategorizeRecords(ITEM_CATEGORIES, records)) as { [key: string]: Connection[] };
+  .then((connections) => CategorizeRecords(ITEM_CATEGORIES, connections));
   return connections;
 }
 
@@ -318,7 +322,7 @@ async function searchConnections(searchParams: { [key: string]: string | string[
 async function searchGenerals(searchParams: { [key: string]: string | string[] | undefined }) {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;    
-  const generals = await fetch(apiUrl, {
+  const generals: {[key:string]: General[]} = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -358,7 +362,7 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
   })
   .then((res) => res.json())
   .then((records) => records.map((record:object) => ({kind:"general", ...record})))
-  .then((records) => CategorizeRecords(ITEM_CATEGORIES, records)) as { [key: string]: General[] };
+  .then((generals) => CategorizeRecords(ITEM_CATEGORIES, generals));
   return generals;
 }
 
@@ -403,7 +407,7 @@ async function searchDloises(searchParams: { [key: string]: string | string[] | 
   })
   .then((res) => res.json())
   .then((records) => records.map((record:object) => ({kind:"dlois", ...record})))
-  .then((records) => ({"Dロイス": records}));
+  .then((dloises) => ({"Dロイス": dloises}));
   return dloises;
 }
 
@@ -445,7 +449,7 @@ async function searchEloises(searchParams: { [key: string]: string | string[] | 
   })
   .then((res) => res.json())
   .then((records) => records.map((record:object) => ({kind:"elois", ...record})))
-  .then((records) => ({"Eロイス": records}));
+  .then((eloises) => ({"Eロイス": eloises}));
   return eloises;
 }
 
@@ -477,7 +481,7 @@ async function searchWorks(searchParams: { [key: string]: string | string[] | un
   })
   .then((res) => res.json())
   .then((records) => records.map((record:object) => ({kind:"work", ...record})))
-  .then((records) => ({"ワークス": records}));
+  .then((works) => ({"ワークス": works}));
   return works;
 }
 
@@ -661,5 +665,3 @@ export function CategorizeRecords<T extends RecordWithCategory>(
   }
   return categorizedRecords;
 }
-
-// 自身への参照を追加する関数

@@ -47,6 +47,7 @@ function getFindOptions( kind: string, id: string ) {
                     effect: true,
                     ref_weapon: true,
                     ref_armor: true,
+                    refed_dlois: true,
                     other_vers: true,
                     rel_powers: true,
                     rel_weapons: true,

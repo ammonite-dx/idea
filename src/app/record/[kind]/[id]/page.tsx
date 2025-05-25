@@ -19,7 +19,10 @@ export default async function Page({ params }: PageProps) {
     const { kind, id } = await params;
     const decodedKind = decodeURIComponent(kind) as CardRecordKind;
     const decodedId = decodeURIComponent(id);
+    console.log("kind: ", decodedKind);
+    console.log("id: ", decodedId);
     const record = await getRecordById(decodedKind, decodedId);
+    console.log("record: ", record);
     if (!record) return notFound();
 
     // 別バージョン
@@ -33,7 +36,7 @@ export default async function Page({ params }: PageProps) {
         "rel_vehicles" in record ? record.rel_vehicles : null,
         "rel_connections" in record ? record.rel_connections : null,
         "rel_generals" in record ? record.rel_generals : null,
-    ].filter((item) => item !== null).flat();
+    ].filter((item) => (item !== null) && (item !== undefined)).flat();
     const relDlois = "rel_dloises" in record ? record.rel_dloises : null;
     const relElois = "rel_eloises" in record ? record.rel_eloises : null;
 
