@@ -92,7 +92,7 @@ async function searchItems(searchParams: { [key: string]: string | string[] | un
         const vehiclesInCategory: Item[] = vehicles[category] || [];
         const connectionsInCategory: Item[] = connections[category] || [];
         const generalsInCategory: Item[] = generals[category] || [];
-        const itemsInCategory: Item[] = armorsInCategory.concat(vehiclesInCategory).concat(connectionsInCategory).concat(generalsInCategory);
+        const itemsInCategory: Item[] = weaponsInCategory.concat(armorsInCategory).concat(vehiclesInCategory).concat(connectionsInCategory).concat(generalsInCategory);
         return [category, itemsInCategory]
       }));
       return items;
