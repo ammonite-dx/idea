@@ -66,8 +66,8 @@ async function PowerCard ({ power, category, details }: { power:Power, category:
           <CardBodyRow><PropDict name="装甲値" value={power.ref_armor.armor} /></CardBodyRow>
         </CardBody>
       }
-      {details && power.rel_faqs && <FaqBody faqs={power.rel_faqs} />}
-      {details && power.rel_infos && <InfoBody infos={power.rel_infos} />}
+      {details && power.rel_faqs && power.rel_faqs.length && <FaqBody faqs={power.rel_faqs} />}
+      {details && power.rel_infos && power.rel_infos.length && <InfoBody infos={power.rel_infos} />}
     </Card>
   );
 }
@@ -102,8 +102,8 @@ async function WeaponCard ({ weapon, category, details }: { weapon:Weapon, categ
         {weapon.rec_effect && <EffectDict name="強化効果" value={weapon.rec_effect} />}
         {weapon.price && <EffectDict name="代償" value={weapon.price} />}
       </CardBody>
-      {details && weapon.rel_faqs && <FaqBody faqs={weapon.rel_faqs} />}
-      {details && weapon.rel_infos && <InfoBody infos={weapon.rel_infos} />}
+      {details && weapon.rel_faqs && weapon.rel_faqs.length && <FaqBody faqs={weapon.rel_faqs} />}
+      {details && weapon.rel_infos && weapon.rel_infos.length && <InfoBody infos={weapon.rel_infos} />}
     </Card>
   );
 }
@@ -139,8 +139,8 @@ async function ArmorCard ({ armor, category, details }: { armor:Armor, category:
         {armor.rec_effect && <EffectDict name="強化効果" value={armor.rec_effect} />}
         {armor.price && <EffectDict name="代償" value={armor.price} />}
       </CardBody>
-      {details && armor.rel_faqs && <FaqBody faqs={armor.rel_faqs} />}
-      {details && armor.rel_infos && <InfoBody infos={armor.rel_infos} />}
+      {details && armor.rel_faqs  && armor.rel_faqs.length && <FaqBody faqs={armor.rel_faqs} />}
+      {details && armor.rel_infos && armor.rel_infos.length && <InfoBody infos={armor.rel_infos} />}
     </Card>
   );
 }
@@ -166,8 +166,8 @@ async function VehicleCard ({ vehicle, category, details }: { vehicle:Vehicle, c
         {vehicle.rec_effect && <EffectDict name="強化効果" value={vehicle.rec_effect} />}
         {vehicle.price && <EffectDict name="代償" value={vehicle.price} />}
       </CardBody>
-      {details && vehicle.rel_faqs && <FaqBody faqs={vehicle.rel_faqs} />}
-      {details && vehicle.rel_infos && <InfoBody infos={vehicle.rel_infos} />}
+      {details && vehicle.rel_faqs && vehicle.rel_faqs.length && <FaqBody faqs={vehicle.rel_faqs} />}
+      {details && vehicle.rel_infos && vehicle.rel_infos.length && <InfoBody infos={vehicle.rel_infos} />}
     </Card>
   );
 }
@@ -190,8 +190,8 @@ async function ConnectionCard ({ connection, category, details }: { connection:C
         {connection.rec_effect && <EffectDict name="強化効果" value={connection.rec_effect} />}
         {connection.price && <EffectDict name="代償" value={connection.price} />}
       </CardBody>
-      {details && connection.rel_faqs && <FaqBody faqs={connection.rel_faqs} />}
-      {details && connection.rel_infos && <InfoBody infos={connection.rel_infos} />}
+      {details && connection.rel_faqs && connection.rel_faqs.length && <FaqBody faqs={connection.rel_faqs} />}
+      {details && connection.rel_infos && connection.rel_infos.length && <InfoBody infos={connection.rel_infos} />}
     </Card>
   );
 }
@@ -222,8 +222,8 @@ async function GeneralCard ({ general, category, details }: { general:General, c
         {general.rec_effect && <EffectDict name="強化効果" value={general.rec_effect} />}
         {general.price && <EffectDict name="代償" value={general.price} />}
       </CardBody>
-      {details && general.rel_faqs && <FaqBody faqs={general.rel_faqs} />}
-      {details && general.rel_infos && <InfoBody infos={general.rel_infos} />}
+      {details && general.rel_faqs && general.rel_faqs.length && <FaqBody faqs={general.rel_faqs} />}
+      {details && general.rel_infos && general.rel_infos.length && <InfoBody infos={general.rel_infos} />}
     </Card>
   );
 }
@@ -272,8 +272,8 @@ async function DloisCard ({ dlois, details }: { dlois:Dlois, details:boolean }) 
           </CardBody>
         </>
       }
-      {details && dlois.rel_faqs && <FaqBody faqs={dlois.rel_faqs} />}
-      {details && dlois.rel_infos && <InfoBody infos={dlois.rel_infos} />}
+      {details && dlois.rel_faqs && dlois.rel_faqs.length && <FaqBody faqs={dlois.rel_faqs} />}
+      {details && dlois.rel_infos && dlois.rel_infos.length && <InfoBody infos={dlois.rel_infos} />}
     </Card>
   );
 }
@@ -293,8 +293,8 @@ async function EloisCard ({ elois, details }: { elois:Elois, details:boolean }) 
         <EffectDict name="解説" value={elois.flavor} />
         <EffectDict name="効果" value={elois.effect} />
       </CardBody>
-      {details && elois.rel_faqs && <FaqBody faqs={elois.rel_faqs} />}
-      {details && elois.rel_infos && <InfoBody infos={elois.rel_infos} />}
+      {details && elois.rel_faqs && elois.rel_faqs.length && <FaqBody faqs={elois.rel_faqs} />}
+      {details && elois.rel_infos && elois.rel_infos.length && <InfoBody infos={elois.rel_infos} />}
     </Card>
   );
 }
