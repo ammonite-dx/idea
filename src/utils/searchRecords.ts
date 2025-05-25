@@ -2,7 +2,7 @@ import { toArray, toString } from '@/utils/utils';
 import { POWER_CATEGORIES } from '@/consts/power';
 import { ITEM_CATEGORIES } from '@/consts/item';
 import { TypeMap, Power, Item, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work } from '@/types/types';
-
+ 
 export default async function searchRecords<K extends keyof TypeMap>(
   kind: K,
   searchParams:{ [key:string]:string|string[] | undefined } 
@@ -25,54 +25,53 @@ export default async function searchRecords<K extends keyof TypeMap>(
 
 // エフェクト
 async function searchPowers(searchParams: { [key: string]: string | string[] | undefined }) {
-  const powers: {[key: string]: Power[]} = Object.fromEntries(await Promise.all(toArray(searchParams["category"], POWER_CATEGORIES).map(async category => {
-    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-    const apiUrl = `${baseUrl}/api/prisma`;
-    const powersInCategory = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
+  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+  const apiUrl = `${baseUrl}/api/prisma`;
+  const powers = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: "power",
+      findOptions: {
+        where: {
+          AND: [
+            powerWhereCondition(searchParams),
+          ].flat()
         },
-        body: JSON.stringify({
-            model: "power",
-            findOptions: {
-              where: {
-                AND: [
-                  {category: category},
-                  powerWhereCondition(searchParams),
-                ].flat()
-              },
-              select: {
-                id: true,
-                supplement: true,
-                category: true,
-                type: true,
-                name: true,
-                maxlv: true,
-                timing: true,
-                skill: true,
-                dfclty: true,
-                target: true,
-                rng: true,
-                encroach: true,
-                restrict: true,
-                premise: true,
-                flavor: true,
-                effect: true,
-                ref_weapon: true,
-                ref_armor: true,
-              },
-              orderBy: [
-                {type_restrict_order: 'asc' as const},
-                {ruby: 'asc' as const},
-              ],
-            },
-        }),
-    }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"power", ...record}))) as Power[];
-    return [category, powersInCategory];
-  })));
+        select: {
+          id: true,
+          supplement: true,
+          category: true,
+          type: true,
+          name: true,
+          maxlv: true,
+          timing: true,
+          skill: true,
+          dfclty: true,
+          target: true,
+          rng: true,
+          encroach: true,
+          restrict: true,
+          premise: true,
+          flavor: true,
+          effect: true,
+          ref_weapon: true,
+          ref_armor: true,
+        },
+        orderBy: [
+          {type_restrict_order: 'asc' as const},
+          {ruby: 'asc' as const},
+        ],
+      },
+    }),
+  })
+  .then((res) => res.json())
+  .then((records) => records.map((record:object) => ({kind:"power", ...record})))
+  .then((records) => CategorizeRecords(POWER_CATEGORIES, records)) as { [key: string]: Power[] };
   return powers;
-}
+};
 
 // アイテム
 async function searchItems(searchParams: { [key: string]: string | string[] | undefined }) {
@@ -82,17 +81,19 @@ async function searchItems(searchParams: { [key: string]: string | string[] | un
     case "コネ": return await searchConnections(searchParams) as { [key: string]: Item[] };
     case "一般アイテム": return await searchGenerals(searchParams) as { [key: string]: Item[] };
     default:
+      const weapons = await searchWeapons(searchParams);
       const armors = await searchArmors(searchParams);
       const vehicles = await searchVehicles(searchParams);
       const connections = await searchConnections(searchParams);
       const generals = await searchGenerals(searchParams);
       const items = Object.fromEntries(toArray(searchParams["category"], ITEM_CATEGORIES).map(category => {
-          const armorsInCategory: Item[] = armors[category] || [];
-          const vehiclesInCategory: Item[] = vehicles[category] || [];
-          const connectionsInCategory: Item[] = connections[category] || [];
-          const generalsInCategory: Item[] = generals[category] || [];
-          const itemsInCategory: Item[] = armorsInCategory.concat(vehiclesInCategory).concat(connectionsInCategory).concat(generalsInCategory);
-          return [category, itemsInCategory]
+        const weaponsInCategory: Item[] = weapons[category] || [];
+        const armorsInCategory: Item[] = armors[category] || [];
+        const vehiclesInCategory: Item[] = vehicles[category] || [];
+        const connectionsInCategory: Item[] = connections[category] || [];
+        const generalsInCategory: Item[] = generals[category] || [];
+        const itemsInCategory: Item[] = armorsInCategory.concat(vehiclesInCategory).concat(connectionsInCategory).concat(generalsInCategory);
+        return [category, itemsInCategory]
       }));
       return items;
   }
@@ -143,210 +144,208 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
         ],
       },
     }),
-  }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"weapon", ...record}))).then((data) => ({"武器": data}));
-  console.log("weapons", weapons);
+  })
+  .then((res) => res.json())
+  .then((records) => records.map((record:object) => ({kind:"weapon", ...record})))
+  .then((records) => CategorizeRecords(ITEM_CATEGORIES, records)) as { [key: string]: Weapon[] };
   return weapons;
 }
 
 // 防具
 async function searchArmors(searchParams: { [key: string]: string | string[] | undefined }) {
-  const armors: { [key: string]: Armor[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-    const apiUrl = `${baseUrl}/api/prisma`;
-    const armorsInCategory = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: "armor",
-        findOptions: {
-          where: {
-            AND: [
-              {category: category},
-              itemWhereCondition(searchParams),
-              armorWhereCondition(searchParams),
-            ].flat()
-          },
-          select: {
-            id: true,
-            supplement: true,
-            category: true,
-            name: true,
-            type: true,
-            dodge: true,
-            initiative: true,
-            armor: true,
-            procure: true,
-            stock: true,
-            exp: true,
-            rec: true,
-            flavor: true,
-            effect: true,
-            price: true,
-            rec_effect: true,
-            ref_weapon: true,
-            refed_power: true,
-          },
-          orderBy: [
-            {type_order: "asc" as const},
-            {cost_order: "asc" as const},
-            {ruby: "asc" as const}
-          ],
+  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+  const apiUrl = `${baseUrl}/api/prisma`;
+  const armors = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: "armor",
+      findOptions: {
+        where: {
+          AND: [
+            itemWhereCondition(searchParams),
+            armorWhereCondition(searchParams),
+          ].flat()
         },
-      }),
-    }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"armor", ...record}))) as Armor[];
-    return [category, armorsInCategory]
-  })));
+        select: {
+          id: true,
+          supplement: true,
+          category: true,
+          name: true,
+          type: true,
+          dodge: true,
+          initiative: true,
+          armor: true,
+          procure: true,
+          stock: true,
+          exp: true,
+          rec: true,
+          flavor: true,
+          effect: true,
+          price: true,
+          rec_effect: true,
+          ref_weapon: true,
+          refed_power: true,
+        },
+        orderBy: [
+          {type_order: "asc" as const},
+          {cost_order: "asc" as const},
+          {ruby: "asc" as const}
+        ],
+      },
+    }),
+  })
+  .then((res) => res.json())
+  .then((records) => records.map((record:object) => ({kind:"armor", ...record})))
+  .then((records) => CategorizeRecords(ITEM_CATEGORIES, records)) as { [key: string]: Armor[] };
   return armors;
 }
 
 // ヴィークル
 async function searchVehicles(searchParams: { [key: string]: string | string[] | undefined }) {
-  const vehicles: { [key: string]: Vehicle[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-    const apiUrl = `${baseUrl}/api/prisma`;    
-    const vehiclesInCategory = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: "vehicle",
-        findOptions: {
-          where: {
-            AND: [
-              {category: category},
-              itemWhereCondition(searchParams),
-              vehicleWhereCondition(searchParams),
-            ].flat()
-          },
-          select: {
-            id: true,
-            supplement: true,
-            category: true,
-            name: true,
-            type: true,
-            skill: true,
-            atk: true,
-            initiative: true,
-            armor: true,
-            dash: true,
-            procure: true,
-            stock: true,
-            exp: true,
-            rec: true,
-            flavor: true,
-            effect: true,
-            price: true,
-            rec_effect: true,
-          },
-          orderBy: [
-            {cost_order: "asc" as const},
-            {ruby: "asc" as const}
-          ],
+  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+  const apiUrl = `${baseUrl}/api/prisma`;  
+  const vehicles = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: "vehicle",
+      findOptions: {
+        where: {
+          AND: [
+            itemWhereCondition(searchParams),
+            vehicleWhereCondition(searchParams),
+          ].flat()
         },
-      }),
-    }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"vehicle", ...record}))) as Vehicle[];
-    return [category, vehiclesInCategory]
-  })));
+        select: {
+          id: true,
+          supplement: true,
+          category: true,
+          name: true,
+          type: true,
+          skill: true,
+          atk: true,
+          initiative: true,
+          armor: true,
+          dash: true,
+          procure: true,
+          stock: true,
+          exp: true,
+          rec: true,
+          flavor: true,
+          effect: true,
+          price: true,
+          rec_effect: true,
+        },
+        orderBy: [
+          {cost_order: "asc" as const},
+          {ruby: "asc" as const}
+        ],
+      },
+    }),
+  })
+  .then((res) => res.json())
+  .then((records) => records.map((record:object) => ({kind:"vehicle", ...record})))
+  .then((records) => CategorizeRecords(ITEM_CATEGORIES, records)) as { [key: string]: Vehicle[] };
   return vehicles;
 }
 
 // コネ
 async function searchConnections(searchParams: { [key: string]: string | string[] | undefined }) {
-  const connections: { [key: string]: Connection[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-    const apiUrl = `${baseUrl}/api/prisma`;    
-    const connectionsInCategory: Connection[] = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: "connection",
-        findOptions: {
-          where: {
-            AND: [
-              {category: category},
-              itemWhereCondition(searchParams),
-              connectionWhereCondition(searchParams),
-            ].flat()
-          },
-          select: {
-            id: true,
-            supplement: true,
-            category: true,
-            name: true,
-            type: true,
-            skill: true,
-            procure: true,
-            stock: true,
-            exp: true,
-            rec: true,
-            flavor: true,
-            effect: true,
-            price: true,
-            rec_effect: true,
-          },
-          orderBy: [
-            {cost_order: "asc" as const},
-            {ruby: "asc" as const}
-          ],
+  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+  const apiUrl = `${baseUrl}/api/prisma`;    
+  const connections = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: "connection",
+      findOptions: {
+        where: {
+          AND: [
+            itemWhereCondition(searchParams),
+            connectionWhereCondition(searchParams),
+          ].flat()
         },
-      }),
-    }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"connection", ...record})));
-    return [category, connectionsInCategory]
-  })));
+        select: {
+          id: true,
+          supplement: true,
+          category: true,
+          name: true,
+          type: true,
+          skill: true,
+          procure: true,
+          stock: true,
+          exp: true,
+          rec: true,
+          flavor: true,
+          effect: true,
+          price: true,
+          rec_effect: true,
+        },
+        orderBy: [
+          {cost_order: "asc" as const},
+          {ruby: "asc" as const}
+        ],
+      },
+    }),
+  })
+  .then((res) => res.json())
+  .then((records) => records.map((record:object) => ({kind:"connection", ...record})))
+  .then((records) => CategorizeRecords(ITEM_CATEGORIES, records)) as { [key: string]: Connection[] };
   return connections;
 }
 
 // 一般アイテム
 async function searchGenerals(searchParams: { [key: string]: string | string[] | undefined }) {
-  const generals: { [key: string]: General[] } = Object.fromEntries(await Promise.all(toArray(searchParams["category"], ITEM_CATEGORIES).map(async category => {
-    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-    const apiUrl = `${baseUrl}/api/prisma`;    
-    const generalsInCategory = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: "general",
-        findOptions: {
-          where: {
-            AND: [
-              {category: category},
-              itemWhereCondition(searchParams),
-              generalWhereCondition(searchParams),
-            ].flat()
-          },
-          select: {
-            id: true,
-            supplement: true,
-            category: true,
-            name: true,
-            type: true,
-            procure: true,
-            stock: true,
-            exp: true,
-            rec: true,
-            flavor: true,
-            effect: true,
-            price: true,
-            rec_effect: true,
-            ref_weapon: true,
-          },
-          orderBy: [
-            {type_order: "asc" as const},
-            {cost_order: "asc" as const},
-            {ruby: "asc" as const}
-          ],
+  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+  const apiUrl = `${baseUrl}/api/prisma`;    
+  const generals = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: "general",
+      findOptions: {
+        where: {
+          AND: [
+            itemWhereCondition(searchParams),
+            generalWhereCondition(searchParams),
+          ].flat()
         },
-      }),
-    }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"general", ...record}))) as General[];
-    return [category, generalsInCategory]
-  })));
+        select: {
+          id: true,
+          supplement: true,
+          category: true,
+          name: true,
+          type: true,
+          procure: true,
+          stock: true,
+          exp: true,
+          rec: true,
+          flavor: true,
+          effect: true,
+          price: true,
+          rec_effect: true,
+          ref_weapon: true,
+        },
+        orderBy: [
+          {type_order: "asc" as const},
+          {cost_order: "asc" as const},
+          {ruby: "asc" as const}
+        ],
+      },
+    }),
+  })
+  .then((res) => res.json())
+  .then((records) => records.map((record:object) => ({kind:"general", ...record})))
+  .then((records) => CategorizeRecords(ITEM_CATEGORIES, records)) as { [key: string]: General[] };
   return generals;
 }
 
@@ -388,7 +387,10 @@ async function searchDloises(searchParams: { [key: string]: string | string[] | 
         ],
       },
     }),
-  }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"dlois", ...record}))).then((data) => ({"Dロイス": data}));
+  })
+  .then((res) => res.json())
+  .then((records) => records.map((record:object) => ({kind:"dlois", ...record})))
+  .then((records) => ({"Dロイス": records}));
   return dloises;
 }
 
@@ -427,7 +429,10 @@ async function searchEloises(searchParams: { [key: string]: string | string[] | 
         ],
       },
     }),
-  }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"elois", ...record}))).then((data) => ({"Eロイス": data}));
+  })
+  .then((res) => res.json())
+  .then((records) => records.map((record:object) => ({kind:"elois", ...record})))
+  .then((records) => ({"Eロイス": records}));
   return eloises;
 }
 
@@ -456,7 +461,10 @@ async function searchWorks(searchParams: { [key: string]: string | string[] | un
         },
       },
     }),
-  }).then((res) => res.json()).then((records) => records.map((record:object) => ({kind:"work", ...record}))).then((data) => ({"ワークス": data}));
+  })
+  .then((res) => res.json())
+  .then((records) => records.map((record:object) => ({kind:"work", ...record})))
+  .then((records) => ({"ワークス": records}));
   return works;
 }
 
@@ -615,4 +623,44 @@ function workWhereCondition(searchParams: { [key: string]: string | string[] | u
   if (searchParams["stat"] !== undefined) {conditions.push({OR: toArray(searchParams["stat"], []).map(stat => ({stat: {contains: stat}}))});}
   if (searchParams["skill"] !== undefined) {conditions.push({OR: toArray(searchParams["skill"], []).map(skill => ({skills: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))});}
   return conditions;
+}
+
+////////////////////////////////
+// ユーティリティ関数
+////////////////////////////////
+
+// レコードをカテゴリごとに分類する関数
+interface RecordWithCategory {
+  category: string;
+}
+export function CategorizeRecords<T extends RecordWithCategory>(
+  categories: string[],
+  records: T[]
+): { [key: string]: T[] } {
+  const categorizedRecords: { [key: string]: T[] } = {};
+  for (const category of categories) {
+    categorizedRecords[category] = []; // 初期化
+  }
+  for (const record of records) {
+    if (categorizedRecords.hasOwnProperty(record.category)) { // record.category が categorizedRecords のキーとして存在するか（つまり事前定義されたカテゴリか）確認
+      categorizedRecords[record.category].push(record); // T 型の record を T[] 型の配列に push
+    }
+  }
+  return categorizedRecords;
+}
+
+// カテゴライズされたレコードをマージする関数
+export function MergeCategorizedRecords<T extends RecordWithCategory>(
+  categorizedRecords: { [key: string]: T[] }[]
+): { [key: string]: T[] } {
+  const mergedRecords: { [key: string]: T[] } = {};
+  for (const records of categorizedRecords) {
+    for (const category in records) {
+      if (!mergedRecords[category]) {
+        mergedRecords[category] = [];
+      }
+      mergedRecords[category] = mergedRecords[category].concat(records[category]);
+    }
+  }
+  return mergedRecords;
 }
