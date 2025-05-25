@@ -13,7 +13,7 @@ export default async function getRecordById<K extends keyof TypeMap>(
         },
         body: JSON.stringify({
             model: kind,
-            findOptions: JSON.stringify(getFindOptions(kind, id)),
+            findOptions: getFindOptions(kind, id),
         }),
     })
     .then((response) => response.json())
