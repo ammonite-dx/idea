@@ -9,7 +9,7 @@ import { Fragment } from "react";
 import { notFound } from "next/navigation";
 import ScaledText from "@/components/ScaledText";
 
-export default async function SearchResults<K extends keyof TypeMap> ({
+export default function SearchResults<K extends keyof TypeMap> ({
     kind,
     searchParams,
   }: {
@@ -30,6 +30,7 @@ export default async function SearchResults<K extends keyof TypeMap> ({
           // 必要であれば、JSON.stringify(searchParams) などでシリアライズした値を依存関係に含めることを検討してください。
           const result = await searchRecords(kind, searchParams);
           setRecords(result);
+          //eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
           console.error("searchRecords failed:", e);
           setError(e.message || "データの取得に失敗しました。");
