@@ -3,6 +3,7 @@ import { POWER_CATEGORIES } from '@/consts/power';
 import { ITEM_CATEGORIES } from '@/consts/item';
 import { TypeMap, Power, Item, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work, PowerResponse, WeaponResponse, ArmorResponse, VehicleResponse, ConnectionResponse, GeneralResponse, DloisResponse, EloisResponse, WorkResponse } from '@/types/types';
 import { parsePower, parseWeapon, parseArmor, parseVehicle, parseConnection, parseGeneral, parseDlois, parseElois, parseWork } from './parseRecord';
+import { cookies } from 'next/headers';
  
 export default async function searchRecords<K extends keyof TypeMap>(
   kind: K,
@@ -27,12 +28,14 @@ export default async function searchRecords<K extends keyof TypeMap>(
 async function searchPowers(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Power[] }> {
+  const cookieStore = await cookies();
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;
   const powers: {[key:string]: Power[]} = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Cookies': cookieStore.toString(),
     },
     body: JSON.stringify({
       model: "power",
