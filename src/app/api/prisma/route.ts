@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
 import { getPrismaClient } from '@/lib/prisma';
 import type { D1Database } from '@cloudflare/workers-types';
 
@@ -8,11 +7,6 @@ export const runtime = 'edge';
 export async function POST(request: Request) {
     console.log('[API_PRISMA_POST] Handler reached!');
     try {
-        const { userId } = await auth();
-        console.log('[API_PRISMA_POST] userId from auth():', userId); // ★ userId確認
-        if (!userId) {
-            return NextResponse.json({ error: 'Unauthorized (from API Route)' }, { status: 401 });
-        }
         const body = await request.json();
         const model = body.model;
         const findOptions = body.findOptions;

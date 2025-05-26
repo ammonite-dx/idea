@@ -3,7 +3,6 @@ import { POWER_CATEGORIES } from '@/consts/power';
 import { ITEM_CATEGORIES } from '@/consts/item';
 import { TypeMap, Power, Item, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work, PowerResponse, WeaponResponse, ArmorResponse, VehicleResponse, ConnectionResponse, GeneralResponse, DloisResponse, EloisResponse, WorkResponse } from '@/types/types';
 import { parsePower, parseWeapon, parseArmor, parseVehicle, parseConnection, parseGeneral, parseDlois, parseElois, parseWork } from './parseRecord';
-import { cookies } from 'next/headers';
  
 export default async function searchRecords<K extends keyof TypeMap>(
   kind: K,
@@ -28,14 +27,12 @@ export default async function searchRecords<K extends keyof TypeMap>(
 async function searchPowers(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Power[] }> {
-  const cookieStore = await cookies();
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;
   const powers: {[key:string]: Power[]} = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Cookies': cookieStore.toString(),
     },
     body: JSON.stringify({
       model: "power",
@@ -56,6 +53,7 @@ async function searchPowers(
         ],
       },
     }),
+    credentials: 'include',
   })
   .then((response) => response.json())
   .then((records:PowerResponse[]) => records.map((record) => parsePower(record)))
@@ -123,6 +121,7 @@ async function searchWeapons(
         ],
       },
     }),
+    credentials: 'include',
   })
   .then((response) => response.json())
   .then((records:WeaponResponse[]) => records.map((record) => parseWeapon(record)))
@@ -161,6 +160,7 @@ async function searchArmors(
         ],
       },
     }),
+    credentials: 'include',
   })
   .then((response) => response.json())
   .then((records:ArmorResponse[]) => records.map((record) => parseArmor(record)))
@@ -194,6 +194,7 @@ async function searchVehicles(
         ],
       },
     }),
+    credentials: 'include',
   })
   .then((response) => response.json())
   .then((records:VehicleResponse[]) => records.map((record) => parseVehicle(record)))
@@ -227,6 +228,7 @@ async function searchConnections(
         ],
       },
     }),
+    credentials: 'include',
   })
   .then((res) => res.json())
   .then((records:ConnectionResponse[]) => records.map((record) => parseConnection(record)))
@@ -264,6 +266,7 @@ async function searchGenerals(
         ],
       },
     }),
+    credentials: 'include',
   })
   .then((res) => res.json())
   .then((records:GeneralResponse[]) => records.map((record) => parseGeneral(record)))
@@ -298,6 +301,7 @@ async function searchDloises(
         ],
       },
     }),
+    credentials: 'include',
   })
   .then((res) => res.json())
   .then((records:DloisResponse[]) => records.map((record) => parseDlois(record)))
@@ -328,6 +332,7 @@ async function searchEloises(
         ],
       },
     }),
+    credentials: 'include',
   })
   .then((res) => res.json())
   .then((records:EloisResponse[]) => records.map((record) => parseElois(record)))
@@ -354,6 +359,7 @@ async function searchWorks(
         },
       },
     }),
+    credentials: 'include',
   })
   .then((res) => res.json())
   .then((records:WorkResponse[]) => records.map((record) => parseWork(record)))

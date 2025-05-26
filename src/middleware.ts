@@ -36,9 +36,6 @@ export default clerkMiddleware(async (auth, req) => {
   if (!userId) {
     console.log(`[MW_NO_USERID_V2] User not authenticated for ${currentPath}. Calling protect().`);
     await auth.protect();
-    const signInUrl = new URL(process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || '/sign-in', req.url);
-    signInUrl.searchParams.set("redirect_url", req.url);
-    return NextResponse.redirect(signInUrl);
   }
 
   console.log(`[MW_USER_AUTHED_V2] User IS authenticated. userId: ${userId}. Path: ${currentPath}.`);
