@@ -1,50 +1,39 @@
-import { TypeMap } from '@/types/types';
+import { TypeMap, Power, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work, PowerResponse, WeaponResponse, ArmorResponse, VehicleResponse, ConnectionResponse, GeneralResponse, DloisResponse, EloisResponse, WorkResponse } from '@/types/types';
+import { parsePower, parseWeapon, parseArmor, parseVehicle, parseConnection, parseGeneral, parseDlois, parseElois, parseWork } from './parseRecord';
 
 export default async function getRecordById<K extends keyof TypeMap>(
     kind: K,
     id: string
 ): Promise<TypeMap[K] | null> {
+    switch (kind) {
+        case "power": return await getPowerById(id) as TypeMap[K];
+        case "weapon": return await getWeaponById(id) as TypeMap[K];
+        case "armor": return await getArmorById(id) as TypeMap[K];
+        case "vehicle": return await getVehicleById(id) as TypeMap[K];
+        case "connection": return await getConnectionById(id) as TypeMap[K];
+        case "general": return await getGeneralById(id) as TypeMap[K];
+        case "dlois": return await getDloisById(id) as TypeMap[K];
+        case "elois": return await getEloisById(id) as TypeMap[K];
+        case "work": return await getWorkById(id) as TypeMap[K];
+        default: return null;
+    }
+}
+
+async function getPowerById(
+    id: string
+): Promise<Power | null> {
     const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
     const apiUrl = `${baseUrl}/api/prisma`;
-    const response: TypeMap[K] = await fetch(apiUrl, {
+    const power: Power | null = await fetch(apiUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            model: kind,
-            findOptions: getFindOptions(kind, id),
-        }),
-    })
-    .then((response) => response.json())
-    .then((records) => records[0])
-    .then((record) => ({kind:kind, ...record}));
-    if (!response) return null;
-    return response;
-}
-
-function getFindOptions( kind: string, id: string ) {
-    switch (kind) {
-        case "power":
-            return { 
+            model: 'power',
+            findOptions: {
                 where: { id: id },
-                select: {
-                    id: true,
-                    supplement: true,
-                    category: true,
-                    type: true,
-                    name: true,
-                    maxlv: true,
-                    timing: true,
-                    skill: true,
-                    dfclty: true,
-                    target: true,
-                    rng: true,
-                    encroach: true,
-                    restrict: true,
-                    premise: true,
-                    flavor: true,
-                    effect: true,
+                include: {
                     ref_weapon: true,
                     ref_armor: true,
                     refed_dlois: true,
@@ -58,30 +47,31 @@ function getFindOptions( kind: string, id: string ) {
                     rel_dloises: true,
                     rel_faqs: true,
                     rel_infos: true,
-                },
-            };
-        case "weapon":
-            return {
+                }
+            },
+        }),
+    })
+    .then((response) => response.json())
+    .then((records: PowerResponse[]) => records[0])
+    .then((record: PowerResponse) => parsePower(record));
+    return power;
+}
+
+async function getWeaponById(
+    id: string
+): Promise<Weapon | null> {
+    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/prisma`;
+    const weapon: Weapon | null = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'weapon',
+            findOptions: {
                 where: { id: id },
-                select: {
-                    id: true,
-                    supplement: true,
-                    category: true,
-                    name: true,
-                    type: true,
-                    skill: true,
-                    acc: true,
-                    atk: true,
-                    guard: true,
-                    rng: true,
-                    procure: true,
-                    stock: true,
-                    exp: true,
-                    rec: true,
-                    flavor: true,
-                    effect: true,
-                    price: true,
-                    rec_effect: true,
+                include: {
                     refed_power: true,
                     refed_armor: true,
                     refed_general: true,
@@ -95,28 +85,31 @@ function getFindOptions( kind: string, id: string ) {
                     rel_dloises: true,
                     rel_faqs: true,
                     rel_infos: true,
-                }
-             };
-        case "armor":
-            return {
+                },
+            },
+        }),
+    })
+    .then((response) => response.json())
+    .then((records: WeaponResponse[]) => records[0])
+    .then((record: WeaponResponse) => parseWeapon(record));
+    return weapon;
+}
+
+async function getArmorById(
+    id: string
+): Promise<Armor | null> {
+    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/prisma`;
+    const armor: Armor | null = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'armor',
+            findOptions: {
                 where: { id: id },
-                select: {
-                    id: true,
-                    supplement: true,
-                    category: true,
-                    name: true,
-                    type: true,
-                    dodge: true,
-                    initiative: true,
-                    armor: true,
-                    procure: true,
-                    stock: true,
-                    exp: true,
-                    rec: true,
-                    flavor: true,
-                    effect: true,
-                    price: true,
-                    rec_effect: true,
+                include: {
                     ref_weapon: true,
                     refed_power: true,
                     other_vers: true,
@@ -129,30 +122,31 @@ function getFindOptions( kind: string, id: string ) {
                     rel_dloises: true,
                     rel_faqs: true,
                     rel_infos: true,
-                }
-            };
-        case "vehicle":
-            return {
+                },
+            },
+        }),
+    })
+    .then((response) => response.json())
+    .then((records: ArmorResponse[]) => records[0])
+    .then((record: ArmorResponse) => parseArmor(record));
+    return armor;
+}
+
+async function getVehicleById(
+    id: string
+): Promise<Vehicle | null> {
+    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/prisma`;
+    const vehicle: Vehicle | null = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'vehicle',
+            findOptions: {
                 where: { id: id },
-                select: {
-                    id: true,
-                    supplement: true,
-                    category: true,
-                    name: true,
-                    type: true,
-                    skill: true,
-                    atk: true,
-                    initiative: true,
-                    armor: true,
-                    dash: true,
-                    procure: true,
-                    stock: true,
-                    exp: true,
-                    rec: true,
-                    flavor: true,
-                    effect: true,
-                    price: true,
-                    rec_effect: true,
+                include: {
                     other_vers: true,
                     rel_powers: true,
                     rel_weapons: true,
@@ -163,26 +157,31 @@ function getFindOptions( kind: string, id: string ) {
                     rel_dloises: true,
                     rel_faqs: true,
                     rel_infos: true,
-                }
-            };
-        case "connection":
-            return {
+                },
+            },
+        }),
+    })
+    .then((response) => response.json())
+    .then((records: VehicleResponse[]) => records[0])
+    .then((record: VehicleResponse) => parseVehicle(record));
+    return vehicle;
+}
+
+async function getConnectionById(
+    id: string
+): Promise<Connection | null> {
+    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/prisma`;
+    const connection: Connection | null = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'connection',
+            findOptions: {
                 where: { id: id },
-                select: {
-                    id: true,
-                    supplement: true,
-                    category: true,
-                    name: true,
-                    type: true,
-                    skill: true,
-                    procure: true,
-                    stock: true,
-                    exp: true,
-                    rec: true,
-                    flavor: true,
-                    effect: true,
-                    price: true,
-                    rec_effect: true,
+                include: {
                     other_vers: true,
                     rel_powers: true,
                     rel_weapons: true,
@@ -193,25 +192,31 @@ function getFindOptions( kind: string, id: string ) {
                     rel_dloises: true,
                     rel_faqs: true,
                     rel_infos: true,
-                }
-            };
-        case "general":
-            return {
+                },
+            },
+        }),
+    })
+    .then((response) => response.json())
+    .then((records: ConnectionResponse[]) => records[0])
+    .then((record: ConnectionResponse) => parseConnection(record));
+    return connection;
+}
+
+async function getGeneralById(
+    id: string
+): Promise<General | null> {
+    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/prisma`;
+    const general: General | null = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'general',
+            findOptions: {
                 where: { id: id },
-                select: {
-                    id: true,
-                    supplement: true,
-                    category: true,
-                    name: true,
-                    type: true,
-                    procure: true,
-                    stock: true,
-                    exp: true,
-                    rec: true,
-                    flavor: true,
-                    effect: true,
-                    price: true,
-                    rec_effect: true,
+                include: {
                     ref_weapon: true,
                     other_vers: true,
                     rel_powers: true,
@@ -223,26 +228,32 @@ function getFindOptions( kind: string, id: string ) {
                     rel_dloises: true,
                     rel_faqs: true,
                     rel_infos: true,
-                }
-            };
-        case "dlois":
-            return {
+                },
+            },
+        }),
+    })
+    .then((response) => response.json())
+    .then((records: GeneralResponse[]) => records[0])
+    .then((record: GeneralResponse) => parseGeneral(record));
+    return general;
+}
+
+async function getDloisById(
+    id: string
+): Promise<Dlois | null> {
+    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/prisma`;
+    const dlois: Dlois | null = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'dlois',
+            findOptions: {
                 where: { id: id },
-                select: {
-                    id: true,
-                    supplement: true,
-                    type: true,
-                    name: true,
-                    restrict: true,
-                    flavor: true,
-                    description: true,
-                    rec: true,
-                    effect: true,
-                    rec_effect: true,
+                include: {
                     ref_power: true,
-                    flavor_summary: true,
-                    effect_summary: true,
-                    rec_effect_summary: true,
                     other_vers: true,
                     rel_powers: true,
                     rel_weapons: true,
@@ -253,32 +264,57 @@ function getFindOptions( kind: string, id: string ) {
                     rel_dloises: true,
                     rel_faqs: true,
                     rel_infos: true,
-                }
-            };
-        case "elois":
-            return {
+                },
+            },
+        }),
+    })
+    .then((response) => response.json())
+    .then((records: DloisResponse[]) => records[0])
+    .then((record: DloisResponse) => parseDlois(record));
+    return dlois;
+}
+
+async function getEloisById(
+    id: string
+): Promise<Elois | null> {
+    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/prisma`;
+    const elois: Elois | null = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'elois',
+            findOptions: {
                 where: { id: id },
-                select: {
-                    id: true,
-                    supplement: true,
-                    type: true,
-                    name: true,
-                    timing: true,
-                    skill: true,
-                    dfclty: true,
-                    target: true,
-                    rng: true,
-                    urge: true,
-                    flavor: true,
-                    effect: true,
-                    other_vers: true,
+                include: {
                     rel_eloises: true,
                     rel_faqs: true,
                     rel_infos: true,
-                }
-            };
-        case "work":
-            return {
+                },
+            },
+        }),
+    })
+    .then((response) => response.json())
+    .then((records: EloisResponse[]) => records[0])
+    .then((record: EloisResponse) => parseElois(record));
+    return elois;
+}
+
+async function getWorkById(
+    id: string
+): Promise<Work | null> {
+    const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/prisma`;
+    const work: Work | null = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'work',
+            findOptions: {
                 where: { id: id },
                 select: {
                     id: true,
@@ -287,9 +323,12 @@ function getFindOptions( kind: string, id: string ) {
                     stat: true,
                     skills: true,
                     emblems: true,
-                }
-            };
-        default:
-            throw new Error(`Unknown kind: ${kind}`);
-    }
+                },
+            },
+        }),
+    })
+    .then((response) => response.json())
+    .then((records: WorkResponse[]) => records[0])
+    .then((record: WorkResponse) => parseWork(record));
+    return work;
 }

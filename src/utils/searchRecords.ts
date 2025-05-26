@@ -24,7 +24,9 @@ export default async function searchRecords<K extends keyof TypeMap>(
 ///////////////////////////////
 
 // エフェクト
-async function searchPowers(searchParams: { [key: string]: string | string[] | undefined }) {
+async function searchPowers(
+  searchParams: { [key: string]: string | string[] | undefined }
+): Promise<{ [key: string]: Power[] }> {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;
   const powers: {[key:string]: Power[]} = await fetch(apiUrl, {
@@ -59,7 +61,9 @@ async function searchPowers(searchParams: { [key: string]: string | string[] | u
 };
 
 // アイテム
-async function searchItems(searchParams: { [key: string]: string | string[] | undefined }) {
+async function searchItems(
+  searchParams: { [key: string]: string | string[] | undefined }
+): Promise<{ [key: string]: Item[] }> {
   switch (toString(searchParams["item-type"], "指定なし")) {
     case "防具": return await searchArmors(searchParams) as { [key: string]: Item[] } ;
     case "ヴィークル": return await searchVehicles(searchParams) as { [key: string]: Item[] };
@@ -85,7 +89,9 @@ async function searchItems(searchParams: { [key: string]: string | string[] | un
 }
 
 // 武器
-async function searchWeapons(searchParams: { [key: string]: string | string[] | undefined }) {
+async function searchWeapons(
+  searchParams: { [key: string]: string | string[] | undefined }
+): Promise<{ [key: string]: Weapon[] }> {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;
   const weapons: {[key:string]: Weapon[]} = await fetch(apiUrl, {
@@ -122,7 +128,9 @@ async function searchWeapons(searchParams: { [key: string]: string | string[] | 
 }
 
 // 防具
-async function searchArmors(searchParams: { [key: string]: string | string[] | undefined }) {
+async function searchArmors(
+  searchParams: { [key: string]: string | string[] | undefined }
+): Promise<{ [key: string]: Armor[] }> {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;
   const armors: {[key:string]: Armor[]} = await fetch(apiUrl, {
@@ -158,7 +166,9 @@ async function searchArmors(searchParams: { [key: string]: string | string[] | u
 }
 
 // ヴィークル
-async function searchVehicles(searchParams: { [key: string]: string | string[] | undefined }) {
+async function searchVehicles(
+  searchParams: { [key: string]: string | string[] | undefined }
+): Promise<{ [key: string]: Vehicle[] }> {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;  
   const vehicles: {[key:string]: Vehicle[]} = await fetch(apiUrl, {
@@ -189,7 +199,9 @@ async function searchVehicles(searchParams: { [key: string]: string | string[] |
 }
 
 // コネ
-async function searchConnections(searchParams: { [key: string]: string | string[] | undefined }) {
+async function searchConnections(
+  searchParams: { [key: string]: string | string[] | undefined }
+): Promise<{ [key: string]: Connection[] }> {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;    
   const connections: {[key:string]: Connection[]} = await fetch(apiUrl, {
@@ -220,7 +232,9 @@ async function searchConnections(searchParams: { [key: string]: string | string[
 }
 
 // 一般アイテム
-async function searchGenerals(searchParams: { [key: string]: string | string[] | undefined }) {
+async function searchGenerals(
+  searchParams: { [key: string]: string | string[] | undefined }
+): Promise<{ [key: string]: General[] }> {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;    
   const generals: {[key:string]: General[]} = await fetch(apiUrl, {
@@ -255,7 +269,9 @@ async function searchGenerals(searchParams: { [key: string]: string | string[] |
 }
 
 // Dロイス
-async function searchDloises(searchParams: { [key: string]: string | string[] | undefined }) {
+async function searchDloises(
+  searchParams: { [key: string]: string | string[] | undefined }
+): Promise<{ [key: string]: Dlois[] }> {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;  
   const dloises: {[key: string]: Dlois[]} = await fetch(apiUrl, {
@@ -287,7 +303,9 @@ async function searchDloises(searchParams: { [key: string]: string | string[] | 
 }
 
 // Eロイス
-async function searchEloises(searchParams: { [key: string]: string | string[] | undefined }) {
+async function searchEloises(
+  searchParams: { [key: string]: string | string[] | undefined }
+): Promise<{ [key: string]: Elois[] }> {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;
   const eloises: {[key: string]: Elois[]} = await fetch(apiUrl, {
@@ -315,7 +333,9 @@ async function searchEloises(searchParams: { [key: string]: string | string[] | 
 }
 
 // ワークス
-async function searchWorks(searchParams: { [key: string]: string | string[] | undefined }) {
+async function searchWorks(
+  searchParams: { [key: string]: string | string[] | undefined }
+): Promise<{ [key: string]: Work[] }> {
   const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
   const apiUrl = `${baseUrl}/api/prisma`;  
   const works: {[key: string]: Work[]} = await fetch(apiUrl, {
