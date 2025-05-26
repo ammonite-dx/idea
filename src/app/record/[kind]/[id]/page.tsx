@@ -36,7 +36,6 @@ export default async function Page({ params }: PageProps) {
     ].filter((item) => (item !== null) && (item !== undefined)).flat();
     const relDlois = "rel_dloises" in record ? record.rel_dloises : null;
     const relElois = "rel_eloises" in record ? record.rel_eloises : null;
-    console.log("relItems: ",relItems);
 
     return (
         <div>
