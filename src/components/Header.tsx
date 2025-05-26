@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { SignedIn, SignedOut, UserButton, SignInButton } from '@clerk/nextjs'
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -35,6 +36,16 @@ export default function Header() {
             </Link>
           ))}
         </nav>
+
+        {/* ユーザーボタン（Clerk） */}
+        <div className="hidden md:block">
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          <SignedOut>
+            <SignInButton mode="modal" />
+          </SignedOut>
+        </div>
 
         {/* ハンバーガーアイコン */}
         <button
