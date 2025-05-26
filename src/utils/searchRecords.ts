@@ -27,8 +27,7 @@ export default async function searchRecords<K extends keyof TypeMap>(
 async function searchPowers(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Power[] }> {
-  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-  const apiUrl = `${baseUrl}/api/prisma`;
+  const apiUrl = `/api/prisma`;
   const powers: {[key:string]: Power[]} = await fetch(apiUrl, {
     method: 'POST',
     headers: {

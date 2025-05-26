@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from 'react';
 import searchRecords from "@/utils/searchRecords";
 import CardList from "@/components/CardList";
 import { Card, CardDivider } from "@/components/Card";
@@ -14,9 +17,40 @@ export default async function SearchResults<K extends keyof TypeMap> ({
     searchParams: { [key:string]: string | string[] | undefined },
   }) {
 
-    const records: { [key: string]: TypeMap[K][] } | null = await searchRecords(kind, searchParams);
+    const [records, setRecords] = useState<{ [key: string]: TypeMap[K][] } | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+      const fetchRecords = async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+          // searchParamsオブジェクトが毎回新しく生成される場合、useEffectの依存関係配列で問題を起こすことがあります。
+          // 必要であれば、JSON.stringify(searchParams) などでシリアライズした値を依存関係に含めることを検討してください。
+          const result = await searchRecords(kind, searchParams);
+          setRecords(result);
+        } catch (e: any) {
+          console.error("searchRecords failed:", e);
+          setError(e.message || "データの取得に失敗しました。");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchRecords();
+    }, [kind, JSON.stringify(searchParams)]); // searchParams の変更を検知するためにシリアライズ
+
+    if (isLoading) {
+      return <div>検索中...</div>; // ローディング表示
+    }
+
+    if (error) {
+      return <div>エラー: {error}</div>; // エラー表示
+    }
 
     if (!records) return notFound();
+
     // 全カテゴリーのレコードの数をカウントする
     const totalCount = Object.values(records).reduce((sum, items) => sum + items.length, 0);
     return (
