@@ -44,7 +44,7 @@ async function searchPowers(
           ref_weapon: true,
           ref_armor: true,
           refed_dlois: true,
-          favorite_by: true,
+          favorited_by: true,
         },
         orderBy: [
           {type_restrict_order: 'asc' as const},
