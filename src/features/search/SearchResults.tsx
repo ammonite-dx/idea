@@ -37,7 +37,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
       };
 
       fetchRecords();
-    }, [kind, JSON.stringify(searchParams)]); // searchParams の変更を検知するためにシリアライズ
+    }, [kind, JSON.stringify(searchParams)]);
 
     if (isLoading) {
       return <div>検索中...</div>; // ローディング表示

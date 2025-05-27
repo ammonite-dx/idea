@@ -22,8 +22,8 @@ export async function POST(request: Request) {
         }
         const prisma = getPrismaClient(DB_BINDING);
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         console.log('Prisma findOptions:', JSON.stringify(findOptions, null, 2));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const data = await (prisma[model] as any).findMany(findOptions);
         return NextResponse.json(data);
     } catch (error: unknown) {

@@ -15,8 +15,6 @@ const isPublicRoute = createRouteMatcher([
 
 export default clerkMiddleware(async (auth, req) => {
 
-  const currentPath = req.nextUrl.pathname;
-
   // 1. 公開ルートかどうかを判定
   if (isPublicRoute(req)) {
     return NextResponse.next();
