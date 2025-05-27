@@ -27,8 +27,7 @@ export default async function searchRecords<K extends keyof TypeMap>(
 async function searchPowers(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Power[] }> {
-  const apiUrl = `/api/prisma`;
-  const powers: {[key:string]: Power[]} = await fetch(apiUrl, {
+  const powers: {[key:string]: Power[]} = await fetch('/api/prisma', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -57,7 +56,6 @@ async function searchPowers(
   .then((response) => response.json())
   .then((records:PowerResponse[]) => records.map((record) => parsePower(record)))
   .then((powers:Power[]) => CategorizeRecords(POWER_CATEGORIES, powers));
-  console.log("[searchPowers] powers:", powers);
   return powers;
 };
 
@@ -93,9 +91,7 @@ async function searchItems(
 async function searchWeapons(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Weapon[] }> {
-  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-  const apiUrl = `${baseUrl}/api/prisma`;
-  const weapons: {[key:string]: Weapon[]} = await fetch(apiUrl, {
+  const weapons: {[key:string]: Weapon[]} = await fetch('/api/prisma', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -133,9 +129,7 @@ async function searchWeapons(
 async function searchArmors(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Armor[] }> {
-  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-  const apiUrl = `${baseUrl}/api/prisma`;
-  const armors: {[key:string]: Armor[]} = await fetch(apiUrl, {
+  const armors: {[key:string]: Armor[]} = await fetch('/api/prisma', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -172,9 +166,7 @@ async function searchArmors(
 async function searchVehicles(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Vehicle[] }> {
-  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-  const apiUrl = `${baseUrl}/api/prisma`;  
-  const vehicles: {[key:string]: Vehicle[]} = await fetch(apiUrl, {
+  const vehicles: {[key:string]: Vehicle[]} = await fetch('/api/prisma', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -206,9 +198,7 @@ async function searchVehicles(
 async function searchConnections(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Connection[] }> {
-  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-  const apiUrl = `${baseUrl}/api/prisma`;    
-  const connections: {[key:string]: Connection[]} = await fetch(apiUrl, {
+  const connections: {[key:string]: Connection[]} = await fetch('/api/prisma', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -240,9 +230,7 @@ async function searchConnections(
 async function searchGenerals(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: General[] }> {
-  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-  const apiUrl = `${baseUrl}/api/prisma`;    
-  const generals: {[key:string]: General[]} = await fetch(apiUrl, {
+  const generals: {[key:string]: General[]} = await fetch('/api/prisma', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -278,9 +266,7 @@ async function searchGenerals(
 async function searchDloises(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Dlois[] }> {
-  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-  const apiUrl = `${baseUrl}/api/prisma`;  
-  const dloises: {[key: string]: Dlois[]} = await fetch(apiUrl, {
+  const dloises: {[key: string]: Dlois[]} = await fetch('/api/prisma', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -313,9 +299,7 @@ async function searchDloises(
 async function searchEloises(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Elois[] }> {
-  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-  const apiUrl = `${baseUrl}/api/prisma`;
-  const eloises: {[key: string]: Elois[]} = await fetch(apiUrl, {
+  const eloises: {[key: string]: Elois[]} = await fetch('/api/prisma', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -344,9 +328,7 @@ async function searchEloises(
 async function searchWorks(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Work[] }> {
-  const baseUrl = process.env.CF_PAGES_URL || process.env.NEXT_PUBLIC_BASE_URL;
-  const apiUrl = `${baseUrl}/api/prisma`;  
-  const works: {[key: string]: Work[]} = await fetch(apiUrl, {
+  const works: {[key: string]: Work[]} = await fetch('/api/prisma', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
