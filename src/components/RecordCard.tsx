@@ -34,7 +34,7 @@ export default function RecordCard ({ record, category=false, details=false }: {
 ////////////////////////////////
 
 // エフェクトカード
-async function PowerCard ({ power, category, details }: { power:Power, category:boolean , details:boolean }) {
+function PowerCard ({ power, category, details }: { power:Power, category:boolean , details:boolean }) {
   return (
     <Card>
       <RecordCardHeader title={power.name} record={power} subtitle={power.type === "一般" ? "" : power.type} />
@@ -73,7 +73,7 @@ async function PowerCard ({ power, category, details }: { power:Power, category:
 }
 
 // 武器カード
-async function WeaponCard ({ weapon, category, details }: { weapon:Weapon, category:boolean, details:boolean }) {
+function WeaponCard ({ weapon, category, details }: { weapon:Weapon, category:boolean, details:boolean }) {
   if (weapon.refed_power) {
     return PowerCard({ power:weapon.refed_power, category, details });
   }
@@ -109,7 +109,7 @@ async function WeaponCard ({ weapon, category, details }: { weapon:Weapon, categ
 }
 
 // 防具カード
-async function ArmorCard ({ armor, category, details }: { armor:Armor, category:boolean, details:boolean }) {
+function ArmorCard ({ armor, category, details }: { armor:Armor, category:boolean, details:boolean }) {
   if (armor.refed_power) {
     return PowerCard({ power:armor.refed_power, category, details });
   }
@@ -146,7 +146,7 @@ async function ArmorCard ({ armor, category, details }: { armor:Armor, category:
 }
 
 // ヴィークルカード
-async function VehicleCard ({ vehicle, category, details }: { vehicle:Vehicle, category:boolean, details:boolean }) {
+function VehicleCard ({ vehicle, category, details }: { vehicle:Vehicle, category:boolean, details:boolean }) {
   return (
     <Card>
       <RecordCardHeader title={vehicle.name} record={vehicle} subtitle={""} />
@@ -173,7 +173,7 @@ async function VehicleCard ({ vehicle, category, details }: { vehicle:Vehicle, c
 }
 
 // コネカード
-async function ConnectionCard ({ connection, category, details }: { connection:Connection, category:boolean, details:boolean }) {
+function ConnectionCard ({ connection, category, details }: { connection:Connection, category:boolean, details:boolean }) {
   return (
     <Card>
       <RecordCardHeader title={connection.name} record={connection} subtitle={""} />
@@ -197,7 +197,7 @@ async function ConnectionCard ({ connection, category, details }: { connection:C
 }
 
 // 一般アイテムカード
-async function GeneralCard ({ general, category, details }: { general:General, category:boolean, details:boolean }) {
+function GeneralCard ({ general, category, details }: { general:General, category:boolean, details:boolean }) {
   return (
     <Card>
       <RecordCardHeader title={general.name} record={general} subtitle={""} />
@@ -229,7 +229,7 @@ async function GeneralCard ({ general, category, details }: { general:General, c
 }
 
 // Dロイスカード
-async function DloisCard ({ dlois, details }: { dlois:Dlois, details:boolean }) {
+function DloisCard ({ dlois, details }: { dlois:Dlois, details:boolean }) {
   return (
     <Card>
       <RecordCardHeader title={dlois.name} record={dlois}/>
@@ -279,7 +279,7 @@ async function DloisCard ({ dlois, details }: { dlois:Dlois, details:boolean }) 
 }
 
 // Eロイスカード
-async function EloisCard ({ elois, details }: { elois:Elois, details:boolean }) {
+function EloisCard ({ elois, details }: { elois:Elois, details:boolean }) {
   return (
     <Card>
       <RecordCardHeader title={elois.name} record={elois} />
