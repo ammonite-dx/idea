@@ -57,6 +57,7 @@ async function searchPowers(
   .then((response) => response.json())
   .then((records:PowerResponse[]) => records.map((record) => parsePower(record)))
   .then((powers:Power[]) => CategorizeRecords(POWER_CATEGORIES, powers));
+  console.log("[searchPowers] powers:", powers);
   return powers;
 };
 

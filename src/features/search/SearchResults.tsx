@@ -29,7 +29,6 @@ export default function SearchResults<K extends keyof TypeMap> ({
           // searchParamsオブジェクトが毎回新しく生成される場合、useEffectの依存関係配列で問題を起こすことがあります。
           // 必要であれば、JSON.stringify(searchParams) などでシリアライズした値を依存関係に含めることを検討してください。
           const result = await searchRecords(kind, searchParams);
-          console.log("searchRecords result:", result);
           setRecords(result);
           //eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
