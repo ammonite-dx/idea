@@ -6,7 +6,6 @@ import CardList from "@/components/CardList";
 import { Card, CardDivider } from "@/components/Card";
 import { CardRecord, Work, TypeMap } from "@/types/types";
 import { Fragment } from "react";
-import { notFound } from "next/navigation";
 import ScaledText from "@/components/ScaledText";
 
 export default function SearchResults<K extends keyof TypeMap> ({
