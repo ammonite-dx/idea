@@ -26,8 +26,6 @@ export default function SearchResults<K extends keyof TypeMap> ({
         setIsLoading(true);
         setError(null);
         try {
-          // searchParamsオブジェクトが毎回新しく生成される場合、useEffectの依存関係配列で問題を起こすことがあります。
-          // 必要であれば、JSON.stringify(searchParams) などでシリアライズした値を依存関係に含めることを検討してください。
           const result = await searchRecords(kind, searchParams);
           setRecords(result);
           //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,7 +48,17 @@ export default function SearchResults<K extends keyof TypeMap> ({
       return <div>エラー: {error}</div>; // エラー表示
     }
 
-    if (!records) return notFound();
+    if (!records) {
+      // records が null (または初期値のまま) の場合、
+      // searchRecords がデータを返さなかった（該当なし、またはエラー以外の理由で空）と解釈
+      return (
+        <section>
+          <h2 className="headline-text font-bold">検索結果</h2>
+          <hr className="border-neutral-900 dark:border-neutral-200 mb-4"/>
+          <div className="m-4">条件に一致するデータがありません。</div>
+        </section>
+      );
+    }
 
     // 全カテゴリーのレコードの数をカウントする
     const totalCount = Object.values(records).reduce((sum, items) => sum + items.length, 0);
