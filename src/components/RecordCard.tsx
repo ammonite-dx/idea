@@ -306,13 +306,14 @@ function EloisCard ({ elois, details }: { elois:Elois, details:boolean }) {
 // カードのヘッダー
 function RecordCardHeader ({ title, record, subtitle="" }: { title:string, record:CardRecord, subtitle?:string }) {
   const link = `/record/${record.kind}/${record.id}`;
+  const favoritedBy = record.favorited_by;
   return (
       <CardHeader>
         <div className="flex items-center justify-between">
             <div className="title-text font-black"><Link href={link}><ScaledText text={title}/></Link></div>  
             <div className="flex items-center justify-end space-x-1">
               <div className="base-text text-right font-black"><ScaledText text={subtitle}/></div>
-              <FavoriteButton recordKind={record.kind} recordId={record.id} />
+              <FavoriteButton recordKind={record.kind} recordId={record.id} favoritedBy={favoritedBy} />
             </div>  
         </div>
       </CardHeader>

@@ -18,8 +18,8 @@ export async function POST(request: Request) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const DB_BINDING = (process.env as any).DB as D1Database;
         if (!DB_BINDING) {
-        console.error("API Route: D1 binding 'DB' not found.");
-        return NextResponse.json({ error: "D1 binding not configured" }, { status: 500 });
+            console.error("API Route: D1 binding 'DB' not found.");
+            return NextResponse.json({ error: "D1 binding not configured" }, { status: 500 });
         }
         const prisma = getPrismaClient(DB_BINDING);
 

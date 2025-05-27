@@ -56,6 +56,7 @@ export type Power = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
+    favorited_by: User[],
 };
 
 export type Weapon = {
@@ -91,6 +92,7 @@ export type Weapon = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
+    favorited_by: User[],
 };
 
 export type Armor = {
@@ -123,6 +125,7 @@ export type Armor = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
+    favorited_by: User[],
 };
 
 export type Vehicle = {
@@ -155,6 +158,7 @@ export type Vehicle = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
+    favorited_by: User[],
 };
 
 export type Connection = {
@@ -183,6 +187,7 @@ export type Connection = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
+    favorited_by: User[],
 };
 
 export type General = {
@@ -211,6 +216,7 @@ export type General = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
+    favorited_by: User[],
 };
 
 export type Dlois = {
@@ -239,6 +245,7 @@ export type Dlois = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
+    favorited_by: User[],
 };
 
 export type Elois = {
@@ -259,6 +266,7 @@ export type Elois = {
     rel_eloises?: Elois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
+    favorited_by: User[],
 };
 
 export type Work = {
@@ -346,7 +354,7 @@ export type PowerResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by?: UserResponse[];
+    favorited_by: UserResponse[];
     type_restrict_order: number;
 };
 
@@ -391,7 +399,7 @@ export type WeaponResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by?: UserResponse[];
+    favorited_by: UserResponse[];
     type_order: number;
     cost_order: number;
 };
@@ -433,7 +441,7 @@ export type ArmorResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by?: UserResponse[];
+    favorited_by: UserResponse[];
     type_order: number;
     cost_order: number;
 };
@@ -476,7 +484,7 @@ export type VehicleResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by?: UserResponse[];
+    favorited_by: UserResponse[];
     cost_order: number;
 };
 
@@ -510,7 +518,7 @@ export type ConnectionResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by?: UserResponse[];
+    favorited_by: UserResponse[];
     cost_order: number;
 };
 
@@ -544,7 +552,7 @@ export type GeneralResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by?: UserResponse[];
+    favorited_by: UserResponse[];
     type_order: number;
     cost_order: number;
 };
@@ -574,7 +582,7 @@ export type DloisResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by?: UserResponse[];
+    favorited_by: UserResponse[];
     flavor_summary: string;
     effect_summary: string;
     rec_effect_summary: string | null;
@@ -601,7 +609,7 @@ export type EloisResponse = {
     rel_eloises?: EloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by?: UserResponse[];
+    favorited_by: UserResponse[];
     type_order: number;
     urge_order: number;
 };

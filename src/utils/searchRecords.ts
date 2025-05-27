@@ -44,6 +44,7 @@ async function searchPowers(
           ref_weapon: true,
           ref_armor: true,
           refed_dlois: true,
+          favorite_by: true,
         },
         orderBy: [
           {type_restrict_order: 'asc' as const},
@@ -109,6 +110,7 @@ async function searchWeapons(
           refed_power: true,
           refed_armor: true,
           refed_general: true,
+          favorited_by: true,
         },
         orderBy: [
           {type_order: "asc" as const},
@@ -146,6 +148,7 @@ async function searchArmors(
         include: {
           ref_weapon: true,
           refed_power: true,
+          favorited_by: true,
         },
         orderBy: [
           {type_order: "asc" as const},
@@ -180,6 +183,9 @@ async function searchVehicles(
             vehicleWhereCondition(searchParams),
           ].flat()
         },
+        include: {
+          favorited_by: true,
+        },
         orderBy: [
           {cost_order: "asc" as const},
           {ruby: "asc" as const}
@@ -211,6 +217,9 @@ async function searchConnections(
             itemWhereCondition(searchParams),
             connectionWhereCondition(searchParams),
           ].flat()
+        },
+        include: {
+          favorited_by: true,
         },
         orderBy: [
           {cost_order: "asc" as const},
@@ -246,6 +255,7 @@ async function searchGenerals(
         },
         include: {
           ref_weapon: true,
+          favorited_by: true,
         },
         orderBy: [
           {type_order: "asc" as const},
@@ -279,6 +289,7 @@ async function searchDloises(
         },
         include: {
           ref_power: true,
+          favorited_by: true,
         },
         orderBy: [
           {type_order: "asc" as const},
@@ -309,6 +320,9 @@ async function searchEloises(
       findOptions: {
         where: {
           AND: eloisWhereCondition(searchParams),
+        },
+        include: {
+          favorited_by: true,
         },
         orderBy: [
           {urge_order: "asc" as const},
