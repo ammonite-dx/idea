@@ -1,40 +1,44 @@
 import { Power, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work, Faq, Info, User, PowerResponse, WeaponResponse, ArmorResponse, VehicleResponse, ConnectionResponse, GeneralResponse, DloisResponse, EloisResponse, WorkResponse, FaqResponse, InfoResponse, UserResponse } from "@/types/types";
 
 export function parsePower (response: PowerResponse): Power {
-    const { id, supplement, category, type, name, maxlv, timing, skill, dfclty, target, rng, encroach, restrict, premise, flavor, effect } = response;
-    console.log("[parsePower] response.favorited_by: ", response.favorited_by);
-    const favorited_by: User[] = response.favorited_by.map((res: UserResponse) => parseUser(res));
-    console.log("[parsePower] favorited_by: ", favorited_by);
-    const power_base: Power = { kind:"power", id, supplement, category, type, name, maxlv, timing, skill, dfclty, target, rng, encroach, restrict, premise, flavor, effect, favorited_by };
-    const ref_weapon: Weapon|null = ("ref_weapon" in response && response.ref_weapon) ? parseWeapon(response.ref_weapon) : null;
-    const ref_armor: Armor|null = ("ref_armor" in response && response.ref_armor) ? parseArmor(response.ref_armor) : null;
-    const refed_dlois: Dlois|null = ("refed_dlois" in response && response.refed_dlois) ? {...parseDlois(response.refed_dlois), ref_power: power_base} : null;
-    const other_vers: Power[] = ("other_vers" in response && response.other_vers) ? response.other_vers.map((res: PowerResponse) => parsePower(res)) : [];
-    const rel_powers: Power[] = ("rel_powers" in response && response.rel_powers) ? response.rel_powers.map((res: PowerResponse) => parsePower(res)) : [];
-    const rel_weapons: Weapon[] = ("rel_weapons" in response && response.rel_weapons) ? response.rel_weapons.map((res: WeaponResponse) => parseWeapon(res)) : [];
-    const rel_armors: Armor[] = ("rel_armors" in response && response.rel_armors) ? response.rel_armors.map((res: ArmorResponse) => parseArmor(res)) : [];
-    const rel_vehicles: Vehicle[] = ("rel_vehicles" in response && response.rel_vehicles) ? response.rel_vehicles.map((res: VehicleResponse) => parseVehicle(res)) : [];
-    const rel_connections: Connection[] = ("rel_connections" in response && response.rel_connections) ? response.rel_connections.map((res: ConnectionResponse) => parseConnection(res)) : [];
-    const rel_generals: General[] = ("rel_generals" in response && response.rel_generals) ? response.rel_generals.map((res: GeneralResponse) => parseGeneral(res)) : [];
-    const rel_dloises: Dlois[] = ("rel_dloises" in response && response.rel_dloises) ? response.rel_dloises.map((res: DloisResponse) => parseDlois(res)) : [];
-    const rel_faqs: Faq[] = ("rel_faqs" in response && response.rel_faqs) ? response.rel_faqs.map((res: FaqResponse) => parseFaq(res)) : [];
-    const rel_infos: Info[] = ("rel_infos" in response && response.rel_infos) ? response.rel_infos.map((res: InfoResponse) => parseInfo(res)) : [];
-    return {
-        ...power_base,
-        ref_weapon,
-        ref_armor,
-        refed_dlois,
-        other_vers,
-        rel_powers,
-        rel_weapons,
-        rel_armors,
-        rel_vehicles,
-        rel_connections,
-        rel_generals,
-        rel_dloises,
-        rel_faqs,
-        rel_infos,
-    };
+    try {
+        const { id, supplement, category, type, name, maxlv, timing, skill, dfclty, target, rng, encroach, restrict, premise, flavor, effect } = response;
+        const favorited_by: User[] = response.favorited_by.map((res: UserResponse) => parseUser(res));
+        const power_base: Power = { kind:"power", id, supplement, category, type, name, maxlv, timing, skill, dfclty, target, rng, encroach, restrict, premise, flavor, effect, favorited_by };
+        const ref_weapon: Weapon|null = ("ref_weapon" in response && response.ref_weapon) ? parseWeapon(response.ref_weapon) : null;
+        const ref_armor: Armor|null = ("ref_armor" in response && response.ref_armor) ? parseArmor(response.ref_armor) : null;
+        const refed_dlois: Dlois|null = ("refed_dlois" in response && response.refed_dlois) ? {...parseDlois(response.refed_dlois), ref_power: power_base} : null;
+        const other_vers: Power[] = ("other_vers" in response && response.other_vers) ? response.other_vers.map((res: PowerResponse) => parsePower(res)) : [];
+        const rel_powers: Power[] = ("rel_powers" in response && response.rel_powers) ? response.rel_powers.map((res: PowerResponse) => parsePower(res)) : [];
+        const rel_weapons: Weapon[] = ("rel_weapons" in response && response.rel_weapons) ? response.rel_weapons.map((res: WeaponResponse) => parseWeapon(res)) : [];
+        const rel_armors: Armor[] = ("rel_armors" in response && response.rel_armors) ? response.rel_armors.map((res: ArmorResponse) => parseArmor(res)) : [];
+        const rel_vehicles: Vehicle[] = ("rel_vehicles" in response && response.rel_vehicles) ? response.rel_vehicles.map((res: VehicleResponse) => parseVehicle(res)) : [];
+        const rel_connections: Connection[] = ("rel_connections" in response && response.rel_connections) ? response.rel_connections.map((res: ConnectionResponse) => parseConnection(res)) : [];
+        const rel_generals: General[] = ("rel_generals" in response && response.rel_generals) ? response.rel_generals.map((res: GeneralResponse) => parseGeneral(res)) : [];
+        const rel_dloises: Dlois[] = ("rel_dloises" in response && response.rel_dloises) ? response.rel_dloises.map((res: DloisResponse) => parseDlois(res)) : [];
+        const rel_faqs: Faq[] = ("rel_faqs" in response && response.rel_faqs) ? response.rel_faqs.map((res: FaqResponse) => parseFaq(res)) : [];
+        const rel_infos: Info[] = ("rel_infos" in response && response.rel_infos) ? response.rel_infos.map((res: InfoResponse) => parseInfo(res)) : [];
+        return {
+            ...power_base,
+            ref_weapon,
+            ref_armor,
+            refed_dlois,
+            other_vers,
+            rel_powers,
+            rel_weapons,
+            rel_armors,
+            rel_vehicles,
+            rel_connections,
+            rel_generals,
+            rel_dloises,
+            rel_faqs,
+            rel_infos,
+        };
+    } catch (error) {
+        console.log("[parsePower] Error parsing response:", response);
+        console.error("[parsePower] Error:", error);
+        throw error;
+    }
 }
 
 export function parseWeapon (response: WeaponResponse): Weapon {
