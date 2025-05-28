@@ -12,11 +12,11 @@ export default function FavoriteButton({
 }: {
   recordKind: CardRecordKind,
   recordId: string,
-  favoritedBy: User[]
+  favoritedBy?: User[]
 }) {
   const { user } = useUser();
   const userId = user?.id || "";
-  const [ isFavorite, setIsFavorite ] = useState(favoritedBy.some((u) => u.id === userId));
+  const [ isFavorite, setIsFavorite ] = useState(favoritedBy ? favoritedBy.some((u) => u.id === userId) : false);
   const [ loadingFavorite, setLoadingFavorite ] = useState(true);
 
   // トグル処理

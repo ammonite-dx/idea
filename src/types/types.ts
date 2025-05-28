@@ -56,7 +56,7 @@ export type Power = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
-    favorited_by: User[],
+    favorited_by?: User[],
 };
 
 export type Weapon = {
@@ -92,7 +92,7 @@ export type Weapon = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
-    favorited_by: User[],
+    favorited_by?: User[],
 };
 
 export type Armor = {
@@ -125,7 +125,7 @@ export type Armor = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
-    favorited_by: User[],
+    favorited_by?: User[],
 };
 
 export type Vehicle = {
@@ -158,7 +158,7 @@ export type Vehicle = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
-    favorited_by: User[],
+    favorited_by?: User[],
 };
 
 export type Connection = {
@@ -187,7 +187,7 @@ export type Connection = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
-    favorited_by: User[],
+    favorited_by?: User[],
 };
 
 export type General = {
@@ -216,7 +216,7 @@ export type General = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
-    favorited_by: User[],
+    favorited_by?: User[],
 };
 
 export type Dlois = {
@@ -245,7 +245,7 @@ export type Dlois = {
     rel_dloises?: Dlois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
-    favorited_by: User[],
+    favorited_by?: User[],
 };
 
 export type Elois = {
@@ -266,7 +266,7 @@ export type Elois = {
     rel_eloises?: Elois[],
     rel_faqs?: Faq[],
     rel_infos?: Info[],
-    favorited_by: User[],
+    favorited_by?: User[],
 };
 
 export type Work = {
