@@ -22,10 +22,8 @@ export async function POST(request: Request) {
         }
         const prisma = getPrismaClient(DB_BINDING);
 
-        console.log('Generated Prisma findOptions:', findOptions);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const data = await (prisma[model] as any).findMany({...findOptions, take: 10});
-        console.log('Data fetched from Prisma:', data);
+        const data = await (prisma[model] as any).findMany({...findOptions, take: 50});
         return NextResponse.json(data);
     } catch (error: unknown) {
         console.error('Error in API route:', error);

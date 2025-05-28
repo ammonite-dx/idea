@@ -55,15 +55,8 @@ async function searchPowers(
     credentials: 'include',
   })
   .then((response) => response.json())
-  .then((records:PowerResponse[]) => {
-    console.log("searchPowers: fetched records", records);
-    return records.map((record) => parsePower(record))
-  })
-  .then((powers:Power[]) => {
-    console.log("searchPowers: parsed powers", powers);
-    return CategorizeRecords(POWER_CATEGORIES, powers);
-  });
-  console.log("searchPowers: categorized powers", powers);
+  .then((records:PowerResponse[]) => records.map((record) => parsePower(record)))
+  .then((powers:Power[]) => CategorizeRecords(POWER_CATEGORIES, powers));
   return powers;
 };
 
