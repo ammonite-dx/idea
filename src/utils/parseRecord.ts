@@ -2,7 +2,9 @@ import { Power, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work,
 
 export function parsePower (response: PowerResponse): Power {
     const { id, supplement, category, type, name, maxlv, timing, skill, dfclty, target, rng, encroach, restrict, premise, flavor, effect } = response;
+    console.log("[parsePower] response.favorited_by: ", response.favorited_by);
     const favorited_by: User[] = response.favorited_by.map((res: UserResponse) => parseUser(res));
+    console.log("[parsePower] favorited_by: ", favorited_by);
     const power_base: Power = { kind:"power", id, supplement, category, type, name, maxlv, timing, skill, dfclty, target, rng, encroach, restrict, premise, flavor, effect, favorited_by };
     const ref_weapon: Weapon|null = ("ref_weapon" in response && response.ref_weapon) ? parseWeapon(response.ref_weapon) : null;
     const ref_armor: Armor|null = ("ref_armor" in response && response.ref_armor) ? parseArmor(response.ref_armor) : null;
