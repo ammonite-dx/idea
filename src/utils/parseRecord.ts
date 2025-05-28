@@ -232,6 +232,7 @@ export function parseDlois (response: DloisResponse): Dlois {
         rel_dloises,
         rel_faqs,
         rel_infos,
+        favorited_by
     };
 }
 
