@@ -354,7 +354,7 @@ export type PowerResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by: UserResponse[];
+    favorited_by?: UserResponse[];
     type_restrict_order: number;
 };
 
@@ -399,7 +399,7 @@ export type WeaponResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by: UserResponse[];
+    favorited_by?: UserResponse[];
     type_order: number;
     cost_order: number;
 };
@@ -441,7 +441,7 @@ export type ArmorResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by: UserResponse[];
+    favorited_by?: UserResponse[];
     type_order: number;
     cost_order: number;
 };
@@ -484,7 +484,7 @@ export type VehicleResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by: UserResponse[];
+    favorited_by?: UserResponse[];
     cost_order: number;
 };
 
@@ -518,7 +518,7 @@ export type ConnectionResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by: UserResponse[];
+    favorited_by?: UserResponse[];
     cost_order: number;
 };
 
@@ -552,7 +552,7 @@ export type GeneralResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by: UserResponse[];
+    favorited_by?: UserResponse[];
     type_order: number;
     cost_order: number;
 };
@@ -582,7 +582,7 @@ export type DloisResponse = {
     rel_dloises?: DloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by: UserResponse[];
+    favorited_by?: UserResponse[];
     flavor_summary: string;
     effect_summary: string;
     rec_effect_summary: string | null;
@@ -609,7 +609,7 @@ export type EloisResponse = {
     rel_eloises?: EloisResponse[];
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
-    favorited_by: UserResponse[];
+    favorited_by?: UserResponse[];
     type_order: number;
     urge_order: number;
 };

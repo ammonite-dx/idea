@@ -33,23 +33,10 @@ async function searchPowers(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: "power",
-      findOptions: {
-        where: {
-          AND: [
-            powerWhereCondition(searchParams),
-          ].flat()
-        },
-        include: {
-          ref_weapon: true,
-          ref_armor: true,
-          refed_dlois: true,
-          favorited_by: true,
-        },
-        orderBy: [
-          {type_restrict_order: 'asc' as const},
-          {ruby: 'asc' as const},
-        ],
+      whereOptions: {
+        AND: [
+          powerWhereCondition(searchParams),
+        ].flat()
       },
     }),
     credentials: 'include',
