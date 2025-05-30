@@ -45,6 +45,7 @@ export async function POST(req: Request) {
             "svix-timestamp": svix_timestamp,
             "svix-signature": svix_signature,
         }) as WebhookEvent;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
         console.error('Error verifying webhook signature:', err.message);
         return new Response('Error: Webhook signature verification failed', { status: 400 });
@@ -61,11 +62,11 @@ export async function POST(req: Request) {
 
     const eventType = evt.type;
     if (eventType === 'user.created') {
-        const { id, email_addresses, username, image_url /*, ...other attributes */ } = evt.data;
+        const { id } = evt.data;
 
         if (!id) {
-        console.error('Clerk User ID (id) is missing in user.created event data.');
-        return new Response('Error: Clerk User ID missing', { status: 400 });
+            console.error('Clerk User ID (id) is missing in user.created event data.');
+            return new Response('Error: Clerk User ID missing', { status: 400 });
         }
 
         try {
@@ -76,6 +77,7 @@ export async function POST(req: Request) {
                 },
             });
             console.log(`User created in D1 with ID: ${id}`);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (dbError: any) {
         // Prismaのエラーコード P2002 はユニーク制約違反（この場合はidの重複）
             if (dbError.code === 'P2002' && dbError.meta?.target?.includes('id')) {
