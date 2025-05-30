@@ -24,6 +24,7 @@ export default clerkMiddleware(async (auth, req) => {
   const authResult = await auth();
   const { userId, sessionClaims } = authResult;
   if (!userId) {
+    console.warn('User is not authenticated, redirecting to sign-in page');
     await auth.protect();
   }
 
@@ -31,10 +32,9 @@ export default clerkMiddleware(async (auth, req) => {
   const isMember = publicMetadata?.isMemberOfTargetGuild;
 
   if (isMember !== true) {
-    if (req.nextUrl.pathname !== "/access-denied") {
-      const accessDeniedUrl = new URL('/access-denied', req.url);
-      return NextResponse.redirect(accessDeniedUrl);
-    }
+    console.warn('User is not a member of the target guild, redirecting to access denied page');
+    const accessDeniedUrl = new URL('/access-denied', req.url);
+    return NextResponse.redirect(accessDeniedUrl);
   }
 
   return NextResponse.next();
