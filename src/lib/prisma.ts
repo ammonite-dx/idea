@@ -12,7 +12,24 @@ declare global {
 export function getPrismaClient(d1Binding: D1Database): PrismaClient {
   if (process.env.NODE_ENV === 'production') {
     const adapter = new PrismaD1(d1Binding);
-    return new PrismaClient({ adapter });
+    const prisma = new PrismaClient({
+      adapter,
+      log: [
+        { emit: 'event', level: 'query' },
+        { emit: 'event', level: 'info' },
+        { emit: 'event', level: 'warn' },
+        { emit: 'event', level: 'error' }
+      ]
+    });
+    prisma.$on('query', (e) => {
+      console.log('------------------------------------')
+      console.log('Prisma Query:', e.query)
+      console.log('Params:', e.params)
+      console.log('Duration:', e.duration + 'ms')
+      console.log('Timestamp:', e.timestamp)
+      console.log('------------------------------------')
+    })
+    return prisma;
   } else {
     if (!global.prisma) {
       const adapter = new PrismaD1(d1Binding);
