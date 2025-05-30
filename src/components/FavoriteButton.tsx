@@ -17,7 +17,7 @@ export default function FavoriteButton({
   const { user } = useUser();
   const userId = user?.id || "";
   const [ isFavorite, setIsFavorite ] = useState(favoritedBy ? favoritedBy.some((u) => u.id === userId) : false);
-  const [ loadingFavorite, setLoadingFavorite ] = useState(true);
+  const [ loadingFavorite, setLoadingFavorite ] = useState(false);
 
   // トグル処理
   const toggleFavorite = async () => {
