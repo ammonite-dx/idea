@@ -3,6 +3,7 @@ import { auth, clerkClient } from '@clerk/nextjs/server';
 
 export const runtime = 'edge';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(request: Request) { // POSTリクエストでトリガーする想定
   try {
     const { userId } = await auth(); // 現在認証されているユーザーのIDを取得
