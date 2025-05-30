@@ -27,7 +27,7 @@ export default async function searchRecords<K extends keyof TypeMap>(
 async function searchPowers(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Power[] }> {
-  const powers: {[key:string]: Power[]} = await fetch('/api/prisma', {
+  const powers: {[key:string]: Power[]} = await fetch('/api/power', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
