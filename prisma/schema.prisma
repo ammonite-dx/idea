@@ -360,7 +360,7 @@ model Info {
 }
 
 model User {
-  id                  String @id @default(cuid())
+  id                  String @id
   fav_powers          Power[] @relation("FavPower")
   fav_weapons         Weapon[] @relation("FavWeapon")
   fav_armors          Armor[] @relation("FavArmor")
