@@ -62,7 +62,7 @@ export async function DELETE(request: Request) {
         const updatedFavorite = await (prisma[model] as any).update({
             where: { id: recordId },
             data: {
-                favoritedBy: {
+                favorited_by: {
                     disconnect: { id: userId },
                 },
             },
