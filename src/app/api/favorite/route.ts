@@ -13,6 +13,7 @@ export async function POST(request: Request) {
         const recordId = body.recordId;
 
         if (!model || !userId || !recordId) {
+            console.log('[API Route: POST /api/favorite] Invalid input:', { model, userId, recordId });
             return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
         }
 
