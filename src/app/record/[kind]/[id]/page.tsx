@@ -16,6 +16,7 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
 
     // 詳細を表示したいデータを取得
+    
     const { kind, id } = await params;
     const decodedKind = decodeURIComponent(kind) as CardRecordKind;
     const decodedId = decodeURIComponent(id);
