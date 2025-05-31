@@ -8,6 +8,7 @@ import { User } from "@/types/types";
 
 export default function Favorites() {
 
+    const { user: clerkUser, isSignedIn, isLoaded: isClerkDataLoaded } = useUser();
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -28,10 +29,15 @@ export default function Favorites() {
             }
         };
 
-        const { user } = useUser();
-        const userId = user?.id || "";
-        fetchUser(userId);
-    }, []);
+        if (isClerkDataLoaded && isSignedIn && clerkUser?.id) {
+            // Clerkのユーザー情報がロードされ、ユーザーがサインインしており、かつIDが存在する場合に実行
+            fetchUser(clerkUser.id);
+        } else if (isClerkDataLoaded && !isSignedIn) {
+            // Clerkのロードは完了したが、サインインしていない場合
+            setIsLoading(false);
+            setUser(null); // D1ユーザー情報もクリア
+        }
+    }, [clerkUser?.id, isSignedIn, isClerkDataLoaded]);
 
     if (isLoading) {
         return <div className='base-text'>検索中...</div>; // ローディング表示
