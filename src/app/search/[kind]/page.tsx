@@ -29,5 +29,5 @@ export default async function Page({ params, searchParams }: PageProps) {
 }
 
 function isSearchKind(value: string): value is SearchKind {
-    return ["power", "item", "dlois", "elois", "work", "weapon"].includes(value);
+    return ["power", "item", "dlois", "elois", "work"].includes(value);
 }

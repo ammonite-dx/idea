@@ -25,6 +25,17 @@ export type TypeMap = {
     info: Info;
 };
 
+export type CardRecordKindMap = {
+    power: Power;
+    weapon: Weapon;
+    armor: Armor;
+    vehicle: Vehicle;
+    connection: Connection;
+    general: General;
+    dlois: Dlois;
+    elois: Elois;
+};
+
 export type ResponseMap = {
     power: PowerResponse;
     weapon: WeaponResponse;
