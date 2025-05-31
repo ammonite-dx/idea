@@ -1,3 +1,5 @@
+"use client";
+
 import { notFound } from "next/navigation";
 import RecordCard from "@/components/RecordCard";
 import CardList from "@/components/CardList";
