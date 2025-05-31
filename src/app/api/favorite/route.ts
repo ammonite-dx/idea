@@ -28,7 +28,7 @@ export async function POST(request: Request) {
         const newFavorite = await (prisma[model] as any).update({
             where: { id: recordId },
             data: {
-                favoritedBy: {
+                favorited_by: {
                     connect: { id: userId },
                 },
             },
