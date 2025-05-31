@@ -17,7 +17,7 @@ export function parsePower (response: PowerResponse): Power {
         const rel_dloises: Dlois[] = ("rel_dloises" in response && response.rel_dloises) ? response.rel_dloises.map((res: DloisResponse) => parseDlois(res)) : [];
         const rel_faqs: Faq[] = ("rel_faqs" in response && response.rel_faqs) ? response.rel_faqs.map((res: FaqResponse) => parseFaq(res)) : [];
         const rel_infos: Info[] = ("rel_infos" in response && response.rel_infos) ? response.rel_infos.map((res: InfoResponse) => parseInfo(res)) : [];
-        const favorited_by: User[] = ("response.favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
+        const favorited_by: User[] = ("favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
         return {
             ...power_base,
             ref_weapon,
@@ -58,7 +58,7 @@ export function parseWeapon (response: WeaponResponse): Weapon {
     const rel_dloises: Dlois[] = ("rel_dloises" in response && response.rel_dloises) ? response.rel_dloises.map((res: DloisResponse) => parseDlois(res)) : [];
     const rel_faqs: Faq[] = ("rel_faqs" in response && response.rel_faqs) ? response.rel_faqs.map((res: FaqResponse) => parseFaq(res)) : [];
     const rel_infos: Info[] = ("rel_infos" in response && response.rel_infos) ? response.rel_infos.map((res: InfoResponse) => parseInfo(res)) : [];
-    const favorited_by: User[] = ("response.favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
+    const favorited_by: User[] = ("favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
     return {
         ...weapon_base,
         refed_power,
@@ -93,7 +93,7 @@ export function parseArmor (response: ArmorResponse): Armor {
     const rel_dloises: Dlois[] = ("rel_dloises" in response && response.rel_dloises) ? response.rel_dloises.map((res: DloisResponse) => parseDlois(res)) : [];
     const rel_faqs: Faq[] = ("rel_faqs" in response && response.rel_faqs) ? response.rel_faqs.map((res: FaqResponse) => parseFaq(res)) : [];
     const rel_infos: Info[] = ("rel_infos" in response && response.rel_infos) ? response.rel_infos.map((res: InfoResponse) => parseInfo(res)) : [];
-    const favorited_by: User[] = ("response.favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
+    const favorited_by: User[] = ("favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
     return {
         ...armor_base,
         ref_weapon,
@@ -125,7 +125,7 @@ export function parseVehicle (response: VehicleResponse): Vehicle {
     const rel_dloises: Dlois[] = ("rel_dloises" in response && response.rel_dloises) ? response.rel_dloises.map((res: DloisResponse) => parseDlois(res)) : [];
     const rel_faqs: Faq[] = ("rel_faqs" in response && response.rel_faqs) ? response.rel_faqs.map((res: FaqResponse) => parseFaq(res)) : [];
     const rel_infos: Info[] = ("rel_infos" in response && response.rel_infos) ? response.rel_infos.map((res: InfoResponse) => parseInfo(res)) : [];
-    const favorited_by: User[] = ("response.favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
+    const favorited_by: User[] = ("favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
     return {
         ...vehicle_base,
         other_vers,
@@ -155,7 +155,7 @@ export function parseConnection (response: ConnectionResponse): Connection {
     const rel_dloises: Dlois[] = ("rel_dloises" in response && response.rel_dloises) ? response.rel_dloises.map((res: DloisResponse) => parseDlois(res)) : [];
     const rel_faqs: Faq[] = ("rel_faqs" in response && response.rel_faqs) ? response.rel_faqs.map((res: FaqResponse) => parseFaq(res)) : [];
     const rel_infos: Info[] = ("rel_infos" in response && response.rel_infos) ? response.rel_infos.map((res: InfoResponse) => parseInfo(res)) : [];
-    const favorited_by: User[] = ("response.favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
+    const favorited_by: User[] = ("favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
     return {
         ...connection_base,
         other_vers,
@@ -186,7 +186,7 @@ export function parseGeneral (response: GeneralResponse): General {
     const rel_dloises: Dlois[] = ("rel_dloises" in response && response.rel_dloises) ? response.rel_dloises.map((res: DloisResponse) => parseDlois(res)) : [];
     const rel_faqs: Faq[] = ("rel_faqs" in response && response.rel_faqs) ? response.rel_faqs.map((res: FaqResponse) => parseFaq(res)) : [];
     const rel_infos: Info[] = ("rel_infos" in response && response.rel_infos) ? response.rel_infos.map((res: InfoResponse) => parseInfo(res)) : [];
-    const favorited_by: User[] = ("response.favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
+    const favorited_by: User[] = ("favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
     return {
         ...general_base,
         ref_weapon,
@@ -218,7 +218,7 @@ export function parseDlois (response: DloisResponse): Dlois {
     const rel_dloises: Dlois[] = ("rel_dloises" in response && response.rel_dloises) ? response.rel_dloises.map((res: DloisResponse) => parseDlois(res)) : [];
     const rel_faqs: Faq[] = ("rel_faqs" in response && response.rel_faqs) ? response.rel_faqs.map((res: FaqResponse) => parseFaq(res)) : [];
     const rel_infos: Info[] = ("rel_infos" in response && response.rel_infos) ? response.rel_infos.map((res: InfoResponse) => parseInfo(res)) : [];
-    const favorited_by: User[] = ("response.favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
+    const favorited_by: User[] = ("favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
     return {
         ...dlois_base,
         ref_power,
@@ -243,7 +243,7 @@ export function parseElois (response: EloisResponse): Elois {
     const rel_eloises: Elois[] = ("rel_eloises" in response && response.rel_eloises) ? response.rel_eloises.map((res: EloisResponse) => parseElois(res)) : [];
     const rel_faqs: Faq[] = ("rel_faqs" in response && response.rel_faqs) ? response.rel_faqs.map((res: FaqResponse) => parseFaq(res)) : [];
     const rel_infos: Info[] = ("rel_infos" in response && response.rel_infos) ? response.rel_infos.map((res: InfoResponse) => parseInfo(res)) : [];
-    const favorited_by: User[] = ("response.favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
+    const favorited_by: User[] = ("favorited_by" in response && response.favorited_by) ? response.favorited_by.map((res: UserResponse) => parseUser(res)) : [];
     return {
         ...elois_base,
         other_vers,
