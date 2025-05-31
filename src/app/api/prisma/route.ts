@@ -20,13 +20,15 @@ interface ApiRequestBody {
 
 // Prisma Clientのモデルdelegateを型安全に取得するヘルパー関数
 function getPrismaModelDelegate(prisma: PrismaClient, modelKey: keyof ResponseMap) {
-  const delegate = prisma[modelKey as keyof PrismaClient];
-  if (!delegate || typeof (delegate as any).findMany !== 'function') {
-    // findManyメソッドが存在しない、またはmodelKeyが不正な場合
-    throw new Error(`Invalid model key or delegate does not support findMany: ${modelKey}`);
-  }
-  // findManyメソッドを持つことを型で示す (より具体的な型も可能)
-  return delegate as { findMany: (args: any) => Promise<any[]> };
+    const delegate = prisma[modelKey as keyof PrismaClient];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!delegate || typeof (delegate as any).findMany !== 'function') {
+        // findManyメソッドが存在しない、またはmodelKeyが不正な場合
+        throw new Error(`Invalid model key or delegate does not support findMany: ${modelKey}`);
+    }
+    // findManyメソッドを持つことを型で示す (より具体的な型も可能)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return delegate as { findMany: (args: any) => Promise<any[]> };
 }
 
 export async function POST(
