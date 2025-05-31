@@ -13,12 +13,10 @@ export default function Favorites() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchUser = async () => {
+        const fetchUser = async (userId: string) => {
             setIsLoading(true);
             setError(null);
             try {
-                const { user } = useUser();
-                const userId = user?.id || "";
                 const result = await getRecordById("user", userId);
                 setUser(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,7 +28,9 @@ export default function Favorites() {
             }
         };
 
-        fetchUser();
+        const { user } = useUser();
+        const userId = user?.id || "";
+        fetchUser(userId);
     }, []);
 
     if (isLoading) {
