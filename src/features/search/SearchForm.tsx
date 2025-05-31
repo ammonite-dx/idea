@@ -154,9 +154,9 @@ function PowerSearchForm({ control }: { control:any }) {
     return (
         <>
             <div className="grid-item col-span-12 lg:col-span-12"><TextInput label="名称" name="name" control={control}/></div>
-            <div className="grid-item col-span-12 lg:col-span-4"><SelectBox label="分類" name="type" control={control} options={POWER_TYPES.map((s)=>({value:s,label:s}))} isMulti/></div>
-            <div className="grid-item col-span-12 lg:col-span-4"><SelectBox label="カテゴリ" name="category" control={control} options={POWER_CATEGORIES.map((s)=>({value:s,label:s}))} isMulti/></div>
             <div className="grid-item col-span-12 lg:col-span-4"><SelectBox label="サプリメント" name="supplement" control={control} options={POWER_SUPPLEMENTS.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-4"><SelectBox label="カテゴリ" name="category" control={control} options={POWER_CATEGORIES.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-4"><SelectBox label="分類" name="type" control={control} options={POWER_TYPES.map((s)=>({value:s,label:s}))} isMulti/></div>
             <div className="grid-item col-span-12 lg:col-span-3"><TextInput label="最大レベル" name="maxlv" control={control} isNumber suffix='以上'/></div>
             <div className="grid-item col-span-12 lg:col-span-3"><SelectBox label="タイミング" name="timing" control={control} options={POWER_TIMINGS.map((s)=>({value:s,label:s}))} isMulti/></div>
             <div className="grid-item col-span-12 lg:col-span-3"><SelectBox label="技能" name="skill" control={control} options={POWER_SKILLS.map((s)=>({value:s,label:s}))} isMulti/></div>
@@ -176,8 +176,8 @@ function ItemSearchForm ({ control, watch } : { control:any, watch:any }) {
     return (
         <>
             <div className="grid-item col-span-12 lg:col-span-12"><TextInput control={control} name="name" label="名称"/></div>
-            <div className="grid-item col-span-12 lg:col-span-4"><SelectBox control={control} name="category" label="カテゴリ" options={ITEM_CATEGORIES.map((s)=>({value:s,label:s}))} isMulti/></div>
             <div className="grid-item col-span-12 lg:col-span-4"><SelectBox control={control} name="supplement" label="サプリメント" options={ITEM_SUPPLEMENTS.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-4"><SelectBox control={control} name="category" label="カテゴリ" options={ITEM_CATEGORIES.map((s)=>({value:s,label:s}))} isMulti/></div>
             <div className="grid-item col-span-12 lg:col-span-4"><SelectBox control={control} name="item-type" label="アイテム種別" options={ITEM_TYPES.map((s)=>({value:s,label:s}))}/></div>
             {itemType.value=="武器" && <WeaponSearchForm control={control}/>}
             {itemType.value=="防具" && <ArmorSearchForm control={control}/>}
