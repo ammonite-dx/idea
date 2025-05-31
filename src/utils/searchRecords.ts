@@ -27,7 +27,7 @@ export default async function searchRecords<K extends keyof TypeMap>(
 async function searchPowers(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Power[] }> {
-  const powers: {[key:string]: Power[]} = await fetch('/api/prisma', {
+  const powers: {[key:string]: Power[]} = await fetch('/api/record', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ async function searchItems(
 async function searchWeapons(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Weapon[] }> {
-  const weapons: {[key:string]: Weapon[]} = await fetch('/api/prisma', {
+  const weapons: {[key:string]: Weapon[]} = await fetch('/api/record', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ async function searchWeapons(
 async function searchArmors(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Armor[] }> {
-  const armors: {[key:string]: Armor[]} = await fetch('/api/prisma', {
+  const armors: {[key:string]: Armor[]} = await fetch('/api/record', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -169,7 +169,7 @@ async function searchArmors(
 async function searchVehicles(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Vehicle[] }> {
-  const vehicles: {[key:string]: Vehicle[]} = await fetch('/api/prisma', {
+  const vehicles: {[key:string]: Vehicle[]} = await fetch('/api/record', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -204,7 +204,7 @@ async function searchVehicles(
 async function searchConnections(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Connection[] }> {
-  const connections: {[key:string]: Connection[]} = await fetch('/api/prisma', {
+  const connections: {[key:string]: Connection[]} = await fetch('/api/record', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -239,7 +239,7 @@ async function searchConnections(
 async function searchGenerals(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: General[] }> {
-  const generals: {[key:string]: General[]} = await fetch('/api/prisma', {
+  const generals: {[key:string]: General[]} = await fetch('/api/record', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -276,7 +276,7 @@ async function searchGenerals(
 async function searchDloises(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Dlois[] }> {
-  const dloises: {[key: string]: Dlois[]} = await fetch('/api/prisma', {
+  const dloises: {[key: string]: Dlois[]} = await fetch('/api/record', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -310,7 +310,7 @@ async function searchDloises(
 async function searchEloises(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Elois[] }> {
-  const eloises: {[key: string]: Elois[]} = await fetch('/api/prisma', {
+  const eloises: {[key: string]: Elois[]} = await fetch('/api/record', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -342,7 +342,7 @@ async function searchEloises(
 async function searchWorks(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Work[] }> {
-  const works: {[key: string]: Work[]} = await fetch('/api/prisma', {
+  const works: {[key: string]: Work[]} = await fetch('/api/record', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
