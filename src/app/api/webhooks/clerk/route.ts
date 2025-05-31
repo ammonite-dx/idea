@@ -4,6 +4,7 @@ import type { WebhookEvent } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { getPrismaClient } from '@/lib/prisma';
 import type { D1Database } from '@cloudflare/workers-types';
+import { performGuildCheckAndSaveMetadata } from '@/lib/discordUtils';
 
 export const runtime = 'edge';
 
@@ -72,22 +73,37 @@ export async function POST(req: Request) {
         }
 
         try {
-            // ユーザーが既に存在するかどうかを確認せずに作成 (idが主キーなので重複作成はエラーになる)
+            // ステップ1: D1にユーザーを作成
             await prisma.user.create({
                 data: {
                     id: id,
                 },
             });
             console.log(`User created in D1 with ID: ${id}`);
+
+            // ステップ2: Discordギルドチェックとメタデータ更新を実行
+            const guildCheckResult = await performGuildCheckAndSaveMetadata(id);
+            console.log(`Guild check result for ${id}: ${guildCheckResult.message} (Member: ${guildCheckResult.isMember}, Status: ${guildCheckResult.status})`);
+            if (guildCheckResult.error) {
+                console.warn(`Guild check for user ${id} encountered an issue: ${guildCheckResult.error} - ${guildCheckResult.details || guildCheckResult.message}`);
+            }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (dbError: any) {
-        // Prismaのエラーコード P2002 はユニーク制約違反（この場合はidの重複）
             if (dbError.code === 'P2002' && dbError.meta?.target?.includes('id')) {
-                console.warn(`User with ID: ${id} already exists. Skipping creation.`);
-                // 既に存在する場合はエラーとせず、成功として応答することもできる
-                return new Response('User already exists', { status: 200 }); // または 204 No Content
+                console.warn(`User ${id} already exists in D1. Attempting guild check.`);
+                try {
+                    const guildCheckResult = await performGuildCheckAndSaveMetadata(id);
+                    console.log(`Guild check result for existing user ${id}: ${guildCheckResult.message}`);
+                    if (guildCheckResult.error) {
+                        console.warn(`Guild check for existing user ${id} encountered an issue: ${guildCheckResult.error} - ${guildCheckResult.details || guildCheckResult.message}`);
+                    }
+                    return new Response('User already existed, guild check attempted.', { status: 200 });
+                } catch (guildCheckError: any) {
+                    console.error(`Error during guild check for existing user ${id}:`, guildCheckError);
+                    return new Response('User already existed, but guild check process failed.', { status: 500 });
+                }
             } else {
-                console.error('Error creating user in D1:', dbError);
+                console.error(`Error creating user ${id} in D1:`, dbError);
                 return new Response('Error processing user creation in database', { status: 500 });
             }
         }
