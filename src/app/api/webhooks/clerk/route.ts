@@ -13,8 +13,6 @@ const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
 export async function POST(req: Request) {
 
-    console.log('Received Clerk webhook request.');
-
     // 環境変数が設定されているか確認
     if (!CLERK_WEBHOOK_SECRET) {
         console.error('CLERK_WEBHOOK_SECRET is not set.');

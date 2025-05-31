@@ -38,17 +38,17 @@ export default function RecordResult<K extends keyof CardRecordKindMap>({
     }, [kind, id]);
 
     if (isLoading) {
-        return <div>検索中...</div>; // ローディング表示
+        return <div className='base-text'>検索中...</div>; // ローディング表示
     }
 
     if (error) {
-        return <div>エラー: {error}</div>; // エラー表示
+        return <div className='base-text'>エラー: {error}</div>; // エラー表示
     }
 
     if (!record) {
         return (
             <section>
-                <div className="m-4">指定されたデータは存在しません。</div>
+                <div className="base-text m-4">指定されたデータは存在しません。</div>
             </section>
         );
     }

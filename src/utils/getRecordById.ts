@@ -1,5 +1,5 @@
-import { TypeMap, Power, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work, PowerResponse, WeaponResponse, ArmorResponse, VehicleResponse, ConnectionResponse, GeneralResponse, DloisResponse, EloisResponse, WorkResponse } from '@/types/types';
-import { parsePower, parseWeapon, parseArmor, parseVehicle, parseConnection, parseGeneral, parseDlois, parseElois, parseWork } from './parseRecord';
+import { TypeMap, Power, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work, User, PowerResponse, WeaponResponse, ArmorResponse, VehicleResponse, ConnectionResponse, GeneralResponse, DloisResponse, EloisResponse, WorkResponse, UserResponse } from '@/types/types';
+import { parsePower, parseWeapon, parseArmor, parseVehicle, parseConnection, parseGeneral, parseDlois, parseElois, parseWork, parseUser } from './parseRecord';
 
 export default async function getRecordById<K extends keyof TypeMap>(
     kind: K,
@@ -15,6 +15,7 @@ export default async function getRecordById<K extends keyof TypeMap>(
         case "dlois": return await getDloisById(id) as TypeMap[K];
         case "elois": return await getEloisById(id) as TypeMap[K];
         case "work": return await getWorkById(id) as TypeMap[K];
+        case "user": return await getUserById(id) as TypeMap[K];
         default: return null;
     }
 }
@@ -321,4 +322,49 @@ async function getWorkById(
     .then((records: WorkResponse[]) => records[0])
     .then((record: WorkResponse) => parseWork(record));
     return work;
+}
+
+async function getUserById(
+    id: string
+): Promise<User | null> {
+    const user = await fetch('/api/record', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'user',
+            findOptions: {
+                where: { id: id },
+                include: {
+                    favPowers: {
+                        ref_weapon: true,
+                        ref_armor: true,
+                    },
+                    favWeapons: {
+                        refed_power: true,
+                        refed_armor: true,
+                        refed_general: true,
+                    },
+                    favArmors: {
+                        ref_weapon: true,
+                        refed_power: true,
+                    },
+                    favVehicles: true,
+                    favConnections: true,
+                    favGenerals: {
+                        ref_weapon: true,
+                    },
+                    favDloises: {
+                        ref_power: true,
+                    },
+                    favEloises: true,
+                },
+            },
+        }),
+    })
+    .then((response) => response.json())
+    .then((users: UserResponse[]) => users[0])
+    .then((user: UserResponse) => parseUser(user));
+    return user;
 }

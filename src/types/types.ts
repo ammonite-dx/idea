@@ -23,6 +23,7 @@ export type TypeMap = {
     work: Work;
     faq: Faq;
     info: Info;
+    user: User;
 };
 
 export type CardRecordKindMap = {

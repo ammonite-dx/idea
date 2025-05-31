@@ -40,11 +40,11 @@ export default function SearchResults<K extends keyof TypeMap> ({
     }, [kind, JSON.stringify(searchParams)]);
 
     if (isLoading) {
-      return <div>検索中...</div>; // ローディング表示
+      return <div className='base-text'>検索中...</div>; // ローディング表示
     }
 
     if (error) {
-      return <div>エラー: {error}</div>; // エラー表示
+      return <div className='base-text'>エラー: {error}</div>; // エラー表示
     }
 
     if (!records) {
@@ -54,7 +54,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
         <section>
           <h2 className="headline-text font-bold">検索結果</h2>
           <hr className="border-neutral-900 dark:border-neutral-200 mb-4"/>
-          <div className="m-4">条件に一致するデータがありません。</div>
+          <div className="base-text m-4">条件に一致するデータがありません。</div>
         </section>
       );
     }
@@ -69,10 +69,10 @@ export default function SearchResults<K extends keyof TypeMap> ({
           ? <SearchResultsCardList kind={kind} records={records} />
           : (kind==="work") 
           ? <SearchResultsTable kind={kind} records={records} />
-          : <div className="m-4">条件に一致するデータがありません。</div>
+          : <div className="base-text m-4">条件に一致するデータがありません。</div>
         }
       </section> 
-    )
+    );
   }
 
 // エフェクト・Dロイス・Eロイスの検索結果を表示するコンポーネント
