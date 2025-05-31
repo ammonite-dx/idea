@@ -25,6 +25,21 @@ export type TypeMap = {
     info: Info;
 };
 
+export type ResponseMap = {
+    power: PowerResponse;
+    weapon: WeaponResponse;
+    armor: ArmorResponse;
+    vehicle: VehicleResponse;
+    connection: ConnectionResponse;
+    general: GeneralResponse;
+    dlois: DloisResponse;
+    elois: EloisResponse;
+    work: WorkResponse;
+    faq: FaqResponse;
+    info: InfoResponse;
+    user: UserResponse;
+};
+
 export type Power = {
     kind: "power",
     id: string,

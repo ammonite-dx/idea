@@ -27,16 +27,29 @@ export default async function searchRecords<K extends keyof TypeMap>(
 async function searchPowers(
   searchParams: { [key: string]: string | string[] | undefined }
 ): Promise<{ [key: string]: Power[] }> {
-  const powers: {[key:string]: Power[]} = await fetch('/api/power', {
+  const powers: {[key:string]: Power[]} = await fetch('/api/prisma', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      whereOptions: {
-        AND: [
-          powerWhereCondition(searchParams),
-        ].flat()
+      model: "power",
+      findOptions: {
+        where: {
+          AND: [
+            powerWhereCondition(searchParams),
+          ].flat()
+        },
+        include: {
+          ref_weapon: true,
+          ref_armor: true,
+          refed_dlois: true,
+          favorited_by: true,
+        },
+        orderBy: [
+          {type_restrict_order: 'asc' as const},
+          {ruby: 'asc' as const},
+        ],
       },
     }),
     credentials: 'include',

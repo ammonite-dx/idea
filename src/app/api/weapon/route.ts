@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getPrismaClient } from '@/lib/prisma';
 import type { D1Database } from '@cloudflare/workers-types';
-import type { PowerResponse } from '@/types/types';
+import type { WeaponResponse } from '@/types/types';
 
 export const runtime = 'edge';
 
@@ -27,37 +27,38 @@ export async function POST(request: Request) {
         const BATCH_SIZE = 100;
 
         // レコードをバッチで取得
-        let powerResponses: PowerResponse[] = [];
+        let weaponResponses: WeaponResponse[] = [];
         let currentSkip = 0;
         let moreDataToFetch = true;
         while (moreDataToFetch) {
-            const batch: PowerResponse[] = await prisma.power.findMany({
+            const batch: WeaponResponse[] = await prisma.weapon.findMany({
                 where: whereOptions,
-                orderBy: [
-                    {type_restrict_order: 'asc' as const},
-                    {ruby: 'asc' as const},
-                ],
                 include: {
-                    ref_weapon: true,
-                    ref_armor: true,
-                    refed_dlois: true,
+                    refed_power: true,
+                    refed_armor: true,
+                    refed_general: true,
                     favorited_by: true,
                 },
+                orderBy: [
+                    {type_order: "asc" as const},
+                    {cost_order: "asc" as const},
+                    {ruby: "asc" as const}
+                ],
                 take: BATCH_SIZE,
                 skip: currentSkip,
             });
 
             if (batch.length > 0) {
-                powerResponses = powerResponses.concat(batch);
+                weaponResponses = weaponResponses.concat(batch);
                 currentSkip += batch.length; // 次の取得開始位置を更新
                 if (batch.length < BATCH_SIZE) moreDataToFetch = false; // 取得した件数がBATCH_SIZEより少なければ、それが最後のバッチ
             } else {
                 moreDataToFetch = false; // 取得できるデータがなくなった場合はループを終了
             }
         }
-        return NextResponse.json(powerResponses);
+        return NextResponse.json(weaponResponses);
     } catch (error: unknown) {
-        console.error('Error in Power API route:', error);
+        console.error('Error in Weapon API route:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
