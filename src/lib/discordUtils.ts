@@ -1,11 +1,12 @@
 import { clerkClient } from '@clerk/nextjs/server'; // clerkClient を直接インポート
 
 interface GuildCheckResult {
-  isMember: boolean;
-  message: string;
-  error?: string;
-  status?: number; // HTTPステータスコードに類する情報
-  details?: any;
+    isMember: boolean;
+    message: string;
+    error?: string;
+    status?: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    details?: any;
 }
 
 export async function performGuildCheckAndSaveMetadata(

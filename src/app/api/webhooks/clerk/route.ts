@@ -98,6 +98,7 @@ export async function POST(req: Request) {
                         console.warn(`Guild check for existing user ${id} encountered an issue: ${guildCheckResult.error} - ${guildCheckResult.details || guildCheckResult.message}`);
                     }
                     return new Response('User already existed, guild check attempted.', { status: 200 });
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 } catch (guildCheckError: any) {
                     console.error(`Error during guild check for existing user ${id}:`, guildCheckError);
                     return new Response('User already existed, but guild check process failed.', { status: 500 });
