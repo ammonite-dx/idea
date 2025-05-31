@@ -338,25 +338,35 @@ async function getUserById(
                 where: { id: id },
                 include: {
                     fav_powers: {
-                        ref_weapon: true,
-                        ref_armor: true,
+                        include: {
+                            ref_weapon: true,
+                            ref_armor: true,
+                        },
                     },
                     fav_weapons: {
-                        refed_power: true,
-                        refed_armor: true,
-                        refed_general: true,
+                        include: {
+                            refed_power: true,
+                            refed_armor: true,
+                            refed_general: true,
+                        },
                     },
                     fav_armors: {
-                        ref_weapon: true,
-                        refed_power: true,
+                        include: {
+                            ref_weapon: true,
+                            refed_power: true,
+                        },
                     },
                     fav_vehicles: true,
                     fav_connections: true,
                     fav_generals: {
-                        ref_weapon: true,
+                        include: {
+                            ref_weapon: true,
+                        },
                     },
                     fav_dloises: {
-                        ref_power: true,
+                        include: {
+                            ref_power: true,
+                        },
                     },
                     fav_eloises: true,
                 },
