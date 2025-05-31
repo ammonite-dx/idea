@@ -7,6 +7,7 @@ export const runtime = 'edge';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
+        console.log('[API Route: POST /api/favorite] ', body);
         const model = body.RecordKind;
         const userId = body.userId;
         const recordId = body.recordId;
@@ -42,6 +43,7 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
     try {
         const body = await request.json();
+        console.log('[API Route: DELETE /api/favorite] ', body);
         const model = body.RecordKind;
         const userId = body.userId;
         const recordId = body.recordId;
