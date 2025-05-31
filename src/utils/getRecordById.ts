@@ -341,6 +341,7 @@ async function getUserById(
                         include: {
                             ref_weapon: true,
                             ref_armor: true,
+                            favorited_by: true,
                         },
                     },
                     fav_weapons: {
@@ -348,27 +349,43 @@ async function getUserById(
                             refed_power: true,
                             refed_armor: true,
                             refed_general: true,
+                            favorited_by: true,
                         },
                     },
                     fav_armors: {
                         include: {
                             ref_weapon: true,
                             refed_power: true,
+                            favorited_by: true,
                         },
                     },
-                    fav_vehicles: true,
-                    fav_connections: true,
+                    fav_vehicles: {
+                        include: {
+                            favorited_by: true,
+                        },
+                    },
+                    fav_connections: {
+                        include: {
+                            favorited_by: true,
+                        },
+                    },
                     fav_generals: {
                         include: {
                             ref_weapon: true,
+                            favorited_by: true,
                         },
                     },
                     fav_dloises: {
                         include: {
                             ref_power: true,
+                            favorited_by: true,
                         },
                     },
-                    fav_eloises: true,
+                    fav_eloises: {
+                        include: {
+                            favorited_by: true,
+                        },
+                    },
                 },
             },
         }),

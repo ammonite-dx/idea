@@ -312,6 +312,7 @@ export function parseInfo (response: InfoResponse): Info {
 
 export function parseUser (response: UserResponse): User {
     const { id } = response;
+    const user_base: User = { id };
     const fav_powers: Power[] = ("fav_powers" in response && response.fav_powers) ? response.fav_powers.map((res: PowerResponse) => parsePower(res)) : [];
     const fav_weapons: Weapon[] = ("fav_weapons" in response && response.fav_weapons) ? response.fav_weapons.map((res: WeaponResponse) => parseWeapon(res)) : [];
     const fav_armors: Armor[] = ("fav_armors" in response && response.fav_armors) ? response.fav_armors.map((res: ArmorResponse) => parseArmor(res)) : [];
@@ -321,7 +322,7 @@ export function parseUser (response: UserResponse): User {
     const fav_dloises: Dlois[] = ("fav_dloises" in response && response.fav_dloises) ? response.fav_dloises.map((res: DloisResponse) => parseDlois(res)) : [];
     const fav_eloises: Elois[] = ("fav_eloises" in response && response.fav_eloises) ? response.fav_eloises.map((res: EloisResponse) => parseElois(res)) : [];
     return {
-        id,
+        ...user_base,
         fav_powers,
         fav_weapons,
         fav_armors,
