@@ -23,7 +23,7 @@ export default function TextInput ({control, name, label, isNumber=false, suffix
                             {...field}
                             onChange={(e) => field.onChange(e.target.value)}
                             type={isNumber ? 'number' : 'text'}
-                            className='w-full min-h-7 input-box rounded-sm bg-white dark:bg-neutral-900 border border-neutral-500 dark:border-neutral-200 p-1 pl-2 text-left base-text text-neutral-900 dark:text-neautral-100'
+                            className='w-full min-h-7 input-box rounded-sm bg-white dark:bg-neutral-900 border border-neutral-500 dark:border-neutral-200 p-1 pl-2 text-left base-text text-neutral-900 dark:text-neutral-100'
                         />
                         <span className="absolute right-9 top-1/2 -translate-y-1/2 pointer-events-none">
                             {suffix}
