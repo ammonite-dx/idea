@@ -337,28 +337,28 @@ async function getUserById(
             findOptions: {
                 where: { id: id },
                 include: {
-                    favPowers: {
+                    fav_powers: {
                         ref_weapon: true,
                         ref_armor: true,
                     },
-                    favWeapons: {
+                    fav_weapons: {
                         refed_power: true,
                         refed_armor: true,
                         refed_general: true,
                     },
-                    favArmors: {
+                    fav_armors: {
                         ref_weapon: true,
                         refed_power: true,
                     },
-                    favVehicles: true,
-                    favConnections: true,
-                    favGenerals: {
+                    fav_vehicles: true,
+                    fav_connections: true,
+                    fav_generals: {
                         ref_weapon: true,
                     },
-                    favDloises: {
+                    fav_dloises: {
                         ref_power: true,
                     },
-                    favEloises: true,
+                    fav_eloises: true,
                 },
             },
         }),
