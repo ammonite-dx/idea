@@ -1,10 +1,6 @@
 import { TypeMap, Power, Weapon, Armor, Vehicle, Connection, General, Dlois, Elois, Work, PowerResponse, WeaponResponse, ArmorResponse, VehicleResponse, ConnectionResponse, GeneralResponse, DloisResponse, EloisResponse, WorkResponse } from '@/types/types';
 import { parsePower, parseWeapon, parseArmor, parseVehicle, parseConnection, parseGeneral, parseDlois, parseElois, parseWork } from './parseRecord';
 
-// apiUrlの設定
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-const apiUrl = `${baseUrl}/api/record`;
-
 export default async function getRecordById<K extends keyof TypeMap>(
     kind: K,
     id: string
@@ -26,6 +22,8 @@ export default async function getRecordById<K extends keyof TypeMap>(
 async function getPowerById(
     id: string
 ): Promise<Power | null> {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/record`;
     const power: Power | null = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -63,6 +61,8 @@ async function getPowerById(
 async function getWeaponById(
     id: string
 ): Promise<Weapon | null> {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/record`;
     const weapon: Weapon | null = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -100,6 +100,8 @@ async function getWeaponById(
 async function getArmorById(
     id: string
 ): Promise<Armor | null> {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/record`;
     const armor: Armor | null = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -136,6 +138,8 @@ async function getArmorById(
 async function getVehicleById(
     id: string
 ): Promise<Vehicle | null> {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/record`;
     const vehicle: Vehicle | null = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -170,6 +174,8 @@ async function getVehicleById(
 async function getConnectionById(
     id: string
 ): Promise<Connection | null> {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/record`;
     const connection: Connection | null = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -204,6 +210,8 @@ async function getConnectionById(
 async function getGeneralById(
     id: string
 ): Promise<General | null> {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/record`;
     const general: General | null = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -239,6 +247,8 @@ async function getGeneralById(
 async function getDloisById(
     id: string
 ): Promise<Dlois | null> {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/record`;
     const dlois: Dlois | null = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -274,6 +284,8 @@ async function getDloisById(
 async function getEloisById(
     id: string
 ): Promise<Elois | null> {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/record`;
     const elois: Elois | null = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -301,6 +313,8 @@ async function getEloisById(
 async function getWorkById(
     id: string
 ): Promise<Work | null> {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const apiUrl = `${baseUrl}/api/record`;
     const work: Work | null = await fetch(apiUrl, {
         method: 'POST',
         headers: {
