@@ -7,13 +7,11 @@ export const runtime = 'edge';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        console.log('[API Route: POST /api/favorite] ', body);
-        const model = body.RecordKind;
+        const model = body.recordKind;
         const userId = body.userId;
         const recordId = body.recordId;
 
         if (!model || !userId || !recordId) {
-            console.log('[API Route: POST /api/favorite] Invalid input:', { model, userId, recordId });
             return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
         }
 
@@ -44,8 +42,7 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
     try {
         const body = await request.json();
-        console.log('[API Route: DELETE /api/favorite] ', body);
-        const model = body.RecordKind;
+        const model = body.recordKind;
         const userId = body.userId;
         const recordId = body.recordId;
 
