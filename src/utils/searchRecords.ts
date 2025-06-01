@@ -399,7 +399,10 @@ function itemWhereCondition(searchParams: { [key: string]: string | string[] | u
   if (searchParams["name"] !== undefined) {conditions.push({name: {contains: toString(searchParams["name"], "")}});}
   if (searchParams["supplement"] !== undefined) {
     conditions.push({OR: toArray(searchParams["supplement"], []).map(supplement => ({supplement: supplement}))});
-    conditions.push({NOT: toArray(searchParams["supplement"], []).map(supplement => ({update_supplement: {contains: supplement}}))});
+    conditions.push({OR: [
+      {update_supplement: null},
+      {NOT: toArray(searchParams["supplement"], []).map(supplement => ({update_supplement: {contains: supplement}}))}
+    ]})
   } else {
     conditions.push({update_supplement: null});
   }
@@ -482,7 +485,10 @@ function dloisWhereCondition(searchParams: { [key: string]: string | string[] | 
   if (searchParams["name"] !== undefined) {conditions.push({name: {contains: toString(searchParams["name"], "")}});}
   if (searchParams["supplement"] !== undefined) {
     conditions.push({OR: toArray(searchParams["supplement"], []).map(supplement => ({supplement: supplement}))});
-    conditions.push({NOT: toArray(searchParams["supplement"], []).map(supplement => ({update_supplement: {contains: supplement}}))});
+    conditions.push({OR: [
+      {update_supplement: null},
+      {NOT: toArray(searchParams["supplement"], []).map(supplement => ({update_supplement: {contains: supplement}}))}
+    ]})
   } else {
     conditions.push({update_supplement: null});
   }
@@ -498,7 +504,10 @@ function eloisWhereCondition(searchParams: { [key: string]: string | string[] | 
   if (searchParams["name"] !== undefined) {conditions.push({name: {contains: toString(searchParams["name"], "")}});}
   if (searchParams["supplement"] !== undefined) {
     conditions.push({OR: toArray(searchParams["supplement"], []).map(supplement => ({supplement: supplement}))});
-    conditions.push({NOT: toArray(searchParams["supplement"], []).map(supplement => ({update_supplement: {contains: supplement}}))});
+    conditions.push({OR: [
+      {update_supplement: null},
+      {NOT: toArray(searchParams["supplement"], []).map(supplement => ({update_supplement: {contains: supplement}}))}
+    ]})
   } else {
     conditions.push({update_supplement: null});
   }

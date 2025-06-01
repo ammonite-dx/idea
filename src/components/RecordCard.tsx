@@ -312,7 +312,7 @@ function RecordCardHeader ({ title, record, subtitle="" }: { title:string, recor
         <div className="flex items-center justify-between">
             <div className="title-text font-black"><Link href={link}><ScaledText text={title}/></Link></div>  
             <div className="flex items-center justify-end space-x-1">
-              <div className="base-text text-right font-black"><ScaledText text={subtitle}/></div>
+              <div className="base-text text-right font-black">{subtitle}</div>
               <FavoriteButton recordKind={record.kind} recordId={record.id} favoritedBy={favoritedBy} />
             </div>  
         </div>
