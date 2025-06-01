@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, UserButton, SignInButton } from '@clerk/nextjs';
+import { SignedOut, SignInButton } from '@clerk/nextjs';
 export const runtime = 'edge'; // この行を追加
 
 export default function NotFound() {
@@ -8,12 +8,9 @@ export default function NotFound() {
       <p className="text-lg text-gray-700">
         Sorry, the page you are looking for does not exist.
       </p>
-      <div className="hidden md:block">
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
+      <div className="mt-8">
         <SignedOut>
-          <SignInButton mode="modal" />
+          <SignInButton mode='modal' />
         </SignedOut>
       </div>
     </main>
