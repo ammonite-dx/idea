@@ -308,18 +308,21 @@ function RecordCardHeader ({ title, record, subtitle="" }: { title:string, recor
   const link = `/record/${record.kind}/${record.id}`;
   const favoritedBy = record.favorited_by;
   return (
-      <CardHeader>
-        <div className="flex items-center justify-between w-full">
-          <Link href={link}>
-            <div className="flex items-center min-w-0 w-full title-text font-black">
-              <ScaledText text={`${title} (${subtitle})`}/>
-            </div>
-          </Link>
-          <div className="flex items-center justify-end space-x-1">
-            <FavoriteButton recordKind={record.kind} recordId={record.id} favoritedBy={favoritedBy} />
+    <CardHeader>
+      <div className='grid grid-cols-8'>
+        <Link href={link}>
+          <div className="col-span-6 flex items-center justify-center title-text font-black">
+            <ScaledText text={title} />
           </div>
+        </Link>
+        <div className="col-span-1 flex items-center justify-start base-text font-bold">
+          <ScaledText text={subtitle} />
         </div>
-      </CardHeader>
+        <div className="col-span-1 flex items-center justify-end space-x-1">
+          <FavoriteButton recordKind={record.kind} recordId={record.id} favoritedBy={favoritedBy} />
+        </div>
+      </div>
+    </CardHeader>
   )
 }
 

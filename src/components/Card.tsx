@@ -39,7 +39,7 @@ export function CardBodyRow ({ children }: { children:React.ReactNode }) {
         )
     } else {
         return(
-        <div className={`grid grid-cols-${React.Children.count(children)} pb-1`}>
+        <div className={`grid grid-cols-${React.Children.count(children)} pb-1 gap-1`}>
             { children }
         </div>
         )
