@@ -310,11 +310,8 @@ function RecordCardHeader ({ title, record, subtitle="" }: { title:string, recor
   return (
       <CardHeader>
         <div className="flex items-center justify-between">
-            <div className="title-text font-black"><Link href={link}><ScaledText text={title}/></Link></div>  
-            <div className="flex items-center justify-end space-x-1">
-              <div className="base-text text-right font-black">{subtitle}</div>
-              <FavoriteButton recordKind={record.kind} recordId={record.id} favoritedBy={favoritedBy} />
-            </div>  
+            <div className="title-text font-black"><Link href={link}><ScaledText text={`${title} (${subtitle})`}/></Link></div>  
+            <div className="flex items-center justify-end space-x-1"><FavoriteButton recordKind={record.kind} recordId={record.id} favoritedBy={favoritedBy} /></div>  
         </div>
       </CardHeader>
   )
