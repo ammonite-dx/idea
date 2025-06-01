@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { SignedIn, SignedOut, UserButton, SignInButton } from '@clerk/nextjs';
 export const runtime = 'edge'; // この行を追加
 
 export default function NotFound() {
@@ -8,9 +8,14 @@ export default function NotFound() {
       <p className="text-lg text-gray-700">
         Sorry, the page you are looking for does not exist.
       </p>
-      <Link href="/" className="text-blue-500 hover:underline mt-6 inline-block">
-        Go to Homepage
-      </Link>
+      <div className="hidden md:block">
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+        <SignedOut>
+          <SignInButton mode="modal" />
+        </SignedOut>
+      </div>
     </main>
   );
 }
