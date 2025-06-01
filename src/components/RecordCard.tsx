@@ -310,8 +310,8 @@ function RecordCardHeader ({ title, record, subtitle="" }: { title:string, recor
   return (
     <CardHeader>
       <div className='grid grid-cols-12'>
-        <div className="col-span-8 flex items-center justify-center title-text font-black">
-          <Link href={link}><ScaledText text={title} /></Link>
+        <div className="col-span-8 flex items-center justify-start title-text font-black">
+          <ScaledText text={title} />
         </div>
         <div className="col-span-2 flex items-center justify-start base-text font-bold">
           <ScaledText text={subtitle} />
