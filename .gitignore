@@ -22,10 +22,7 @@
 
 # data
 /data/
-
-# scripts
-/scripts/
-/commands/
+/sql/
 
 # misc
 .DS_Store

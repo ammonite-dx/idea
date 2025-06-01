@@ -373,7 +373,10 @@ function powerWhereCondition(searchParams: { [key: string]: string | string[] | 
   if (searchParams["type"] !== undefined) {conditions.push({OR: toArray(searchParams["type"], []).map(type => ({type: type}))});}
   if (searchParams["supplement"] !== undefined) {
     conditions.push({OR: toArray(searchParams["supplement"], []).map(supplement => ({supplement: supplement}))});
-    conditions.push({NOT: toArray(searchParams["supplement"], []).map(supplement => ({update_supplement: {contains: supplement}}))});
+    conditions.push({OR: [
+      {update_supplement: null},
+      {NOT: toArray(searchParams["supplement"], []).map(supplement => ({update_supplement: {contains: supplement}}))}
+    ]})
   } else {
     conditions.push({update_supplement: null});
   }
