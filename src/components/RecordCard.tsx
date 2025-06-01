@@ -309,9 +309,9 @@ function RecordCardHeader ({ title, record, subtitle="" }: { title:string, recor
   const favoritedBy = record.favorited_by;
   return (
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between w-full">
           <Link href={link}>
-            <div className="flex items-center min-w-0 w-full">
+            <div className="flex items-center min-w-0 w-full title-text font-black">
               <ScaledText text={`${title} (${subtitle})`}/>
             </div>
           </Link>
