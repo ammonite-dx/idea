@@ -380,6 +380,7 @@ function powerWhereCondition(searchParams: { [key: string]: string | string[] | 
   } else {
     conditions.push({update_supplement: null});
   }
+  if (searchParams["category"] !== undefined) {conditions.push({OR: toArray(searchParams["category"], []).map(category => ({category: category}))});}
   if (searchParams["name"] !== undefined) {conditions.push({name: {contains: toString(searchParams["name"], "")}});}
   if (searchParams["maxlv"] !== undefined) {conditions.push({OR: [{maxlv_int: null}, {maxlv_int: {gte: parseInt(toString(searchParams["maxlv"], "0"))}}]});}
   if (searchParams["timing"] !== undefined) {conditions.push({OR: toArray(searchParams["timing"], []).map(timing => ({timing: {contains: timing}}))});}
@@ -396,6 +397,7 @@ function powerWhereCondition(searchParams: { [key: string]: string | string[] | 
 // アイテム
 function itemWhereCondition(searchParams: { [key: string]: string | string[] | undefined }) {
   const conditions = [];
+  if (searchParams["category"] !== undefined) {conditions.push({OR: toArray(searchParams["category"], ITEM_CATEGORIES).map(category => ({category: category}))});}
   if (searchParams["name"] !== undefined) {conditions.push({name: {contains: toString(searchParams["name"], "")}});}
   if (searchParams["supplement"] !== undefined) {
     conditions.push({OR: toArray(searchParams["supplement"], []).map(supplement => ({supplement: supplement}))});
