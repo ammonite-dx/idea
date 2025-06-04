@@ -38,7 +38,7 @@ export default function Header() {
         </nav>
 
         {/* ユーザーボタン（Clerk） */}
-        <div className="hidden md:block">
+        <div className="block">
           <SignedIn>
             <UserButton />
           </SignedIn>

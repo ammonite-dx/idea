@@ -689,3 +689,9 @@ export type UserResponse = {
     fav_dloises?: DloisResponse[];
     fav_eloises?: EloisResponse[];
 };
+
+export type CategoryWithCardRecords = {
+  id: string;
+  name: string;
+  records: CardRecord[];
+}

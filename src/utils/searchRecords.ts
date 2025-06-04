@@ -10,7 +10,6 @@ export default async function searchRecords<K extends keyof TypeMap>(
 ): Promise<{ [key: string]: TypeMap[K][] } | null> {
   switch (kind) {
     case "power": return await searchPowers(searchParams) as { [key: string]: TypeMap[K][] };
-    case "weapon": return await searchWeapons(searchParams) as { [key: string]: TypeMap[K][] };
     case "item": return await searchItems(searchParams) as { [key: string]: TypeMap[K][] };
     case "dlois": return await searchDloises(searchParams) as { [key: string]: TypeMap[K][] };
     case "elois": return await searchEloises(searchParams) as { [key: string]: TypeMap[K][] };
@@ -56,7 +55,7 @@ async function searchPowers(
   })
   .then((response) => response.json())
   .then((records:PowerResponse[]) => records.map((record) => parsePower(record)))
-  .then((powers:Power[]) => CategorizeRecords(POWER_CATEGORIES, powers));
+  .then((powers:Power[]) => CategorizeRecords(POWER_CATEGORIES.map((c)=>c.name), powers));
   return powers;
 };
 

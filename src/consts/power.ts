@@ -21,24 +21,24 @@ export const POWER_TYPES: string[] = [
     "優しい奇跡",
 ]
 
-export const POWER_CATEGORIES: string[] = [
-    "エンジェルハィロゥ",
-    "バロール",
-    "ブラックドッグ",
-    "ブラム=ストーカー",
-    "キュマイラ",
-    "エグザイル",
-    "ハヌマーン",
-    "モルフェウス",
-    "ノイマン",
-    "オルクス",
-    "サラマンダー",
-    "ソラリス",
-    "ウロボロス",
-    "ミストルティン",
-    "グレイプニル",
-    "一般",
-    "RB"
+export const POWER_CATEGORIES: {id:string, name:string}[] = [
+    {id:"angelhalo", name:"エンジェルハィロゥ"},
+    {id:"balor", name:"バロール"},
+    {id:"blackdog", name:"ブラックドッグ"},
+    {id:"bramstoker", name:"ブラム=ストーカー"},
+    {id:"chimaera", name:"キュマイラ"},
+    {id:"exile", name:"エグザイル"},
+    {id:"hanuman", name:"ハヌマーン"},
+    {id:"morpheus", name:"モルフェウス"},
+    {id:"neumann", name:"ノイマン"},
+    {id:"orcus", name:"オルクス"},
+    {id:"salamandra", name:"サラマンダー"},
+    {id:"solaris", name:"ソラリス"},
+    {id:"ouroboros", name:"ウロボロス"},
+    {id:"mistilteinn", name:"ミストルティン"},
+    {id:"gleipnir", name:"グレイプニル"},
+    {id:"common", name:"一般"},
+    {id:"rb", name:"RB"},
 ]
 
 export const POWER_SUPPLEMENTS: string[] = [
