@@ -52,6 +52,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
           setActivePage(0); // データがなければ0ページ（表示なし）
           setcategoriesForCurrentPage([]);
         }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         console.error("fetchPaginationInfo failed:", e);
         setError(e.message || "ページ情報の取得に失敗しました。");
@@ -76,6 +77,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
         if (!response.ok) throw new Error('Failed to fetch page data');
         const data = await response.json();
         setcategoriesForCurrentPage(data.dataForPage || []);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         console.error("fetchPageData failed:", e);
         setError(e.message || "ページデータの取得に失敗しました。");
@@ -95,6 +97,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
         if (!response.ok) throw new Error('Failed to fetch table records');
         const records: TableRecord[] = await response.json();
         setTableRecords(records || []); // テーブル表示用のデータをセット
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         console.error("fetchTableRecords failed:", e);
         setError(e.message || "データの取得に失敗しました。");

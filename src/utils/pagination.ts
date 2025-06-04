@@ -1,56 +1,34 @@
-export interface CategoryInfoForPagination {
+type CategoryInfoForPagination = {
   id: string;    // カテゴリの一意なID
   name: string;  // カテゴリ名
   count: number; // そのカテゴリに含まれるレコードの総数
 }
 
-/**
- * 特定のページに含まれるカテゴリの定義
- */
-export interface PageCategoryDefinition extends CategoryInfoForPagination {}
-
-/**
- * 1つのページの定義
- */
-export interface PageDefinition {
+type PageDefinition = {
   page: number;                      // ページ番号
-  categories: PageCategoryDefinition[]; // このページに含まれるカテゴリのリスト
+  categories: CategoryInfoForPagination[]; // このページに含まれるカテゴリのリスト
 }
 
-/**
- * ページネーション構造の計算結果
- */
-export interface PaginationStructure {
+type PaginationStructure = {
   totalPages: number;        // 計算された総ページ数
   pageDefinitions: PageDefinition[]; // 各ページの定義の配列
 }
 
-/**
- * カテゴリ情報を基に、ページネーションの構造を計算します。
- * 前提: itemsPerPage は、どの単一カテゴリの count よりも大きい。
- * つまり、1つのカテゴリが複数ページにまたがることはない。
- *
- * @param categoriesInfo - 各カテゴリの情報 (id, name, count) の配列
- * @param itemsPerPage - 1ページあたりの最大レコード数
- * @returns PaginationStructure (totalPages と pageDefinitions)
- */
+// ページネーションの計算を行う関数
 export function calculatePageStructure(
   categoriesInfo: CategoryInfoForPagination[],
   itemsPerPage: number
 ): PaginationStructure {
   const pageDefinitions: PageDefinition[] = [];
   let currentPageNumber = 1;
-  let currentPageCategories: PageCategoryDefinition[] = [];
+  let currentPageCategories: CategoryInfoForPagination[] = [];
   let currentItemCountInPage = 0;
 
-  // レコード数が0のカテゴリはページネーション計算に含めない（API側で事前にフィルタ済みのはずだが念のため）
+  // レコード数が0のカテゴリはページネーション計算に含めない
   const validCategories = categoriesInfo.filter(cat => cat.count > 0);
 
   for (const category of validCategories) {
-    // 現在のページにこのカテゴリを追加すると最大レコード数を超えるか、
-    // かつ、現在のページに既に何かしらのカテゴリが含まれている場合
-    // (最初のカテゴリがitemsPerPageを超える場合は、そのカテゴリだけで1ページを構成するため、
-    // currentPageItemCount > 0 の条件が必要)
+    // 現在のページにこのカテゴリを追加すると最大レコード数を超え、かつ、現在のページに既に何かしらのカテゴリが含まれている場合
     if (
         currentItemCountInPage > 0 &&
         currentItemCountInPage + category.count > itemsPerPage
@@ -67,14 +45,11 @@ export function calculatePageStructure(
         currentItemCountInPage = 0;  // 新しいページ用にアイテムカウントをリセット
     }
 
-    // (現在のカテゴリがitemsPerPageを超えてしまうことは前提により無いため、
-    //  そのチェックは不要)
-
     // カテゴリを現在のページに追加
     currentPageCategories.push({
       id: category.id,
       name: category.name,
-      count: category.count, // 元のカテゴリの総件数を保持（表示等で使う可能性あり）
+      count: category.count,
     });
     currentItemCountInPage += category.count;
   }
@@ -94,13 +69,9 @@ export function calculatePageStructure(
       pageDefinitions: [],
     };
   }
-  
-  // totalPages は、作成された pageDefinitions の最後のページ番号、または length
-  // もし途中で空のページができてしまう可能性があるなら、 currentPageNumber を使うのが安全
-  const totalPages = pageDefinitions.length > 0 ? pageDefinitions[pageDefinitions.length - 1].page : 0;
-  // または、単純に currentPageNumber (ただし、アイテムが全くない場合は0にしたい)
-  // const totalPages = validCategories.length > 0 ? currentPageNumber : 0;
 
+  // 合計ページ数を計算
+  const totalPages = pageDefinitions.length > 0 ? pageDefinitions[pageDefinitions.length - 1].page : 0;
 
   return {
     totalPages: totalPages, // または currentPageNumber (アイテムがなければ0)
