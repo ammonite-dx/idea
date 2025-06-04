@@ -130,14 +130,16 @@ export default function SearchResults<K extends keyof TypeMap> ({
     // スクロール処理
     useEffect(() => {
       if (scrollToCategoryId && Object.keys(categoriesForCurrentPage).length > 0) {
-        const element = document.getElementById(`category-anchor-${scrollToCategoryId}`);
-        if (element) {
-          const headerOffset = 80; // 固定ヘッダーの高さ (実際の値に調整)
-          const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-        }
-        setScrollToCategoryId(null); // スクロール後はリセット
+        const animationFrameId = requestAnimationFrame(() => {
+          const element = document.getElementById(`category-anchor-${scrollToCategoryId}`);
+          if (element) {
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset;
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+          }
+          setScrollToCategoryId(null); // スクロール後はリセット
+        });
+        return () => cancelAnimationFrame(animationFrameId); // クリーンアップ
       }
     }, [categoriesForCurrentPage, scrollToCategoryId]);
 
@@ -155,9 +157,8 @@ export default function SearchResults<K extends keyof TypeMap> ({
           // 同ページ内のスクロールの場合、データは変わらないので useEffect が発火しないことがある。強制的にスクロールを実行。
           const element = document.getElementById(`category-anchor-${categoryIdToScroll}`);
           if (element) {
-            const headerOffset = 80;
             const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            const offsetPosition = elementPosition + window.pageYOffset;
             window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
           }
         }
