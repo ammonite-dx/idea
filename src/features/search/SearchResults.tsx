@@ -29,7 +29,6 @@ export default function SearchResults<K extends keyof TypeMap> ({
 
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [initialTotalCount, setInitialTotalCount] = useState<number | null>(null);
     const [tableRecords, setTableRecords] = useState<TableRecord[]>([]);
 
     // 総ページ数と目次データを取得する関数
@@ -44,7 +43,6 @@ export default function SearchResults<K extends keyof TypeMap> ({
 
         setTotalPages(data.totalPages || 0);
         setTableOfContentsData(data.tableOfContents || []);
-        setInitialTotalCount(data.totalRecordsOverall || 0); // APIが全レコード数を返す場合
 
         if (data.totalPages > 0) {
           setActivePage(1); // データがあれば1ページ目を表示
@@ -118,7 +116,6 @@ export default function SearchResults<K extends keyof TypeMap> ({
         setcategoriesForCurrentPage([]);
       } else {
         setIsLoading(false);
-        setInitialTotalCount(0);
       }
     }, [kind, fetchPaginationInfo, searchParams]); // searchParams はfetchPaginationInfo内で使われるので注意
 
@@ -169,7 +166,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
     }, [activePage]);
 
     // --- レンダリング部分 ---
-    if (isLoading && initialTotalCount === null) { // 初回かつ全件数未取得
+    if (isLoading) { // 初回かつ全件数未取得
       return <div className='base-text'>検索中...</div>;
     }
     if (error) {

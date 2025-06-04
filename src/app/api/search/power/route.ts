@@ -38,8 +38,8 @@ export async function GET(
         // 検索条件の作成
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const whereConditions: any[] = [];
-        if (types !== null) {whereConditions.push({OR: types.map(type => ({type: type}))});}
-        if (supplements !== null) {
+        if (types.length > 0) {whereConditions.push({OR: types.map(type => ({type: type}))});}
+        if (supplements.length > 0) {
             whereConditions.push({OR: supplements.map(supplement => ({supplement: supplement}))});
             whereConditions.push({OR: [
                 {update_supplement: null},
@@ -48,16 +48,16 @@ export async function GET(
         } else {
             whereConditions.push({update_supplement: null});
         }
-        if (categories !== null) {whereConditions.push({OR: categories.map(category => ({category: category}))});}
+        if (categories.length > 0) {whereConditions.push({OR: categories.map(category => ({category: category}))});}
         if (name !== null) {whereConditions.push({name: {contains: name}});}
         if (maxlv !== null) {whereConditions.push({OR: [{maxlv_int: null}, {maxlv_int: {gte: parseInt(maxlv)}}]});}
-        if (timings !== null) {whereConditions.push({OR: timings.map(timing => ({timing: {contains: timing}}))});}
-        if (skills !== null) {whereConditions.push({OR: skills.map(skill => ({skill: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))});}
-        if (dfclties !== null) {whereConditions.push({OR: dfclties.map(dfclty => ({dfclty: dfclty}))});}
-        if (targets !== null) {whereConditions.push({OR: targets.map(target => ({target: target}))});}
-        if (rngs !== null) {whereConditions.push({OR: rngs.map(rng => ({rng: rng}))});}
-        if (encroaches !== null) {whereConditions.push({OR: encroaches.map(encroach => ({encroach: encroach}))});}
-        if (restricts !== null) {whereConditions.push({OR: restricts.map(restrict => ({restrict: {contains: restrict}}))});}
+        if (timings.length > 0) {whereConditions.push({OR: timings.map(timing => ({timing: {contains: timing}}))});}
+        if (skills.length > 0) {whereConditions.push({OR: skills.map(skill => ({skill: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))});}
+        if (dfclties.length > 0) {whereConditions.push({OR: dfclties.map(dfclty => ({dfclty: dfclty}))});}
+        if (targets.length > 0) {whereConditions.push({OR: targets.map(target => ({target: target}))});}
+        if (rngs.length > 0) {whereConditions.push({OR: rngs.map(rng => ({rng: rng}))});}
+        if (encroaches.length > 0) {whereConditions.push({OR: encroaches.map(encroach => ({encroach: encroach}))});}
+        if (restricts.length > 0) {whereConditions.push({OR: restricts.map(restrict => ({restrict: {contains: restrict}}))});}
         if (effect !== null) {whereConditions.push({effect: {contains: effect}});}
 
         // D1データベースのバインディングを取得
@@ -75,7 +75,7 @@ export async function GET(
                 const count = await prisma.power.count({
                     where: {
                         AND: [
-                            { category: category },
+                            { category: category.name },
                             ...whereConditions,
                         ],
                     },
@@ -98,7 +98,6 @@ export async function GET(
             });
             return NextResponse.json({
                 totalPages,
-                pageDefinitions,
                 tableOfContents,
             });
         } else if (action === 'getPage') {
