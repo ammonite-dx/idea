@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, Fragment } from 'react';
+import { useState, useEffect, useLayoutEffect, useCallback, Fragment } from 'react';
 import CardList from "@/components/CardList";
 import { Card, CardDivider } from "@/components/Card";
 import { TypeMap, CategoryWithCardRecords, TableRecord } from "@/types/types";
@@ -128,23 +128,21 @@ export default function SearchResults<K extends keyof TypeMap> ({
     }, [activePage, totalPages, fetchPageData, kind]);
 
     // スクロール処理
-    useEffect(() => {
+    useLayoutEffect(() => {
+      console.log('[useLayoutEffect] Triggered. scrollToCategoryId:', scrollToCategoryId, 'dataForCurrentPage length:', categoriesForCurrentPage.length);
       if (scrollToCategoryId && Object.keys(categoriesForCurrentPage).length > 0) {
-        const animationFrameId = requestAnimationFrame(() => {
-          const targetId = `category-anchor-${scrollToCategoryId}`;
-          const element = document.getElementById(targetId);
-          console.log(`[rAF] Attempting to find element with ID: ${targetId}`, element);
-          if (element) {
-            const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset;
-            console.log(`[rAF] Scrolling to offsetPosition: ${offsetPosition}`);
-            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-          } else {
-            console.warn(`[rAF] Element with ID ${targetId} not found.`);
-          }
-          setScrollToCategoryId(null); // スクロール後はリセット
-        });
-        return () => cancelAnimationFrame(animationFrameId); // クリーンアップ
+        const targetId = `category-anchor-${scrollToCategoryId}`;
+        const element = document.getElementById(targetId);
+        console.log(`[useLayoutEffect] Attempting to find element with ID: ${targetId}`, element);
+        if (element) {
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset;
+          console.log(`[useLayoutEffect] Scrolling to offsetPosition: ${offsetPosition}`);
+          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        } else {
+          console.warn(`[useLayoutEffect] Element with ID ${targetId} not found.`);
+        }
+        setScrollToCategoryId(null); // スクロール後はリセット
       }
     }, [categoriesForCurrentPage, scrollToCategoryId]);
 
