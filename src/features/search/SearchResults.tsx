@@ -131,11 +131,16 @@ export default function SearchResults<K extends keyof TypeMap> ({
     useEffect(() => {
       if (scrollToCategoryId && Object.keys(categoriesForCurrentPage).length > 0) {
         const animationFrameId = requestAnimationFrame(() => {
-          const element = document.getElementById(`category-anchor-${scrollToCategoryId}`);
+          const targetId = `category-anchor-${scrollToCategoryId}`;
+          const element = document.getElementById(targetId);
+          console.log(`[rAF] Attempting to find element with ID: ${targetId}`, element);
           if (element) {
             const elementPosition = element.getBoundingClientRect().top;
             const offsetPosition = elementPosition + window.pageYOffset;
+            console.log(`[rAF] Scrolling to offsetPosition: ${offsetPosition}`);
             window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+          } else {
+            console.warn(`[rAF] Element with ID ${targetId} not found.`);
           }
           setScrollToCategoryId(null); // スクロール後はリセット
         });
