@@ -143,43 +143,33 @@ export default function SearchResults<K extends keyof TypeMap> ({
           const offsetPosition = elementPosition + window.pageYOffset;
           console.log(`[useLayoutEffect] Scrolling to offsetPosition: ${offsetPosition}`);
           window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+          setScrollToCategoryId(null); // スクロール後はリセット
         } else {
           console.warn(`[useLayoutEffect] Element with ID ${targetId} not found.`);
         }
-        setScrollToCategoryId(null); // スクロール後はリセット
       }
     }, [categoriesForCurrentPage, scrollToCategoryId]);
 
     const handleNavigate = useCallback((pageNumber: number, categoryIdToScroll: string | null = null) => {
       console.log(`[handleNavigate START] pageNumber: ${pageNumber}, categoryIdToScroll: ${categoryIdToScroll}, current activePage: ${activePage}`);
-      // ページ番号がクリックされた場合 (categoryIdToScroll が null)
-      if (categoryIdToScroll === null) {
-        console.log('[handleNavigate] Path for PAGING (categoryIdToScroll is null)');
-        console.log('[handleNavigate] Setting scrollToCategoryId to null');
-        setScrollToCategoryId(null); // スクロール対象をリセット
-        if (pageNumber !== activePage) {
-          console.log(`[handleNavigate] Different page, setting activePage to: ${pageNumber}`);
-          setActivePage(pageNumber);
-        } else {
-          console.log('[handleNavigate] Same page, no activePage change.');
-        }
-      } else { // 目次からカテゴリがクリックされた場合
-        console.log('[handleNavigate] Path for TOC click (categoryIdToScroll has value)');
-        console.log(`[handleNavigate] Setting scrollToCategoryId to: ${categoryIdToScroll}`);
-        if (pageNumber !== activePage) {
-          console.log(`[handleNavigate] Different page, setting activePage to: ${pageNumber}`);
-          setActivePage(pageNumber); // setActivePage が実行されると fetchPageData が走り、categoriesForCurrentPage が更新され、その後の useEffect でスクロールが実行される。
-        } else {
-          console.log('[handleNavigate] Same page (TOC click), no activePage change. Scroll effect should trigger.');
-          // 同ページ内のスクロールの場合、データは変わらないので useEffect が発火しないことがある。強制的にスクロールを実行。
+      setScrollToCategoryId(categoryIdToScroll); // スクロール対象を更新
+      if (pageNumber !== activePage) {
+        console.log(`[handleNavigate] Different page, setting activePage to: ${pageNumber}`);
+        setActivePage(pageNumber);
+      } else {
+        console.log('[handleNavigate] Same page, no activePage change.');
+        if (categoryIdToScroll) { // 同ページで特定のIDにスクロールしたい場合
           const element = document.getElementById(`category-anchor-${categoryIdToScroll}`);
           if (element) {
-            const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset;
-            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+              console.log(`[handleNavigate] Element for same-page scroll FOUND. Attempting immediate scroll.`);
+              const headerOffset = 80;
+              const elementPosition = element.getBoundingClientRect().top;
+              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+              window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+          } else {
+              console.warn(`[handleNavigate] Element for same-page scroll NOT FOUND immediately. Relying on useLayoutEffect.`);
           }
         }
-        setScrollToCategoryId(categoryIdToScroll);
       }
     }, [activePage]);
 
