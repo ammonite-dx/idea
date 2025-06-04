@@ -127,6 +127,10 @@ export default function SearchResults<K extends keyof TypeMap> ({
       }
     }, [activePage, totalPages, fetchPageData, kind]);
 
+    useEffect(() => {
+      console.log('[DEBUG useEffect] scrollToCategoryId changed to:', scrollToCategoryId);
+    }, [scrollToCategoryId]);
+
     // スクロール処理
     useLayoutEffect(() => {
       console.log('[useLayoutEffect] Triggered. scrollToCategoryId:', scrollToCategoryId, 'dataForCurrentPage length:', categoriesForCurrentPage.length);
@@ -147,16 +151,26 @@ export default function SearchResults<K extends keyof TypeMap> ({
     }, [categoriesForCurrentPage, scrollToCategoryId]);
 
     const handleNavigate = useCallback((pageNumber: number, categoryIdToScroll: string | null = null) => {
+      console.log(`[handleNavigate START] pageNumber: ${pageNumber}, categoryIdToScroll: ${categoryIdToScroll}, current activePage: ${activePage}`);
       // ページ番号がクリックされた場合 (categoryIdToScroll が null)
       if (categoryIdToScroll === null) {
+        console.log('[handleNavigate] Path for PAGING (categoryIdToScroll is null)');
+        console.log('[handleNavigate] Setting scrollToCategoryId to null');
         setScrollToCategoryId(null); // スクロール対象をリセット
         if (pageNumber !== activePage) {
+          console.log(`[handleNavigate] Different page, setting activePage to: ${pageNumber}`);
           setActivePage(pageNumber);
+        } else {
+          console.log('[handleNavigate] Same page, no activePage change.');
         }
       } else { // 目次からカテゴリがクリックされた場合
+        console.log('[handleNavigate] Path for TOC click (categoryIdToScroll has value)');
+        console.log(`[handleNavigate] Setting scrollToCategoryId to: ${categoryIdToScroll}`);
         if (pageNumber !== activePage) {
+          console.log(`[handleNavigate] Different page, setting activePage to: ${pageNumber}`);
           setActivePage(pageNumber); // setActivePage が実行されると fetchPageData が走り、categoriesForCurrentPage が更新され、その後の useEffect でスクロールが実行される。
         } else {
+          console.log('[handleNavigate] Same page (TOC click), no activePage change. Scroll effect should trigger.');
           // 同ページ内のスクロールの場合、データは変わらないので useEffect が発火しないことがある。強制的にスクロールを実行。
           const element = document.getElementById(`category-anchor-${categoryIdToScroll}`);
           if (element) {

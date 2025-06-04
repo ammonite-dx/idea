@@ -27,7 +27,10 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ tocData, onNavigate }
             {tocData.map((item) => (
                 <li key={item.categoryId}>
                     <button
-                        onClick={() => onNavigate(item.pageNumber, item.categoryId)}
+                        onClick={() => {
+                          console.log('[TableOfContents] onClick: Navigating to page:', item.pageNumber, 'for categoryId:', item.categoryId);
+                          onNavigate(item.pageNumber, item.categoryId);
+                        }}
                         className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded py-1 px-2 text-left w-full transition-colors duration-150"
                         title={item.categoryName}
                     >
