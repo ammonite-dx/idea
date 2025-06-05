@@ -28,10 +28,10 @@ export default function SelectBox ({control, name, label, options, isMulti=false
                         placeholder=""
                         unstyled
                         classNames={{
-                            control: () => 'input-box rounded-sm bg-white dark:bg-neutral-900 border border-neutral-500 dark:border-neutral-200 px-1 relative',
+                            control: () => 'input-box rounded-sm bg-white dark:bg-neutral-900 border border-neutral-500 dark:border-neutral-200 px-1 relative box-border',
                                 valueContainer: () => 'flex flex-wrap gap-1',
                                     singleValue: () => 'h-full mx-1',
-                                    multiValue: () => 'h-full bg-neutral-200 dark:bg-neutral-500 rounded-sm px-1 mx-1 items-center',
+                                    multiValue: () => 'h-full bg-neutral-200 dark:bg-neutral-500 rounded-sm px-1 items-center',
                                         multiValueLabel: () => 'base-text text-neutral-900 dark:text-neutral-100',
                                         multiValueRemove: () => 'base-text ml-1',
                                     input : () => 'h-full',
@@ -53,6 +53,14 @@ export default function SelectBox ({control, name, label, options, isMulti=false
                             valueContainer: (base) => ({
                                 ...base,
                                 padding: '6px 2px',
+                            }),
+                            input: (base) => ({
+                                ...base,
+                                lineHeight: 1, 
+                            }),
+                            singleValue: (base) => ({
+                                ...base,
+                                lineHeight: 1,
                             }),
                         }}
                     />
