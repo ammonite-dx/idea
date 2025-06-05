@@ -35,6 +35,8 @@ export async function GET(
         const restricts = searchParams.getAll('restrict');
         const effect = searchParams.get('effect');
 
+        console.log('API Route: Search Power - categories:', categories);
+
         // 検索条件の作成
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const whereConditions: any[] = [];
