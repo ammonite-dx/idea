@@ -31,12 +31,22 @@ export default function SearchResults<K extends keyof TypeMap> ({
     const [error, setError] = useState<string | null>(null);
     const [tableRecords, setTableRecords] = useState<TableRecord[]>([]);
 
+    // apiに渡すクエリ文字列を生成
+    const params = new URLSearchParams();
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach(v => params.append(key, v));
+      } else if (typeof value === 'string') {
+        params.append(key, value);
+      }
+    });
+    const query = params.toString();
+
     // 総ページ数と目次データを取得する関数
     const fetchPaginationInfo = useCallback(async () => {
       setIsLoading(true); // 全体ローディング
       setError(null);
       try {
-        const query = new URLSearchParams(searchParams as Record<string, string>).toString();
         const response = await fetch(`/api/search/${kind}?action=getInfo&${query}`);
         if (!response.ok) throw new Error('Failed to fetch pagination info');
         const data = await response.json();
@@ -70,7 +80,6 @@ export default function SearchResults<K extends keyof TypeMap> ({
       setIsLoading(true); // ページデータ取得中のローディング
       setError(null);
       try {
-        const query = new URLSearchParams(searchParams as Record<string, string>).toString();
         const response = await fetch(`/api/search/${kind}?action=getPage&${query}&page=${page}`);
         if (!response.ok) throw new Error('Failed to fetch page data');
         const data = await response.json();
@@ -90,7 +99,6 @@ export default function SearchResults<K extends keyof TypeMap> ({
       setIsLoading(true);
       setError(null);
       try {
-        const query = new URLSearchParams(searchParams as Record<string, string>).toString();
         const response = await fetch(`/api/search/${kind}?${query}`);
         if (!response.ok) throw new Error('Failed to fetch table records');
         const records: TableRecord[] = await response.json();
