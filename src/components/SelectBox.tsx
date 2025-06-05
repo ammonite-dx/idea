@@ -48,6 +48,7 @@ export default function SelectBox ({control, name, label, options, isMulti=false
                             control: (base) => ({
                                 ...base,
                                 minHeight: '28px',
+                                height: 'auto',
                             }),
                         }}
                     />
