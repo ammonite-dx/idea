@@ -28,7 +28,7 @@ export default function SelectBox ({control, name, label, options, isMulti=false
                         placeholder=""
                         unstyled
                         classNames={{
-                            control: () => 'input-box rounded-sm bg-white dark:bg-neutral-900 ring ring-inset ring-neutral-500 dark:ring-neutral-200 px-1',
+                            control: () => 'input-box rounded-sm bg-white dark:bg-neutral-900 ring-1 ring-inset ring-neutral-500 dark:ring-neutral-200 px-1',
                                 valueContainer: () => 'flex flex-wrap gap-1',
                                     singleValue: () => 'h-full mx-1',
                                     multiValue: () => 'h-full bg-neutral-200 dark:bg-neutral-500 rounded-sm px-1 items-center',
