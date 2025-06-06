@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, Fragment } from 'react';
+import React, { useState } from 'react';
 
 // 目次の各アイテムの型定義
 export type TocItem = {
@@ -16,12 +16,13 @@ type TableOfContentsProps = {
 }
 
 const TableOfContents: React.FC<TableOfContentsProps> = ({ tocData, onNavigate }) => {
+
+  const [ isOpen, setIsOpen ] = useState(false);
+
   // 目次データがない場合は何も表示しない
   if (!tocData || tocData.length === 0) {
     return null;
   }
-
-  const [ isOpen, setIsOpen ] = useState(false);
 
   return (
     <nav aria-labelledby="toc-heading" className="bg-light-dark border border-neutral-500 p-4 my-4">
