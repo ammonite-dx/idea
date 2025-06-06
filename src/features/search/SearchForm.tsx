@@ -46,7 +46,7 @@ export default function SearchForm({ kind, searchParams }: { kind: SearchKind, s
         <div className='bg-light-dark border border-neutral-500 p-4 mb-8'>
             <div className="flex justify-between items-center">
                 <h2 className="headline-text text-neutral-900 dark:text-neutral-100 font-bold">検索条件</h2>
-                <button onClick={() => setIsOpen((prev) => !prev)} className="ring-1 ring-neutral-900 dark:ring-neutral-100 rounded-sm base-text">{isOpen ? <ChevronUp /> : <ChevronDown />}</button>
+                <button onClick={() => setIsOpen((prev) => !prev)} className="ring-1 ring-neutral-900 dark:ring-neutral-100 rounded-sm">{isOpen ? <ChevronUp className='h-3 sm:h-4 md:h-5 lg:h-6' /> : <ChevronDown className='h-3 sm:h-4 md:h-5 lg:h-6' />}</button>
             </div>
             <div hidden={!isOpen}>
                 <hr className="border-neutral-900 dark:border-neutral-200 my-1 lg:my-2"/>
