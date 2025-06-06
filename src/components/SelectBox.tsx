@@ -28,15 +28,15 @@ export default function SelectBox ({control, name, label, options, isMulti=false
                         placeholder=""
                         unstyled
                         classNames={{
-                            control: () => 'input-box rounded-sm bg-white dark:bg-neutral-900 ring-1 ring-inset ring-neutral-500 dark:ring-neutral-200 px-1',
+                            control: () => 'input-box rounded-sm bg-white dark:bg-neutral-900 ring-1 ring-inset ring-neutral-500 dark:ring-neutral-200 px-1 flex',
                                 valueContainer: () => 'flex flex-wrap gap-1',
                                     singleValue: () => 'h-full mx-1',
                                     multiValue: () => 'h-full bg-neutral-200 dark:bg-neutral-500 rounded-sm px-1 items-center',
                                         multiValueLabel: () => 'base-text text-neutral-900 dark:text-neutral-100',
                                         multiValueRemove: () => 'base-text ml-1',
                                     input : () => 'h-full',
-                                indicatorsContainer: () => 'h-full p-0 m-0',
-                                    indicatorSeparator: () => 'w-px mx-1 bg-neutral-500 dark:bg-neutral-200',          
+                                indicatorsContainer: () => 'h-full p-0 m-0 flex items-center',
+                                    indicatorSeparator: () => 'w-px mx-1 bg-neutral-500 dark:bg-neutral-200 self-stretch',          
                             menu: () => 'border border-neutral-500 dark:border-neutral-200',
                                 option: ({isFocused}) => clsx(
                                     'p-2 base-text cursor-pointer',
