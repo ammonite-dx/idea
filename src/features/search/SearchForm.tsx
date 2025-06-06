@@ -43,7 +43,7 @@ export default function SearchForm({ kind, searchParams }: { kind: SearchKind, s
 
     // 検索フォームの表示
     return (
-        <div className='bg-light-dark border border-neutral-500 p-4 mb-8'>
+        <div className='bg-light-dark border border-neutral-500 p-2 lg:p-4 mb-4 lg:mb-8'>
             <div className="flex justify-between items-center">
                 <h2 className="headline-text text-neutral-900 dark:text-neutral-100 font-bold">検索条件</h2>
                 <button onClick={() => setIsOpen((prev) => !prev)} className="ring-1 ring-neutral-900 dark:ring-neutral-100 rounded-sm">{isOpen ? <ChevronUp className='base-icon' /> : <ChevronDown className='base-icon' />}</button>
