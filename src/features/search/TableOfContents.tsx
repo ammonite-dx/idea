@@ -26,27 +26,29 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ tocData, onNavigate }
 
   return (
     <nav aria-labelledby="toc-heading" className="bg-light-dark border border-neutral-500 p-4 my-4">
+      <div className="flex justify-between items-center">
         <h3 className="title-text text-neutral-900 dark:text-neutral-100 font-bold">目次</h3>
-        <button onClick={() => setIsOpen((prev) => !prev)} className="bg-dark">{isOpen ? '閉じる' : '開く'}</button>
-        <div hidden={!isOpen}>
-          <hr className="border-neutral-900 dark:border-neutral-200 lg:mb-2"/>
-          <ul>
-              {tocData.map((item) => (
-                  <li key={item.categoryId}>
-                      <button
-                          onClick={() => {
-                            console.log('[TableOfContents] onClick: Navigating to page:', item.pageNumber, 'for categoryId:', item.categoryId);
-                            onNavigate(item.pageNumber, item.categoryId);
-                          }}
-                          className="w-full base-text text-left hover:bg-neutral-200 dark:hover:bg-neutral-700 p-1"
-                          title={item.categoryName}
-                      >
-                      {item.categoryName}
-                      </button>
-                  </li>
-              ))}
-          </ul>
-        </div>
+        <button onClick={() => setIsOpen((prev) => !prev)} className="bg-dark rounded-md px-3 py-1">{isOpen ? '閉じる' : '開く'}</button>
+      </div>
+      <div hidden={!isOpen}>
+        <hr className="border-neutral-900 dark:border-neutral-200 lg:mb-2"/>
+        <ul>
+            {tocData.map((item) => (
+                <li key={item.categoryId}>
+                    <button
+                        onClick={() => {
+                          console.log('[TableOfContents] onClick: Navigating to page:', item.pageNumber, 'for categoryId:', item.categoryId);
+                          onNavigate(item.pageNumber, item.categoryId);
+                        }}
+                        className="w-full base-text text-left hover:bg-neutral-200 dark:hover:bg-neutral-700 p-1"
+                        title={item.categoryName}
+                    >
+                    {item.categoryName}
+                    </button>
+                </li>
+            ))}
+        </ul>
+      </div>
     </nav>
   );
 };
