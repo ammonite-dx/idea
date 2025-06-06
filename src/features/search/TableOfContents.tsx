@@ -31,7 +31,7 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ tocData, onNavigate }
                           console.log('[TableOfContents] onClick: Navigating to page:', item.pageNumber, 'for categoryId:', item.categoryId);
                           onNavigate(item.pageNumber, item.categoryId);
                         }}
-                        className="w-full base-text"
+                        className="w-full base-text text-left"
                         title={item.categoryName}
                     >
                     {item.categoryName}

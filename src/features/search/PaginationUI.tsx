@@ -91,11 +91,7 @@ const PaginationUI: React.FC<PaginationUIProps> = ({
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`px-3 py-1 border rounded-md text-sm font-medium
-          ${currentPage === 1
-            ? 'bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500'
-            : 'bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
-          }`}
+        className= 'px-3 py-1 border rounded-md base-text font-medium bg-light'
         aria-disabled={currentPage === 1}
         aria-label="Previous page"
       >
@@ -110,8 +106,8 @@ const PaginationUI: React.FC<PaginationUIProps> = ({
           disabled={page === currentPage}
           className={`px-3 py-1 border rounded-md text-sm font-medium
             ${page === currentPage
-              ? 'bg-blue-500 text-white border-blue-500 cursor-default dark:bg-blue-600 dark:border-blue-600'
-              : 'bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+              ? 'bg-dark'
+              : 'bg-light'
             }`}
           aria-current={page === currentPage ? 'page' : undefined}
           aria-label={`Page ${page}`}
@@ -124,11 +120,7 @@ const PaginationUI: React.FC<PaginationUIProps> = ({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`px-3 py-1 border rounded-md text-sm font-medium
-          ${currentPage === totalPages
-            ? 'bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500'
-            : 'bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
-          }`}
+        className= 'px-3 py-1 border rounded-md base-text font-medium bg-light'
         aria-disabled={currentPage === totalPages}
         aria-label="Next page"
       >
