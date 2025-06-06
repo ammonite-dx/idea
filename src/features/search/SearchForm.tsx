@@ -1,6 +1,7 @@
 "use client";
 
 import Form from 'next/form'
+import { useState } from 'react';
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import TextInput from '@/components/TextInput';
@@ -17,6 +18,7 @@ import { GENERAL_TYPES } from '@/consts/general';
 import { DLOIS_SUPPLEMENTS, DLOIS_TYPES, DLOIS_RESTRICTS } from '@/consts/dlois';
 import { ELOIS_SUPPLEMENTS, ELOIS_TYPES, ELOIS_TIMINGS, ELOIS_SKILLS, ELOIS_DFCLTIES, ELOIS_TARGETS, ELOIS_RNGS, ELOIS_URGES } from '@/consts/elois';
 import { WORK_SUPPLEMENTS, WORK_STATS, WORK_SKILLS } from '@/consts/work';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 import { SearchKind } from '@/types/types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,6 +29,9 @@ export default function SearchForm({ kind, searchParams }: { kind: SearchKind, s
     // フォームのcontrol, wachの設定
     const defaultValues = getDefaultValues(kind, searchParams);
     const { control, watch } = useForm<SearchFormValues>({defaultValues: defaultValues});
+
+    // フォームの表示切り替え
+    const [isOpen, setIsOpen] = useState(false);
 
     // submitの処理
     const router = useRouter()
@@ -39,18 +44,23 @@ export default function SearchForm({ kind, searchParams }: { kind: SearchKind, s
     // 検索フォームの表示
     return (
         <div className='bg-light-dark border border-neutral-500 p-4 mb-8'>
-            <h2 className="headline-text text-neutral-900 dark:text-neutral-100 font-bold">検索条件</h2>
-            <hr className="border-neutral-900 dark:border-neutral-200 lg:mb-2"/>
-            <Form action={handleSubmit}>
-                <div className='grid grid-cols-12 gap-x-4 lg:gap-y-2'>
-                    {kind === "power" && <PowerSearchForm control={control}/>}
-                    {kind === "item" && <ItemSearchForm control={control} watch={watch}/>}
-                    {kind === "dlois" && <DloisSearchForm control={control}/>}
-                    {kind === "elois" && <EloisSearchForm control={control}/>}
-                    {kind === "work" && <WorkSearchForm control={control}/>}
-                </div>
-                <div className="mt-6"><SubmitButton text="検索"/></div>
-            </Form>
+            <div className="flex justify-between items-center">
+                <h2 className="headline-text text-neutral-900 dark:text-neutral-100 font-bold">検索条件</h2>
+                <button onClick={() => setIsOpen((prev) => !prev)} className="ring-1 ring-neutral-900 dark:ring-neutral-100 rounded-sm">{isOpen ? <ChevronUp /> : <ChevronDown />}</button>
+            </div>
+            <div hidden={!isOpen}>
+                <hr className="border-neutral-900 dark:border-neutral-200 lg:mb-2"/>
+                <Form action={handleSubmit}>
+                    <div className='grid grid-cols-12 gap-x-4 lg:gap-y-2'>
+                        {kind === "power" && <PowerSearchForm control={control}/>}
+                        {kind === "item" && <ItemSearchForm control={control} watch={watch}/>}
+                        {kind === "dlois" && <DloisSearchForm control={control}/>}
+                        {kind === "elois" && <EloisSearchForm control={control}/>}
+                        {kind === "work" && <WorkSearchForm control={control}/>}
+                    </div>
+                    <div className="mt-6"><SubmitButton text="検索"/></div>
+                </Form>
+            </div>
         </div>
     )
 }
