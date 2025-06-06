@@ -35,9 +35,9 @@ export default function SelectBox ({control, name, label, options, isMulti=false
                                         multiValueLabel: () => 'base-text text-neutral-900 dark:text-neutral-100',
                                         multiValueRemove: () => 'base-text ml-1',
                                     input : () => 'h-full',
-                                indicatorsContainer: () => 'flex self-stretch bg-blue-500',
-                                    indicatorSeparator: () => 'w-px mx-1 bg-neutral-500 dark:bg-neutral-200 self-stretch',   
-                                    dropdownIndicator: () => 'h-full flex items-center justify-center bg-red-500',
+                                indicatorsContainer: () => 'flex self-stretch',
+                                    indicatorSeparator: () => 'w-px mx-1 my-0.5 bg-neutral-500 dark:bg-neutral-200',   
+                                    dropdownIndicator: () => 'h-full flex items-center justify-center',
                             menu: () => 'border border-neutral-500 dark:border-neutral-200',
                                 option: ({isFocused}) => clsx(
                                     'p-2 base-text cursor-pointer',
