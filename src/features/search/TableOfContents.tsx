@@ -29,7 +29,7 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ tocData, onNavigate }
     <nav aria-labelledby="toc-heading" className="bg-light-dark border border-neutral-500 p-4 my-4">
       <div className="flex justify-between items-center">
         <h3 className="title-text text-neutral-900 dark:text-neutral-100 font-bold">目次</h3>
-        <button onClick={() => setIsOpen((prev) => !prev)} className="ring-1 ring-neutral-900 dark:ring-neutral-100 rounded-sm">{isOpen ? <ChevronUp /> : <ChevronDown />}</button>
+        <button onClick={() => setIsOpen((prev) => !prev)} className="bg-neutral-100 dark:bg-neutral-900 ring-1 ring-neutral-900 dark:ring-neutral-100 rounded-sm">{isOpen ? <ChevronUp /> : <ChevronDown />}</button>
       </div>
       <div hidden={!isOpen}>
         <hr className="border-neutral-900 dark:border-neutral-200 my-1 lg:my-2"/>
