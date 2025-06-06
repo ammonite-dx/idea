@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { ChevronUp,ChevronDown } from 'lucide-react';
 
 // 目次の各アイテムの型定義
 export type TocItem = {
@@ -28,7 +29,7 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ tocData, onNavigate }
     <nav aria-labelledby="toc-heading" className="bg-light-dark border border-neutral-500 p-4 my-4">
       <div className="flex justify-between items-center">
         <h3 className="title-text text-neutral-900 dark:text-neutral-100 font-bold">目次</h3>
-        <button onClick={() => setIsOpen((prev) => !prev)} className="bg-dark base-text font-bold px-3">{isOpen ? '畳む' : '開く'}</button>
+        <button onClick={() => setIsOpen((prev) => !prev)} className="ring-1 rounded-sm">{isOpen ? <ChevronUp /> : <ChevronDown />}</button>
       </div>
       <div hidden={!isOpen}>
         <hr className="border-neutral-900 dark:border-neutral-200 my-1 lg:my-2"/>
