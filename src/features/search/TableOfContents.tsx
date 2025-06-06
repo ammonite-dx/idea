@@ -23,7 +23,7 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ tocData, onNavigate }
     <nav aria-labelledby="toc-heading" className="bg-light-dark border border-neutral-500 p-4 my-4">
         <h3 className="title-text text-neutral-900 dark:text-neutral-100 font-bold">目次</h3>
         <hr className="border-neutral-900 dark:border-neutral-200 lg:mb-2"/>
-        <ul className="space-y-1">
+        <ul>
             {tocData.map((item) => (
                 <li key={item.categoryId}>
                     <button
