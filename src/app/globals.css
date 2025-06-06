@@ -38,6 +38,9 @@ body {
   .headline-text {
     @apply text-base sm:text-lg md:text-xl lg:text-2xl;
   }
+  .base-icon {
+    @apply h-3 sm:h-4 md:h-5 lg:h-6 w-3 sm:w-4 md:w-5 lg:w-6;
+  }
   .input-box {
     @apply h-7 sm:h-8 lg:h-9;
   }
