@@ -46,10 +46,10 @@ export default function SearchForm({ kind, searchParams }: { kind: SearchKind, s
         <div className='bg-light-dark border border-neutral-500 p-4 mb-8'>
             <div className="flex justify-between items-center">
                 <h2 className="headline-text text-neutral-900 dark:text-neutral-100 font-bold">検索条件</h2>
-                <button onClick={() => setIsOpen((prev) => !prev)} className="ring-1 ring-neutral-900 dark:ring-neutral-100 rounded-sm">{isOpen ? <ChevronUp /> : <ChevronDown />}</button>
+                <button onClick={() => setIsOpen((prev) => !prev)} className="ring-1 ring-neutral-900 dark:ring-neutral-100 rounded-sm base-text">{isOpen ? <ChevronUp /> : <ChevronDown />}</button>
             </div>
             <div hidden={!isOpen}>
-                <hr className="border-neutral-900 dark:border-neutral-200 lg:mb-2"/>
+                <hr className="border-neutral-900 dark:border-neutral-200 my-1 lg:my-2"/>
                 <Form action={handleSubmit}>
                     <div className='grid grid-cols-12 gap-x-4 lg:gap-y-2'>
                         {kind === "power" && <PowerSearchForm control={control}/>}
