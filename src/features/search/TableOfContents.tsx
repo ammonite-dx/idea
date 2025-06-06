@@ -20,9 +20,9 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ tocData, onNavigate }
   }
 
   return (
-    <nav aria-labelledby="toc-heading" className="my-4 p-4 border rounded-md shadow-sm bg-gray-50 dark:bg-gray-800">
-        <h3 className="title-text font-bold">目次</h3>
-        <hr className="border-neutral-900 dark:border-neutral-200 mb-4"/>
+    <nav aria-labelledby="toc-heading" className="bg-light-dark border border-neutral-500 p-4 my-4">
+        <h3 className="title-text text-neutral-900 dark:text-neutral-100 font-bold">目次</h3>
+        <hr className="border-neutral-900 dark:border-neutral-200 lg:mb-2"/>
         <ul className="space-y-1">
             {tocData.map((item) => (
                 <li key={item.categoryId}>
@@ -31,10 +31,10 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ tocData, onNavigate }
                           console.log('[TableOfContents] onClick: Navigating to page:', item.pageNumber, 'for categoryId:', item.categoryId);
                           onNavigate(item.pageNumber, item.categoryId);
                         }}
-                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded py-1 px-2 text-left w-full transition-colors duration-150"
+                        className="w-full base-text"
                         title={item.categoryName}
                     >
-                    {item.categoryName} <span className="text-sm text-gray-500 dark:text-gray-400">(p.{item.pageNumber})</span>
+                    {item.categoryName}
                     </button>
                 </li>
             ))}

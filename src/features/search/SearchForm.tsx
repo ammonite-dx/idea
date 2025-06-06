@@ -38,7 +38,7 @@ export default function SearchForm({ kind, searchParams }: { kind: SearchKind, s
 
     // 検索フォームの表示
     return (
-        <FormContainer>
+        <div className='bg-light-dark border border-neutral-500 p-4 mb-8'>
             <h2 className="headline-text text-neutral-900 dark:text-neutral-100 font-bold">検索条件</h2>
             <hr className="border-neutral-900 dark:border-neutral-200 lg:mb-2"/>
             <Form action={handleSubmit}>
@@ -51,7 +51,7 @@ export default function SearchForm({ kind, searchParams }: { kind: SearchKind, s
                 </div>
                 <div className="mt-6"><SubmitButton text="検索"/></div>
             </Form>
-        </FormContainer>
+        </div>
     )
 }
 
@@ -291,15 +291,3 @@ function WorkSearchForm({ control }: { control:any }) {
         </>
     )
   }
-
-////////////////////////////////
-// フォームを構成する基本要素
-////////////////////////////////
-
-function FormContainer ({ children }: { children:React.ReactNode }) {
-    return (
-        <div className='bg-light-dark border border-neutral-500 p-4 mb-8'>
-            { children }
-        </div>
-    )
-}
