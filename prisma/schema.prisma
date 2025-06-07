@@ -46,7 +46,10 @@ model Power {
   rel_faqs            Faq[] @relation("RelPowerFaq")
   rel_infos           Info[] @relation("RelPowerInfo")
   favorited_by        User[] @relation("FavPower")
+  supplement_order    Int
+  category_order      Int
   type_restrict_order Int
+  additional_order    Int
 }
 
 model Weapon {
@@ -93,8 +96,11 @@ model Weapon {
   rel_faqs            Faq[] @relation("RelWeaponFaq")
   rel_infos           Info[] @relation("RelWeaponInfo")
   favorited_by        User[] @relation("FavWeapon")
+  supplement_order    Int
+  category_order      Int
   type_order          Int
   cost_order          Int
+  adiditional_order   Int
 }
 
 model Armor {
@@ -138,8 +144,11 @@ model Armor {
   rel_faqs            Faq[] @relation("RelArmorFaq")
   rel_infos           Info[] @relation("RelArmorInfo")
   favorited_by        User[] @relation("FavArmor")
+  supplement_order    Int
+  category_order      Int
   type_order          Int
   cost_order          Int
+  additional_order    Int
 }
 
 model Vehicle {
@@ -183,7 +192,10 @@ model Vehicle {
   rel_faqs            Faq[] @relation("RelVehicleFaq")
   rel_infos           Info[] @relation("RelVehicleInfo")
   favorited_by        User[] @relation("FavVehicle")
+  supplement_order    Int
+  category_order      Int
   cost_order          Int
+  additional_order    Int
 }
 
 model Connection {
@@ -219,7 +231,10 @@ model Connection {
   rel_faqs            Faq[] @relation("RelConnectionFaq")
   rel_infos           Info[] @relation("RelConnectionInfo")
   favorited_by        User[] @relation("FavConnection")
+  supplement_order    Int
+  category_order      Int
   cost_order          Int
+  additional_order    Int
 }
 
 model General {
@@ -256,8 +271,11 @@ model General {
   rel_faqs            Faq[] @relation("RelGeneralFaq")
   rel_infos           Info[] @relation("RelGeneralInfo")
   favorited_by        User[] @relation("FavGeneral")
+  supplement_order    Int
+  category_order      Int
   type_order          Int
   cost_order          Int
+  additional_order    Int
 }
 
 model Dlois {
@@ -292,8 +310,10 @@ model Dlois {
   flavor_summary      String
   effect_summary      String
   rec_effect_summary  String?
+  supplement_order    Int
   type_order          Int
   restrict_order      Int
+  additional_order    Int
 }
 
 model Elois {
@@ -318,8 +338,10 @@ model Elois {
   rel_faqs            Faq[] @relation("RelEloisFaq")
   rel_infos           Info[] @relation("RelEloisInfo")
   favorited_by        User[] @relation("FavElois")
+  supplement_order    Int
   type_order          Int
   urge_order          Int
+  additional_order    Int
 }
 
 model Work {
