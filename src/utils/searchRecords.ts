@@ -74,7 +74,7 @@ async function searchItems(
       const vehicles = await searchVehicles(searchParams);
       const connections = await searchConnections(searchParams);
       const generals = await searchGenerals(searchParams);
-      const items = Object.fromEntries(toArray(searchParams["category"], ITEM_CATEGORIES).map(category => {
+      const items = Object.fromEntries(toArray(searchParams["category"], ITEM_CATEGORIES.map((c)=>c.name)).map(category => {
         const weaponsInCategory: Item[] = weapons[category] || [];
         const armorsInCategory: Item[] = armors[category] || [];
         const vehiclesInCategory: Item[] = vehicles[category] || [];
@@ -122,7 +122,7 @@ async function searchWeapons(
   })
   .then((response) => response.json())
   .then((records:WeaponResponse[]) => records.map((record) => parseWeapon(record)))
-  .then((weapons:Weapon[]) => CategorizeRecords(ITEM_CATEGORIES, weapons));
+  .then((weapons:Weapon[]) => CategorizeRecords(ITEM_CATEGORIES.map(c => c.name), weapons));
   return weapons;
 }
 
@@ -160,7 +160,7 @@ async function searchArmors(
   })
   .then((response) => response.json())
   .then((records:ArmorResponse[]) => records.map((record) => parseArmor(record)))
-  .then((armors:Armor[]) => CategorizeRecords(ITEM_CATEGORIES, armors));
+  .then((armors:Armor[]) => CategorizeRecords(ITEM_CATEGORIES.map(c => c.name), armors));
   return armors;
 }
 
@@ -195,7 +195,7 @@ async function searchVehicles(
   })
   .then((response) => response.json())
   .then((records:VehicleResponse[]) => records.map((record) => parseVehicle(record)))
-  .then((vehicles:Vehicle[]) => CategorizeRecords(ITEM_CATEGORIES, vehicles));
+  .then((vehicles:Vehicle[]) => CategorizeRecords(ITEM_CATEGORIES.map(c => c.name), vehicles));
   return vehicles;
 }
 
@@ -230,7 +230,7 @@ async function searchConnections(
   })
   .then((res) => res.json())
   .then((records:ConnectionResponse[]) => records.map((record) => parseConnection(record)))
-  .then((connections:Connection[]) => CategorizeRecords(ITEM_CATEGORIES, connections));
+  .then((connections:Connection[]) => CategorizeRecords(ITEM_CATEGORIES.map(c => c.name), connections));
   return connections;
 }
 
@@ -267,7 +267,7 @@ async function searchGenerals(
   })
   .then((res) => res.json())
   .then((records:GeneralResponse[]) => records.map((record) => parseGeneral(record)))
-  .then((generals:General[]) => CategorizeRecords(ITEM_CATEGORIES, generals));
+  .then((generals:General[]) => CategorizeRecords(ITEM_CATEGORIES.map(c => c.name), generals));
   return generals;
 }
 
@@ -396,7 +396,7 @@ function powerWhereCondition(searchParams: { [key: string]: string | string[] | 
 // アイテム
 function itemWhereCondition(searchParams: { [key: string]: string | string[] | undefined }) {
   const conditions = [];
-  if (searchParams["category"] !== undefined) {conditions.push({OR: toArray(searchParams["category"], ITEM_CATEGORIES).map(category => ({category: category}))});}
+  if (searchParams["category"] !== undefined) {conditions.push({OR: toArray(searchParams["category"], ITEM_CATEGORIES.map(c => c.name)).map(category => ({category: category}))});}
   if (searchParams["name"] !== undefined) {conditions.push({name: {contains: toString(searchParams["name"], "")}});}
   if (searchParams["supplement"] !== undefined) {
     conditions.push({OR: toArray(searchParams["supplement"], []).map(supplement => ({supplement: supplement}))});
