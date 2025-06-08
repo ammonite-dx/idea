@@ -187,7 +187,7 @@ function ItemSearchForm ({ control, watch } : { control:any, watch:any }) {
         <>
             <div className="grid-item col-span-12 lg:col-span-12"><TextInput control={control} name="name" label="名称"/></div>
             <div className="grid-item col-span-12 lg:col-span-4"><SelectBox control={control} name="supplement" label="サプリメント" options={ITEM_SUPPLEMENTS.map((s)=>({value:s,label:s}))} isMulti/></div>
-            <div className="grid-item col-span-12 lg:col-span-4"><SelectBox control={control} name="category" label="カテゴリ" options={ITEM_CATEGORIES.map((s)=>({value:s,label:s}))} isMulti/></div>
+            <div className="grid-item col-span-12 lg:col-span-4"><SelectBox control={control} name="category" label="カテゴリ" options={ITEM_CATEGORIES.map((s)=>({value:s.name,label:s.name}))} isMulti/></div>
             <div className="grid-item col-span-12 lg:col-span-4"><SelectBox control={control} name="item-type" label="アイテム種別" options={ITEM_TYPES.map((s)=>({value:s,label:s}))}/></div>
             {itemType.value=="武器" && <WeaponSearchForm control={control}/>}
             {itemType.value=="防具" && <ArmorSearchForm control={control}/>}

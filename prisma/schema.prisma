@@ -100,7 +100,7 @@ model Weapon {
   category_order      Int
   type_order          Int
   cost_order          Int
-  adiditional_order   Int
+  additional_order    Int
 }
 
 model Armor {
