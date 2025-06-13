@@ -128,7 +128,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
       } else {
         setIsLoading(false);
       }
-    }, [kind, fetchPaginationInfo, searchParams]); // searchParams はfetchPaginationInfo内で使われるので注意
+    }, [kind, fetchPaginationInfo, JSON.stringify(searchParams)]); // searchParams はfetchPaginationInfo内で使われるので注意
 
     // アクティブページ変更時に該当ページのデータを取得
     useEffect(() => {
