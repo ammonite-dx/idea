@@ -33,9 +33,9 @@ export default function SearchResults<K extends keyof TypeMap> ({
     const [tableRecords, setTableRecords] = useState<TableRecord[]>([]);
 
     // apiに渡すクエリ文字列を生成する関数
-    const getParamsString = () => {
+    const getParamsString = (currentSearchParams: { [key:string]: string | string[] | undefined }) => {
       const params = new URLSearchParams();
-      Object.entries(searchParams).forEach(([key, value]) => {
+      Object.entries(currentSearchParams).forEach(([key, value]) => {
         if (Array.isArray(value)) {
           value.forEach(v => params.append(key, v));
         } else if (typeof value === 'string') {
@@ -50,7 +50,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
       setIsLoading(true); // 全体ローディング
       setError(null);
       try {
-        const response = await fetch(`/api/search/${kind}?action=getInfo&${getParamsString()}`);
+        const response = await fetch(`/api/search/${kind}?action=getInfo&${getParamsString(searchParams)}`);
         if (!response.ok) throw new Error('Failed to fetch pagination info');
         const data = await response.json();
 
@@ -83,7 +83,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
       setIsLoading(true); // ページデータ取得中のローディング
       setError(null);
       const categories = pageDefinitions.find(def => def.page === page)?.categories || [];
-      const paramsForPage = new URLSearchParams(getParamsString()); // 元のparamsをコピー
+      const paramsForPage = new URLSearchParams(getParamsString(searchParams));
       for (const category of categories) paramsForPage.append('category', category.name); // カテゴリ名をクエリに追加
       try {
         const response = await fetch(`/api/search/${kind}?action=getPage&${paramsForPage.toString()}`);
@@ -105,7 +105,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`/api/search/${kind}?${getParamsString()}`);
+        const response = await fetch(`/api/search/${kind}?${getParamsString(searchParams)}`);
         if (!response.ok) throw new Error('Failed to fetch table records');
         const records: TableRecord[] = await response.json();
         setTableRecords(records || []); // テーブル表示用のデータをセット
