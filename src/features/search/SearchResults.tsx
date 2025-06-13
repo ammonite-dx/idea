@@ -33,7 +33,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
     const [tableRecords, setTableRecords] = useState<TableRecord[]>([]);
 
     // apiに渡すクエリ文字列を生成する関数
-    const getParamsString = useCallback(() => {
+    const getParamsString = () => {
       const params = new URLSearchParams();
       Object.entries(searchParams).forEach(([key, value]) => {
         if (Array.isArray(value)) {
@@ -43,7 +43,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
         }
       });
       return params.toString();
-    }, [JSON.stringify(searchParams)]);
+    }
 
     // 総ページ数と目次データを取得する関数
     const fetchPaginationInfo = useCallback(async () => {
