@@ -71,17 +71,9 @@ export async function GET(
 
         if (action === 'getInfo') {
             // ページネーションの情報取得
-            const categoriesInfo = await Promise.all(POWER_CATEGORIES.map(async (category) => {
-                const count = await prisma.power.count({
-                    where: {
-                        AND: [
-                            { category: category.name },
-                            ...whereConditions,
-                        ],
-                    },
-                });
-                return { id: category.id, name: category.name, count };
-            })).then(categories => categories.filter(category => category.count > 0));
+            const resultCategories: string[] = (await prisma.power.findMany({where: {AND: whereConditions}, select: {category: true}})).map(power => power.category);
+
+            const categoriesInfo = POWER_CATEGORIES.map(category => ({...category, count:resultCategories.filter(c => c === category.name).length})).filter(category => category.count > 0);
             const { totalPages, pageDefinitions } = calculatePageStructure(categoriesInfo, ITEMS_PER_PAGE);
             return NextResponse.json({ totalPages, pageDefinitions }, { status: 200 });
         

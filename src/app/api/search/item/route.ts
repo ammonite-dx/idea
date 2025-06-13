@@ -122,15 +122,13 @@ export async function GET(
 
         if (action === 'getInfo') {
             // ページネーションの情報取得
-            const categoriesInfo = await Promise.all(ITEM_CATEGORIES.map(async (category) => {
-                let count = 0;
-                if (itemType === '指定なし' || itemType === '武器') {count += await prisma.weapon.count({where: {AND: [{category: category.name}, ...whereConditions]}});}
-                if (itemType === '指定なし' || itemType === '防具') {count += await prisma.armor.count({where: {AND: [{category: category.name}, ...whereConditions]}});}
-                if (itemType === '指定なし' || itemType === 'ヴィークル') {count += await prisma.vehicle.count({where: {AND: [{category: category.name}, ...whereConditions]}});}
-                if (itemType === '指定なし' || itemType === 'コネ') {count += await prisma.connection.count({where: {AND: [{category: category.name}, ...whereConditions]}});}
-                if (itemType === '指定なし' || itemType === '一般アイテム') {count += await prisma.general.count({where: {AND: [{category: category.name}, ...whereConditions]}});}
-                return { id: category.id, name: category.name, count };
-            })).then(categories => categories.filter(category => category.count > 0));
+            let resultCategories: string[] = []
+            if (itemType === '指定なし' || itemType === '武器') {resultCategories = resultCategories.concat((await prisma.weapon.findMany({where: {AND: whereConditions}, select: {category: true}})).map(weapon => weapon.category));}
+            if (itemType === '指定なし' || itemType === '防具') {resultCategories = resultCategories.concat((await prisma.armor.findMany({where: {AND: whereConditions}, select: {category: true}})).map(armor => armor.category));}
+            if (itemType === '指定なし' || itemType === 'ヴィークル') {resultCategories = resultCategories.concat((await prisma.vehicle.findMany({where: {AND: whereConditions}, select: {category: true}})).map(vehicle => vehicle.category));}
+            if (itemType === '指定なし' || itemType === 'コネ') {resultCategories = resultCategories.concat((await prisma.connection.findMany({where: {AND: whereConditions}, select: {category: true}})).map(connection => connection.category));}
+            if (itemType === '指定なし' || itemType === '一般アイテム') {resultCategories = resultCategories.concat((await prisma.general.findMany({where: {AND: whereConditions}, select: {category: true}})).map(general => general.category));}
+            const categoriesInfo = ITEM_CATEGORIES.map(category => ({...category, count:resultCategories.filter(c => c === category.name).length})).filter(category => category.count > 0);
             const { totalPages, pageDefinitions } = calculatePageStructure(categoriesInfo, ITEMS_PER_PAGE);
             return NextResponse.json({ totalPages, pageDefinitions }, { status: 200 });
 
