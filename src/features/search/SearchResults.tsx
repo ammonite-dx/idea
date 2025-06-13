@@ -56,6 +56,8 @@ export default function SearchResults<K extends keyof TypeMap> ({
 
         setTotalPages(data.totalPages || 0);
         setPageDefinitions(data.pageDefinitions || []);
+        console.log("searchParams:", searchParams);
+        console.log("pageDefinitions:", data.pageDefinitions);
 
         if (data.totalPages > 0) {
           setActivePage(1); // データがあれば1ページ目を表示
