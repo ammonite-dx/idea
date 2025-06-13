@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPrismaClient } from '@/lib/prisma';
 import type { D1Database } from '@cloudflare/workers-types';
-import type { CategoryWithCardRecords, Item, WeaponResponse, ArmorResponse, VehicleResponse, ConnectionResponse, GeneralResponse } from '@/types/types';
+import type { Item, WeaponResponse, ArmorResponse, VehicleResponse, ConnectionResponse, GeneralResponse } from '@/types/types';
 import { ITEM_CATEGORIES } from '@/consts/item';
 import { calculatePageStructure } from '@/utils/pagination';
 import { parseWeapon, parseArmor, parseVehicle, parseConnection, parseGeneral } from '@/utils/parseRecord';
-import type { TocItem } from '@/features/search/TableOfContents';
+import { categorizeRecords } from '@/utils/search';
 
 export const runtime = 'edge';
 
@@ -20,7 +20,6 @@ export async function GET(
         // アイテム全般
         const searchParams = request.nextUrl.searchParams;
         const action = searchParams.get('action');
-        const page = searchParams.get('page');
         const supplements = searchParams.getAll('supplement');
         const categories = searchParams.getAll('category');
         const name = searchParams.get('name');
@@ -28,7 +27,7 @@ export async function GET(
         const stock = searchParams.get('stock');
         const exp = searchParams.get('exp');
         const effect = searchParams.get('effect');
-        const itemType = searchParams.get('item-type');
+        const itemType = searchParams.get('item-type') || '指定なし'; // デフォルトは「指定なし」
         // 武器
         const weaponTypes = searchParams.getAll('weapon-type');
         const weaponSkills = searchParams.getAll('weapon-skill');
@@ -132,242 +131,178 @@ export async function GET(
                 if (itemType === '指定なし' || itemType === '一般アイテム') {count += await prisma.general.count({where: {AND: [{category: category.name}, ...whereConditions]}});}
                 return { id: category.id, name: category.name, count };
             })).then(categories => categories.filter(category => category.count > 0));
-            const { totalPages, pageDefinitions } = calculatePageStructure(
-                categoriesInfo,
-                ITEMS_PER_PAGE
-            );
-            const tableOfContents: TocItem[] = [];
-            pageDefinitions.forEach(pageDefinition => {
-                pageDefinition.categories.forEach(category => {
-                    tableOfContents.push({
-                        categoryId: category.id,
-                        categoryName: category.name,
-                        pageNumber: pageDefinition.page,
-                    });
-                });
-            });
-            return NextResponse.json({
-                totalPages,
-                tableOfContents,
-            });
+            const { totalPages, pageDefinitions } = calculatePageStructure(categoriesInfo, ITEMS_PER_PAGE);
+            return NextResponse.json({ totalPages, pageDefinitions }, { status: 200 });
+
         } else if (action === 'getPage') {
-            // ページごとのデータ取得
-            const pageNumber = parseInt(page || "1");
-            // getInfoと同様にカテゴリごとの件数を取得してページ定義を計算
-            const categoriesInfo = await Promise.all(ITEM_CATEGORIES.map(async (category) => {
-                let count = 0;
-                if (itemType === '指定なし' || itemType === '武器') {count += await prisma.weapon.count({where: {AND: [{category: category.name}, ...whereConditions]}});}
-                if (itemType === '指定なし' || itemType === '防具') {count += await prisma.armor.count({where: {AND: [{category: category.name}, ...whereConditions]}});}
-                if (itemType === '指定なし' || itemType === 'ヴィークル') {count += await prisma.vehicle.count({where: {AND: [{category: category.name}, ...whereConditions]}});}
-                if (itemType === '指定なし' || itemType === 'コネ') {count += await prisma.connection.count({where: {AND: [{category: category.name}, ...whereConditions]}});}
-                if (itemType === '指定なし' || itemType === '一般アイテム') {count += await prisma.general.count({where: {AND: [{category: category.name}, ...whereConditions]}});}
-                return { id: category.id, name: category.name, count };
-            })).then(categories => categories.filter(category => category.count > 0));
-            const { totalPages, pageDefinitions } = calculatePageStructure(
-                categoriesInfo,
-                ITEMS_PER_PAGE
-            );
-            // 指定されたページ番号に対応するカテゴリを取得
-            const pageDefinition = pageDefinitions.find(pageDefinition => pageDefinition.page === pageNumber);
-            if (!pageDefinition) {
-                return NextResponse.json({ currentPage: pageNumber, totalPages, dataForPage: [] }, { status: 200 });
-            }
             // ページ定義に基づいて、該当するカテゴリのレコードを取得
-            const dataForPage: CategoryWithCardRecords[] = [];
-            for (const category of pageDefinition.categories) {
-                // レコードをバッチで取得
-                const records: Item[] = [];
-                if (itemType === '指定なし' || itemType === '武器') {
-                    let responses: WeaponResponse[] = [];
-                    let currentSkip = 0;
-                    let moreDataToFetch = true;
-                    while (moreDataToFetch) {
-                        const batch: WeaponResponse[] = await prisma.weapon.findMany({
-                            where: {
-                                AND: [
-                                    { category: category.name },
-                                    ...whereConditions,
-                                ],
-                            },
-                            include: {
-                                refed_power: true,
-                                refed_armor: true,
-                                refed_general: true,
-                                favorited_by: true,
-                            },
-                            orderBy: [
-                                { supplement_order: 'asc' as const },
-                                { category_order: 'asc' as const },
-                                { type_order: 'asc' as const },
-                                { cost_order: 'asc' as const },
-                                { additional_order: 'asc' as const },
-                                { ruby: 'asc' as const },
-                            ],
-                            take: BATCH_SIZE,
-                            skip: currentSkip,
-                        });
-                        if (batch.length > 0) {
-                            responses = responses.concat(batch);
-                            currentSkip += batch.length; // 次の取得開始位置を更新
-                            if (batch.length < BATCH_SIZE) moreDataToFetch = false; // 取得した件数がBATCH_SIZEより少なければ、それが最後のバッチ
-                        } else {
-                            moreDataToFetch = false; // 取得できるデータがなくなった場合はループを終了
-                        }
+            const records: Item[] = [];
+            if (itemType === '指定なし' || itemType === '武器') {
+                let responses: WeaponResponse[] = [];
+                let currentSkip = 0;
+                let moreDataToFetch = true;
+                while (moreDataToFetch) {
+                    const batch: WeaponResponse[] = await prisma.weapon.findMany({
+                        where: {
+                            AND: whereConditions,
+                        },
+                        include: {
+                            refed_power: true,
+                            refed_armor: true,
+                            refed_general: true,
+                            favorited_by: true,
+                        },
+                        orderBy: [
+                            { category_order: 'asc' as const },
+                            { type_order: 'asc' as const },
+                            { cost_order: 'asc' as const },
+                            { additional_order: 'asc' as const },
+                            { ruby: 'asc' as const },
+                        ],
+                        take: BATCH_SIZE,
+                        skip: currentSkip,
+                    });
+                    if (batch.length > 0) {
+                        responses = responses.concat(batch);
+                        currentSkip += batch.length; // 次の取得開始位置を更新
+                        if (batch.length < BATCH_SIZE) moreDataToFetch = false; // 取得した件数がBATCH_SIZEより少なければ、それが最後のバッチ
+                    } else {
+                        moreDataToFetch = false; // 取得できるデータがなくなった場合はループを終了
                     }
-                    responses.forEach(response => {records.push(parseWeapon(response))});
                 }
-                if (itemType === '指定なし' || itemType === '防具') {
-                    let responses: ArmorResponse[] = [];
-                    let currentSkip = 0;
-                    let moreDataToFetch = true;
-                    while (moreDataToFetch) {
-                        const batch: ArmorResponse[] = await prisma.armor.findMany({
-                            where: {
-                                AND: [
-                                    { category: category.name },
-                                    ...whereConditions,
-                                ],
-                            },
-                            include: {
-                                ref_weapon: true,
-                                refed_power: true,
-                                favorited_by: true,
-                            },
-                            orderBy: [
-                                { supplement_order: 'asc' as const },
-                                { category_order: 'asc' as const },
-                                { type_order: 'asc' as const },
-                                { cost_order: 'asc' as const },
-                                { additional_order: 'asc' as const },
-                                { ruby: 'asc' as const },
-                            ],
-                            take: BATCH_SIZE,
-                            skip: currentSkip,
-                        });
-                        if (batch.length > 0) {
-                            responses = responses.concat(batch);
-                            currentSkip += batch.length; // 次の取得開始位置を更新
-                            if (batch.length < BATCH_SIZE) moreDataToFetch = false; // 取得した件数がBATCH_SIZEより少なければ、それが最後のバッチ
-                        } else {
-                            moreDataToFetch = false; // 取得できるデータがなくなった場合はループを終了
-                        }
-                    }
-                    responses.forEach(response => {records.push(parseArmor(response))});
-                }
-                if (itemType === '指定なし' || itemType === 'ヴィークル') {
-                    let responses: VehicleResponse[] = [];
-                    let currentSkip = 0;
-                    let moreDataToFetch = true;
-                    while (moreDataToFetch) {
-                        const batch: VehicleResponse[] = await prisma.vehicle.findMany({
-                            where: {
-                                AND: [
-                                    { category: category.name },
-                                    ...whereConditions,
-                                ],
-                            },
-                            include: {
-                                favorited_by: true,
-                            },
-                            orderBy: [
-                                { supplement_order: 'asc' as const },
-                                { category_order: 'asc' as const },
-                                { cost_order: 'asc' as const },
-                                { additional_order: 'asc' as const },
-                                { ruby: 'asc' as const },
-                            ],
-                            take: BATCH_SIZE,
-                            skip: currentSkip,
-                        });
-                        if (batch.length > 0) {
-                            responses = responses.concat(batch);
-                            currentSkip += batch.length; // 次の取得開始位置を更新
-                            if (batch.length < BATCH_SIZE) moreDataToFetch = false; // 取得した件数がBATCH_SIZEより少なければ、それが最後のバッチ
-                        } else {
-                            moreDataToFetch = false; // 取得できるデータがなくなった場合はループを終了
-                        }
-                    }
-                    responses.forEach(response => {records.push(parseVehicle(response))});
-                }
-                if (itemType === '指定なし' || itemType === 'コネ') {
-                    let responses: ConnectionResponse[] = [];
-                    let currentSkip = 0;
-                    let moreDataToFetch = true;
-                    while (moreDataToFetch) {
-                        const batch: ConnectionResponse[] = await prisma.connection.findMany({
-                            where: {
-                                AND: [
-                                    { category: category.name },
-                                    ...whereConditions,
-                                ],
-                            },
-                            include: {
-                                favorited_by: true,
-                            },
-                            orderBy: [
-                                { supplement_order: 'asc' as const },
-                                { category_order: 'asc' as const },
-                                { cost_order: 'asc' as const },
-                                { additional_order: 'asc' as const },
-                                { ruby: 'asc' as const },
-                            ],
-                            take: BATCH_SIZE,
-                            skip: currentSkip,
-                        });
-                        if (batch.length > 0) {
-                            responses = responses.concat(batch);
-                            currentSkip += batch.length; // 次の取得開始位置を更新
-                            if (batch.length < BATCH_SIZE) moreDataToFetch = false; // 取得した件数がBATCH_SIZEより少なければ、それが最後のバッチ
-                        } else {
-                            moreDataToFetch = false; // 取得できるデータがなくなった場合はループを終了
-                        }
-                    }
-                    responses.forEach(response => {records.push(parseConnection(response))});
-                }
-                if (itemType === '指定なし' || itemType === '一般アイテム') {
-                    let responses: GeneralResponse[] = [];
-                    let currentSkip = 0;
-                    let moreDataToFetch = true;
-                    while (moreDataToFetch) {
-                        const batch: GeneralResponse[] = await prisma.general.findMany({
-                            where: {
-                                AND: [
-                                    { category: category.name },
-                                    ...whereConditions,
-                                ],
-                            },
-                            include: {
-                                ref_weapon: true,
-                                favorited_by: true,
-                            },
-                            orderBy: [
-                                { supplement_order: 'asc' as const },
-                                { category_order: 'asc' as const },
-                                { type_order: 'asc' as const },
-                                { cost_order: 'asc' as const },
-                                { additional_order: 'asc' as const },
-                                { ruby: 'asc' as const },
-                            ],
-                            take: BATCH_SIZE,
-                            skip: currentSkip,
-                        });
-                        if (batch.length > 0) {
-                            responses = responses.concat(batch);
-                            currentSkip += batch.length; // 次の取得開始位置を更新
-                            if (batch.length < BATCH_SIZE) moreDataToFetch = false; // 取得した件数がBATCH_SIZEより少なければ、それが最後のバッチ
-                        } else {
-                            moreDataToFetch = false; // 取得できるデータがなくなった場合はループを終了
-                        }
-                    }
-                    responses.forEach(response => {records.push(parseGeneral(response))});
-                }
-                dataForPage.push({
-                    id: category.id,
-                    name: category.name,
-                    records: records,
-                });
+                responses.forEach(response => {records.push(parseWeapon(response))});
             }
-            return NextResponse.json({ currentPage: pageNumber, totalPages, dataForPage }, { status: 200 });
+            if (itemType === '指定なし' || itemType === '防具') {
+                let responses: ArmorResponse[] = [];
+                let currentSkip = 0;
+                let moreDataToFetch = true;
+                while (moreDataToFetch) {
+                    const batch: ArmorResponse[] = await prisma.armor.findMany({
+                        where: {
+                            AND: whereConditions,
+                        },
+                        include: {
+                            ref_weapon: true,
+                            refed_power: true,
+                            favorited_by: true,
+                        },
+                        orderBy: [
+                            { category_order: 'asc' as const },
+                            { type_order: 'asc' as const },
+                            { cost_order: 'asc' as const },
+                            { additional_order: 'asc' as const },
+                            { ruby: 'asc' as const },
+                        ],
+                        take: BATCH_SIZE,
+                        skip: currentSkip,
+                    });
+                    if (batch.length > 0) {
+                        responses = responses.concat(batch);
+                        currentSkip += batch.length; // 次の取得開始位置を更新
+                        if (batch.length < BATCH_SIZE) moreDataToFetch = false; // 取得した件数がBATCH_SIZEより少なければ、それが最後のバッチ
+                    } else {
+                        moreDataToFetch = false; // 取得できるデータがなくなった場合はループを終了
+                    }
+                }
+                responses.forEach(response => {records.push(parseArmor(response))});
+            }
+            if (itemType === '指定なし' || itemType === 'ヴィークル') {
+                let responses: VehicleResponse[] = [];
+                let currentSkip = 0;
+                let moreDataToFetch = true;
+                while (moreDataToFetch) {
+                    const batch: VehicleResponse[] = await prisma.vehicle.findMany({
+                        where: {
+                            AND: whereConditions,
+                        },
+                        include: {
+                            favorited_by: true,
+                        },
+                        orderBy: [
+                            { category_order: 'asc' as const },
+                            { cost_order: 'asc' as const },
+                            { additional_order: 'asc' as const },
+                            { ruby: 'asc' as const },
+                        ],
+                        take: BATCH_SIZE,
+                        skip: currentSkip,
+                    });
+                    if (batch.length > 0) {
+                        responses = responses.concat(batch);
+                        currentSkip += batch.length; // 次の取得開始位置を更新
+                        if (batch.length < BATCH_SIZE) moreDataToFetch = false; // 取得した件数がBATCH_SIZEより少なければ、それが最後のバッチ
+                    } else {
+                        moreDataToFetch = false; // 取得できるデータがなくなった場合はループを終了
+                    }
+                }
+                responses.forEach(response => {records.push(parseVehicle(response))});
+            }
+            if (itemType === '指定なし' || itemType === 'コネ') {
+                let responses: ConnectionResponse[] = [];
+                let currentSkip = 0;
+                let moreDataToFetch = true;
+                while (moreDataToFetch) {
+                    const batch: ConnectionResponse[] = await prisma.connection.findMany({
+                        where: {
+                            AND: whereConditions,
+                        },
+                        include: {
+                            favorited_by: true,
+                        },
+                        orderBy: [
+                            { category_order: 'asc' as const },
+                            { cost_order: 'asc' as const },
+                            { additional_order: 'asc' as const },
+                            { ruby: 'asc' as const },
+                        ],
+                        take: BATCH_SIZE,
+                        skip: currentSkip,
+                    });
+                    if (batch.length > 0) {
+                        responses = responses.concat(batch);
+                        currentSkip += batch.length; // 次の取得開始位置を更新
+                        if (batch.length < BATCH_SIZE) moreDataToFetch = false; // 取得した件数がBATCH_SIZEより少なければ、それが最後のバッチ
+                    } else {
+                        moreDataToFetch = false; // 取得できるデータがなくなった場合はループを終了
+                    }
+                }
+                responses.forEach(response => {records.push(parseConnection(response))});
+            }
+            if (itemType === '指定なし' || itemType === '一般アイテム') {
+                let responses: GeneralResponse[] = [];
+                let currentSkip = 0;
+                let moreDataToFetch = true;
+                while (moreDataToFetch) {
+                    const batch: GeneralResponse[] = await prisma.general.findMany({
+                        where: {
+                            AND: whereConditions,
+                        },
+                        include: {
+                            ref_weapon: true,
+                            favorited_by: true,
+                        },
+                        orderBy: [
+                            { category_order: 'asc' as const },
+                            { type_order: 'asc' as const },
+                            { cost_order: 'asc' as const },
+                            { additional_order: 'asc' as const },
+                            { ruby: 'asc' as const },
+                        ],
+                        take: BATCH_SIZE,
+                        skip: currentSkip,
+                    });
+                    if (batch.length > 0) {
+                        responses = responses.concat(batch);
+                        currentSkip += batch.length; // 次の取得開始位置を更新
+                        if (batch.length < BATCH_SIZE) moreDataToFetch = false; // 取得した件数がBATCH_SIZEより少なければ、それが最後のバッチ
+                    } else {
+                        moreDataToFetch = false; // 取得できるデータがなくなった場合はループを終了
+                    }
+                }
+                responses.forEach(response => {records.push(parseGeneral(response))});
+            }
+            const dataForPage = categorizeRecords(ITEM_CATEGORIES, records);
+            return NextResponse.json({ dataForPage }, { status: 200 });
         } else {
             return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
         }

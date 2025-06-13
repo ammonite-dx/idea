@@ -1,48 +1,34 @@
-type CategoryInfoForPagination = {
-  id: string;    // カテゴリの一意なID
-  name: string;  // カテゴリ名
-  count: number; // そのカテゴリに含まれるレコードの総数
-}
-
-type PageDefinition = {
-  page: number;                      // ページ番号
-  categories: CategoryInfoForPagination[]; // このページに含まれるカテゴリのリスト
-}
-
-type PaginationStructure = {
-  totalPages: number;        // 計算された総ページ数
-  pageDefinitions: PageDefinition[]; // 各ページの定義の配列
-}
+import { Category, PageDefinition, PaginationStructure } from '@/types/pagination';
 
 // ページネーションの計算を行う関数
 export function calculatePageStructure(
-  categoriesInfo: CategoryInfoForPagination[],
+  categories: Category[],
   itemsPerPage: number
 ): PaginationStructure {
+
   const pageDefinitions: PageDefinition[] = [];
   let currentPageNumber = 1;
-  let currentPageCategories: CategoryInfoForPagination[] = [];
+  let currentPageCategories: Category[] = [];
   let currentItemCountInPage = 0;
 
-  // レコード数が0のカテゴリはページネーション計算に含めない
-  const validCategories = categoriesInfo.filter(cat => cat.count > 0);
+  for (const category of categories) {
 
-  for (const category of validCategories) {
+    if (!category.count || category.count === 0) {
+      continue; // カテゴリのレコード数が0の場合はスキップ
+    }
+
     // 現在のページにこのカテゴリを追加すると最大レコード数を超え、かつ、現在のページに既に何かしらのカテゴリが含まれている場合
-    if (
-        currentItemCountInPage > 0 &&
-        currentItemCountInPage + category.count > itemsPerPage
-    ) {
-        // 現在のページをページ定義に追加
-        pageDefinitions.push({
-            page: currentPageNumber,
-            categories: currentPageCategories,
-        });
+    if (currentItemCountInPage > 0 && currentItemCountInPage + category.count > itemsPerPage) {
+      // 現在のページをページ定義に追加
+      pageDefinitions.push({
+        page: currentPageNumber,
+        categories: currentPageCategories,
+      });
 
-        // 次のページの準備
-        currentPageNumber++;
-        currentPageCategories = []; // 新しいページ用にカテゴリリストをリセット
-        currentItemCountInPage = 0;  // 新しいページ用にアイテムカウントをリセット
+      // 次のページの準備
+      currentPageNumber++;
+      currentPageCategories = []; // 新しいページ用にカテゴリリストをリセット
+      currentItemCountInPage = 0;  // 新しいページ用にアイテムカウントをリセット
     }
 
     // カテゴリを現在のページに追加
@@ -62,8 +48,8 @@ export function calculatePageStructure(
     });
   }
 
-  // もし validCategories が空だった場合（表示するカテゴリが一つもない場合）
-  if (pageDefinitions.length === 0 && validCategories.length === 0) {
+  // もし categories が空だった場合（表示するカテゴリが一つもない場合）
+  if (pageDefinitions.length === 0 && categories.length === 0) {
     return {
       totalPages: 0,
       pageDefinitions: [],

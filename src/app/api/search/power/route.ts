@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPrismaClient } from '@/lib/prisma';
 import type { D1Database } from '@cloudflare/workers-types';
-import type { CategoryWithCardRecords, PowerResponse } from '@/types/types';
+import type { PowerResponse } from '@/types/types';
 import { POWER_CATEGORIES } from '@/consts/power';
 import { calculatePageStructure } from '@/utils/pagination';
 import { parsePower } from '@/utils/parseRecord';
-import type { TocItem } from '@/features/search/TableOfContents';
+import { categorizeRecords } from '@/utils/search';
 
 export const runtime = 'edge';
 
@@ -20,7 +20,6 @@ export async function GET(
         // クエリを取得
         const searchParams = request.nextUrl.searchParams;
         const action = searchParams.get('action');
-        const page = searchParams.get('page');
         const types = searchParams.getAll('type');
         const supplements = searchParams.getAll('supplement');
         const categories = searchParams.getAll('category');
@@ -83,95 +82,46 @@ export async function GET(
                 });
                 return { id: category.id, name: category.name, count };
             })).then(categories => categories.filter(category => category.count > 0));
-            const { totalPages, pageDefinitions } = calculatePageStructure(
-                categoriesInfo,
-                ITEMS_PER_PAGE
-            );
-            const tableOfContents: TocItem[] = [];
-            pageDefinitions.forEach(pageDefinition => {
-                pageDefinition.categories.forEach(category => {
-                    tableOfContents.push({
-                        categoryId: category.id,
-                        categoryName: category.name,
-                        pageNumber: pageDefinition.page,
-                    });
-                });
-            });
-            return NextResponse.json({
-                totalPages,
-                tableOfContents,
-            });
+            const { totalPages, pageDefinitions } = calculatePageStructure(categoriesInfo, ITEMS_PER_PAGE);
+            return NextResponse.json({ totalPages, pageDefinitions }, { status: 200 });
+        
         } else if (action === 'getPage') {
-            // ページごとのデータ取得
-            const pageNumber = parseInt(page || "1");
-            // getInfoと同様にカテゴリごとの件数を取得してページ定義を計算
-            const categoriesInfo = await Promise.all(POWER_CATEGORIES.map(async (category) => {
-                const count = await prisma.power.count({
-                    where: {
-                        AND: [
-                            { category: category.name },
-                            ...whereConditions,
-                        ],
-                    },
-                });
-                return { id: category.id, name: category.name, count };
-            })).then(categories => categories.filter(category => category.count > 0));
-            const { totalPages, pageDefinitions } = calculatePageStructure(
-                categoriesInfo,
-                ITEMS_PER_PAGE
-            );
-            // 指定されたページ番号に対応するカテゴリを取得
-            const pageDefinition = pageDefinitions.find(pageDefinition => pageDefinition.page === pageNumber);
-            if (!pageDefinition) {
-                return NextResponse.json({ currentPage: pageNumber, totalPages, dataForPage: [] }, { status: 200 });
-            }
             // ページ定義に基づいて、該当するカテゴリのレコードを取得
-            const dataForPage: CategoryWithCardRecords[] = [];
-            for (const category of pageDefinition.categories) {
-                // レコードをバッチで取得
-                let responses: PowerResponse[] = [];
-                let currentSkip = 0;
-                let moreDataToFetch = true;
-                while (moreDataToFetch) {
-                    const batch: PowerResponse[] = await prisma.power.findMany({
-                        where: {
-                            AND: [
-                                { category: category.name },
-                                ...whereConditions,
-                            ],
-                        },
-                        include: {
-                            ref_weapon: true,
-                            ref_armor: true,
-                            refed_dlois: true,
-                            favorited_by: true,
-                        },
-                        orderBy: [
-                            { supplement_order: 'asc' as const },
-                            { category_order: 'asc' as const },
-                            { type_restrict_order: 'asc' as const },
-                            { additional_order: 'asc' as const },
-                            { ruby: 'asc' as const },
-                        ],
-                        take: BATCH_SIZE,
-                        skip: currentSkip,
-                    });
-                    if (batch.length > 0) {
-                        responses = responses.concat(batch);
-                        currentSkip += batch.length; // 次の取得開始位置を更新
-                        if (batch.length < BATCH_SIZE) moreDataToFetch = false; // 取得した件数がBATCH_SIZEより少なければ、それが最後のバッチ
-                    } else {
-                        moreDataToFetch = false; // 取得できるデータがなくなった場合はループを終了
-                    }
-                }
-                const records = responses.map(response => parsePower(response));
-                dataForPage.push({
-                    id: category.id,
-                    name: category.name,
-                    records: records,
+            let responses: PowerResponse[] = [];
+            let currentSkip = 0;
+            let moreDataToFetch = true;
+            while (moreDataToFetch) {
+                const batch: PowerResponse[] = await prisma.power.findMany({
+                    where: {
+                        AND: whereConditions,
+                    },
+                    include: {
+                        ref_weapon: true,
+                        ref_armor: true,
+                        refed_dlois: true,
+                        favorited_by: true,
+                    },
+                    orderBy: [
+                        { supplement_order: 'asc' as const },
+                        { category_order: 'asc' as const },
+                        { type_restrict_order: 'asc' as const },
+                        { additional_order: 'asc' as const },
+                        { ruby: 'asc' as const },
+                    ],
+                    take: BATCH_SIZE,
+                    skip: currentSkip,
                 });
+                if (batch.length > 0) {
+                    responses = responses.concat(batch);
+                    currentSkip += batch.length; // 次の取得開始位置を更新
+                    if (batch.length < BATCH_SIZE) moreDataToFetch = false; // 取得した件数がBATCH_SIZEより少なければ、それが最後のバッチ
+                } else {
+                    moreDataToFetch = false; // 取得できるデータがなくなった場合はループを終了
+                }
             }
-            return NextResponse.json({ currentPage: pageNumber, totalPages, dataForPage }, { status: 200 });
+            const records = responses.map(response => parsePower(response));
+            const dataForPage = categorizeRecords(POWER_CATEGORIES, records);
+            return NextResponse.json({ dataForPage }, { status: 200 });
         } else {
             return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
         }

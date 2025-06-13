@@ -3,9 +3,10 @@
 import { useState, useEffect, useLayoutEffect, useCallback, Fragment } from 'react';
 import CardList from "@/components/CardList";
 import { Card, CardDivider } from "@/components/Card";
-import { TypeMap, CategoryWithCardRecords, TableRecord } from "@/types/types";
+import TableOfContents from './TableOfContents';
+import { TypeMap, TableRecord } from "@/types/types";
+import type { Category, PageDefinition } from "@/types/pagination";
 import ScaledText from "@/components/ScaledText";
-import TableOfContents, { TocItem } from './TableOfContents';
 import PaginationUI from './PaginationUI';
 
 export default function SearchResults<K extends keyof TypeMap> ({
@@ -23,8 +24,8 @@ export default function SearchResults<K extends keyof TypeMap> ({
     // ページネーション用のState
     const [activePage, setActivePage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [tableOfContentsData, setTableOfContentsData] = useState<TocItem[]>([]);
-    const [categoriesForCurrentPage, setcategoriesForCurrentPage] = useState<CategoryWithCardRecords[]>([]);
+    const [pageDefinitions, setPageDefinitions] = useState<PageDefinition[]>([]);
+    const [categoriesForCurrentPage, setCategoriesForCurrentPage] = useState<Category[]>([]);
     const [scrollToCategoryId, setScrollToCategoryId] = useState<string | null>(null);
 
     const [isLoading, setIsLoading] = useState(true);
@@ -40,55 +41,56 @@ export default function SearchResults<K extends keyof TypeMap> ({
         params.append(key, value);
       }
     });
-    const query = params.toString();
 
     // 総ページ数と目次データを取得する関数
     const fetchPaginationInfo = useCallback(async () => {
       setIsLoading(true); // 全体ローディング
       setError(null);
       try {
-        const response = await fetch(`/api/search/${kind}?action=getInfo&${query}`);
+        const response = await fetch(`/api/search/${kind}?action=getInfo&${params.toString()}`);
         if (!response.ok) throw new Error('Failed to fetch pagination info');
         const data = await response.json();
 
         setTotalPages(data.totalPages || 0);
-        setTableOfContentsData(data.tableOfContents || []);
+        setPageDefinitions(data.pageDefinitions || []);
 
         if (data.totalPages > 0) {
           setActivePage(1); // データがあれば1ページ目を表示
         } else {
           setActivePage(0); // データがなければ0ページ（表示なし）
-          setcategoriesForCurrentPage([]);
+          setCategoriesForCurrentPage([]);
         }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         console.error("fetchPaginationInfo failed:", e);
         setError(e.message || "ページ情報の取得に失敗しました。");
         setTotalPages(0);
-        setTableOfContentsData([]);
-        setcategoriesForCurrentPage([]);
+        setPageDefinitions([]);
+        setCategoriesForCurrentPage([]);
       }
     }, [kind, JSON.stringify(searchParams)]);
 
     // 特定のページのデータを取得する関数
     const fetchPageData = useCallback(async (page: number) => {
       if (page === 0 || totalPages === 0) {
-        setcategoriesForCurrentPage([]);
+        setCategoriesForCurrentPage([]);
         setIsLoading(false); // ここでローディング解除
         return;
       }
       setIsLoading(true); // ページデータ取得中のローディング
       setError(null);
+      const categories = pageDefinitions.find(def => def.page === page)?.categories || [];
+      for (const category of categories) params.append('category', category.name); // カテゴリ名をクエリに追加
       try {
-        const response = await fetch(`/api/search/${kind}?action=getPage&${query}&page=${page}`);
+        const response = await fetch(`/api/search/${kind}?action=getPage&${params.toString()}`);
         if (!response.ok) throw new Error('Failed to fetch page data');
         const data = await response.json();
-        setcategoriesForCurrentPage(data.dataForPage || []);
+        setCategoriesForCurrentPage(data.dataForPage || []);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         console.error("fetchPageData failed:", e);
         setError(e.message || "ページデータの取得に失敗しました。");
-        setcategoriesForCurrentPage([]);
+        setCategoriesForCurrentPage([]);
       } finally {
         setIsLoading(false); // ページデータ取得完了またはエラーでローディング解除
       }
@@ -99,7 +101,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`/api/search/${kind}?${query}`);
+        const response = await fetch(`/api/search/${kind}?${params.toString()}`);
         if (!response.ok) throw new Error('Failed to fetch table records');
         const records: TableRecord[] = await response.json();
         setTableRecords(records || []); // テーブル表示用のデータをセット
@@ -120,8 +122,8 @@ export default function SearchResults<K extends keyof TypeMap> ({
       } else if (isTableKind) {
         fetchTableRecords();
         setTotalPages(0); // テーブル表示の場合はページネーション関連をリセット
-        setTableOfContentsData([]);
-        setcategoriesForCurrentPage([]);
+        setPageDefinitions([]);
+        setCategoriesForCurrentPage([]);
       } else {
         setIsLoading(false);
       }
@@ -169,13 +171,13 @@ export default function SearchResults<K extends keyof TypeMap> ({
         if (categoryIdToScroll) { // 同ページで特定のIDにスクロールしたい場合
           const element = document.getElementById(`category-anchor-${categoryIdToScroll}`);
           if (element) {
-              console.log(`[handleNavigate] Element for same-page scroll FOUND. Attempting immediate scroll.`);
-              const headerOffset = 80;
-              const elementPosition = element.getBoundingClientRect().top;
-              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-              window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+            console.log(`[handleNavigate] Element for same-page scroll FOUND. Attempting immediate scroll.`);
+            const headerOffset = 80;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
           } else {
-              console.warn(`[handleNavigate] Element for same-page scroll NOT FOUND immediately. Relying on useLayoutEffect.`);
+            console.warn(`[handleNavigate] Element for same-page scroll NOT FOUND immediately. Relying on useLayoutEffect.`);
           }
         }
       }
@@ -203,7 +205,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
         <section>
           <h2 className="headline-text font-bold">検索結果</h2>
           <hr className="border-neutral-900 dark:border-neutral-200 mb-4"/>
-          <TableOfContents tocData={tableOfContentsData} onNavigate={handleNavigate} />
+          <TableOfContents pageDefinitions={pageDefinitions} onNavigate={handleNavigate} />
           {isLoading && categoriesForCurrentPage.length === 0 && <div className='base-text m-4'>データを読み込んでいます...</div>}
           {!isLoading && categoriesForCurrentPage.length === 0 && totalPages > 0 && <div className='base-text m-4'>このページに表示するデータはありません。</div>}
           <SearchResultsCardList categories={categoriesForCurrentPage} />
@@ -247,16 +249,15 @@ export default function SearchResults<K extends keyof TypeMap> ({
   function SearchResultsCardList ({
     categories,
   }: {
-    categories: CategoryWithCardRecords[],
+    categories: Category[],
   }) {
     return (
       <div className="mx-0 my-4">
         {categories.map((category) => {
+          if (!category.records || category.records.length === 0) return null; // レコードがないカテゴリはスキップ
           return (
             <div key={category.id} id={`category-anchor-${category.id}`}>
-              {category.records.length > 0 && (
-                <CardList title={category.name} records={category.records} />
-              )}
+              <CardList title={category.name} records={category.records} />
             </div>
           );
         })}

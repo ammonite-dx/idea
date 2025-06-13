@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { ChevronUp,ChevronDown } from 'lucide-react';
+import { PageDefinition } from '@/types/pagination';
 
 // 目次の各アイテムの型定義
 export type TocItem = {
@@ -10,20 +11,22 @@ export type TocItem = {
   pageNumber: number;    // このカテゴリが含まれるページ番号
 }
 
-// TableOfContentsコンポーネントのPropsの型定義
-type TableOfContentsProps = {
-  tocData: TocItem[]; // 目次データの配列
-  onNavigate: (pageNumber: number, categoryId: string) => void; // ナビゲーション実行関数
-}
-
-const TableOfContents: React.FC<TableOfContentsProps> = ({ tocData, onNavigate }) => {
+export default function TableOfContents({pageDefinitions, onNavigate}: {pageDefinitions: PageDefinition[], onNavigate: (pageNumber: number, categoryId: string) => void}) {
 
   const [ isOpen, setIsOpen ] = useState(false);
 
   // 目次データがない場合は何も表示しない
-  if (!tocData || tocData.length === 0) {
+  if (!pageDefinitions || pageDefinitions.length === 0) {
     return null;
   }
+
+  const tableOfContents = pageDefinitions.flatMap((pageDefinition) => 
+    pageDefinition.categories.map((category) => ({
+      categoryId: category.id,
+      categoryName: category.name,
+      pageNumber: pageDefinition.page,
+    }))
+  );
 
   return (
     <nav aria-labelledby="toc-heading" className="bg-light-dark border border-neutral-500 p-2 lg:p-4 my-4">
@@ -34,24 +37,19 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ tocData, onNavigate }
       <div hidden={!isOpen}>
         <hr className="border-neutral-900 dark:border-neutral-200 my-1 lg:my-2"/>
         <ul>
-            {tocData.map((item) => (
-                <li key={item.categoryId}>
-                    <button
-                        onClick={() => {
-                          console.log('[TableOfContents] onClick: Navigating to page:', item.pageNumber, 'for categoryId:', item.categoryId);
-                          onNavigate(item.pageNumber, item.categoryId);
-                        }}
-                        className="w-full base-text text-left p-1"
-                        title={item.categoryName}
-                    >
-                    {item.categoryName}
-                    </button>
-                </li>
-            ))}
+          {tableOfContents.map((item) => (
+            <li key={item.categoryId}>
+              <button
+                onClick={() => onNavigate(item.pageNumber, item.categoryId)}
+                className="w-full base-text text-left p-1"
+                title={item.categoryName}
+              >
+              {item.categoryName}
+              </button>
+            </li>
+          ))}
         </ul>
       </div>
     </nav>
   );
 };
-
-export default TableOfContents;
