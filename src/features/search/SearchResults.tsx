@@ -32,22 +32,25 @@ export default function SearchResults<K extends keyof TypeMap> ({
     const [error, setError] = useState<string | null>(null);
     const [tableRecords, setTableRecords] = useState<TableRecord[]>([]);
 
-    // apiに渡すクエリ文字列を生成
-    const params = new URLSearchParams();
-    Object.entries(searchParams).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        value.forEach(v => params.append(key, v));
-      } else if (typeof value === 'string') {
-        params.append(key, value);
-      }
-    });
+    // apiに渡すクエリ文字列を生成する関数
+    const getParamsString = useCallback(() => {
+      const params = new URLSearchParams();
+      Object.entries(searchParams).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach(v => params.append(key, v));
+        } else if (typeof value === 'string') {
+          params.append(key, value);
+        }
+      });
+      return params.toString();
+    }, [searchParams]);
 
     // 総ページ数と目次データを取得する関数
     const fetchPaginationInfo = useCallback(async () => {
       setIsLoading(true); // 全体ローディング
       setError(null);
       try {
-        const response = await fetch(`/api/search/${kind}?action=getInfo&${params.toString()}`);
+        const response = await fetch(`/api/search/${kind}?action=getInfo&${getParamsString()}`);
         if (!response.ok) throw new Error('Failed to fetch pagination info');
         const data = await response.json();
 
@@ -80,7 +83,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
       setIsLoading(true); // ページデータ取得中のローディング
       setError(null);
       const categories = pageDefinitions.find(def => def.page === page)?.categories || [];
-      const paramsForPage = new URLSearchParams(params.toString()); // 元のparamsをコピー
+      const paramsForPage = new URLSearchParams(getParamsString()); // 元のparamsをコピー
       for (const category of categories) paramsForPage.append('category', category.name); // カテゴリ名をクエリに追加
       try {
         const response = await fetch(`/api/search/${kind}?action=getPage&${paramsForPage.toString()}`);
@@ -102,7 +105,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`/api/search/${kind}?${params.toString()}`);
+        const response = await fetch(`/api/search/${kind}?${getParamsString()}`);
         if (!response.ok) throw new Error('Failed to fetch table records');
         const records: TableRecord[] = await response.json();
         setTableRecords(records || []); // テーブル表示用のデータをセット
@@ -117,6 +120,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
 
     // 初期ロード時（または検索条件変更時）にページネーション情報を取得
     useEffect(() => {
+      console.log('[useEffect] Initial load or searchParams changed');
       // kind がカードリストを表示する対象の場合のみページネーション情報を取得
       if (isCardListKind) {
         fetchPaginationInfo();
@@ -137,10 +141,6 @@ export default function SearchResults<K extends keyof TypeMap> ({
         fetchPageData(activePage);
       }
     }, [activePage, totalPages, fetchPageData, kind]);
-
-    useEffect(() => {
-      console.log('[DEBUG useEffect] scrollToCategoryId changed to:', scrollToCategoryId);
-    }, [scrollToCategoryId]);
 
     // スクロール処理
     useLayoutEffect(() => {
