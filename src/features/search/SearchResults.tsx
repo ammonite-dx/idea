@@ -43,7 +43,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
         }
       });
       return params.toString();
-    }, [searchParams]);
+    }, [JSON.stringify(searchParams)]);
 
     // 総ページ数と目次データを取得する関数
     const fetchPaginationInfo = useCallback(async () => {
