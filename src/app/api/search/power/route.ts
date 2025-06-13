@@ -102,7 +102,6 @@ export async function GET(
                         favorited_by: true,
                     },
                     orderBy: [
-                        { supplement_order: 'asc' as const },
                         { category_order: 'asc' as const },
                         { type_restrict_order: 'asc' as const },
                         { additional_order: 'asc' as const },
