@@ -80,9 +80,10 @@ export default function SearchResults<K extends keyof TypeMap> ({
       setIsLoading(true); // ページデータ取得中のローディング
       setError(null);
       const categories = pageDefinitions.find(def => def.page === page)?.categories || [];
-      for (const category of categories) params.append('category', category.name); // カテゴリ名をクエリに追加
+      const paramsForPage = new URLSearchParams(params.toString()); // 元のparamsをコピー
+      for (const category of categories) paramsForPage.append('category', category.name); // カテゴリ名をクエリに追加
       try {
-        const response = await fetch(`/api/search/${kind}?action=getPage&${params.toString()}`);
+        const response = await fetch(`/api/search/${kind}?action=getPage&${paramsForPage.toString()}`);
         if (!response.ok) throw new Error('Failed to fetch page data');
         const data = await response.json();
         setCategoriesForCurrentPage(data.dataForPage || []);
