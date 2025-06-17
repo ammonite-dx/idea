@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useUser } from "@clerk/nextjs";
-import getRecordById from '@/utils/getRecordById';
 import CardList from "@/components/CardList";
 import { User } from "@/types/types";
 
@@ -18,7 +17,9 @@ export default function Favorites() {
             setIsLoading(true);
             setError(null);
             try {
-                const result = await getRecordById("user", userId);
+                const response = await fetch(`/api/record/user?id=${userId}`);
+                if (!response.ok) throw new Error(`Error: ${response.status} ${response.statusText}`);
+                const result = (await response.json()).record as User;
                 setUser(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (e: any) {
