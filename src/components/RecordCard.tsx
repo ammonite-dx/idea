@@ -180,6 +180,7 @@ function ConnectionCard ({ connection, category, details }: { connection:Connect
       <CardDivider />
       <CardBody>
         {category && <CardBodyRow><PropDict name="カテゴリ" value={connection.category} /></CardBodyRow>}
+        <CardBodyRow><PropDict name="出典" value={connection.supplement} /></CardBodyRow>
         <CardBodyRow><PropDict name="種別" value={connection.type} /></CardBodyRow>
         <CardBodyRow><PropDict name="技能" value={connection.skill} /></CardBodyRow>
         {(connection.procure && connection.stock) && <CardBodyRow><PropDict name="購入/常備化" value={`${connection.procure}/${connection.stock}`} /></CardBodyRow>}
