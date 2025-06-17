@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import getRecordById from '@/utils/getRecordById';
 import RecordCard from "@/components/RecordCard";
 import CardList from "@/components/CardList";
 import { CardRecordKindMap } from "@/types/types";
@@ -23,7 +22,9 @@ export default function RecordResult<K extends keyof CardRecordKindMap>({
             setIsLoading(true);
             setError(null);
             try {
-                const result = await getRecordById(kind, id);
+                const response = await fetch(`/api/record/${kind}?id=${id}`);
+                if (!response.ok) throw new Error(`Error: ${response.status} ${response.statusText}`);
+                const result = await response.json();
                 setRecord(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (e: any) {
