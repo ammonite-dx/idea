@@ -98,7 +98,6 @@ export default function SearchResults<K extends keyof TypeMap> ({
         const response = await fetch(`/api/search/${kind}?${params.toString()}`);
         if (!response.ok) throw new Error('Failed to fetch table records');
         const records: TableRecord[] = await response.json();
-        console.log("Fetched table records:", records);
         setTableRecords(records || []); // テーブル表示用のデータをセット
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
@@ -268,6 +267,7 @@ function SearchResultsTable ({
   }: {
     records: TableRecord[],
   }) {
+    console.log('[SearchResultsTable] Rendering with records:', records);
     return (
       <Card>
         <div className="grid grid-cols-12 gap-2">
