@@ -25,6 +25,7 @@ export default function RecordResult<K extends keyof CardRecordKindMap>({
                 const response = await fetch(`/api/record/${kind}?id=${id}`);
                 if (!response.ok) throw new Error(`Error: ${response.status} ${response.statusText}`);
                 const result = await response.json();
+                console.log("fetchRecord result:", result);
                 setRecord(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (e: any) {
