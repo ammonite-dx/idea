@@ -45,7 +45,7 @@ export async function GET(
         const prisma = getPrismaClient(DB_BINDING);
 
         // ページ定義に基づいて、該当するカテゴリのレコードを取得
-        let responses: WorkResponse[] = await prisma.work.findMany({
+        const responses: WorkResponse[] = await prisma.work.findMany({
             where: {
                 AND: whereConditions,
             },
