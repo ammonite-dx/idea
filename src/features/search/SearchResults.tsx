@@ -97,7 +97,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
       try {
         const response = await fetch(`/api/search/${kind}?${params.toString()}`);
         if (!response.ok) throw new Error('Failed to fetch table records');
-        const records: TableRecord[] = await response.json();
+        const records: TableRecord[] = (await response.json()).records;
         setTableRecords(records || []); // テーブル表示用のデータをセット
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
