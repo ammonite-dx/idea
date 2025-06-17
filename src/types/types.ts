@@ -59,6 +59,7 @@ export type Power = {
     category: string,
     type: string,
     name: string,
+    ruby: string,
     maxlv: string,
     timing: string,
     skill: string,
@@ -84,6 +85,10 @@ export type Power = {
     rel_faqs?: Faq[],
     rel_infos?: Info[],
     favorited_by?: User[],
+    supplement_order: number;
+    category_order: number;
+    type_restrict_order: number;
+    additional_order: number;
 };
 
 export type Weapon = {
@@ -92,6 +97,7 @@ export type Weapon = {
     supplement: string,
     category: string,
     name: string,
+    ruby: string,
     type: string,
     skill: string,
     acc: string,
@@ -120,6 +126,11 @@ export type Weapon = {
     rel_faqs?: Faq[],
     rel_infos?: Info[],
     favorited_by?: User[],
+    supplement_order: number;
+    category_order: number;
+    type_order: number;
+    cost_order: number;
+    additional_order: number;
 };
 
 export type Armor = {
@@ -128,6 +139,7 @@ export type Armor = {
     supplement: string,
     category: string,
     name: string,
+    ruby: string,
     type: string,
     dodge: string,
     initiative: string,
@@ -153,6 +165,11 @@ export type Armor = {
     rel_faqs?: Faq[],
     rel_infos?: Info[],
     favorited_by?: User[],
+    supplement_order: number;
+    category_order: number;
+    type_order: number;
+    cost_order: number;
+    additional_order: number;
 };
 
 export type Vehicle = {
@@ -161,6 +178,7 @@ export type Vehicle = {
     supplement: string,
     category: string,
     name: string,
+    ruby: string,
     type: string,
     skill: string,
     atk: string,
@@ -186,6 +204,11 @@ export type Vehicle = {
     rel_faqs?: Faq[],
     rel_infos?: Info[],
     favorited_by?: User[],
+    supplement_order: number;
+    category_order: number;
+    type_order: number;
+    cost_order: number;
+    additional_order: number;
 };
 
 export type Connection = {
@@ -194,6 +217,7 @@ export type Connection = {
     supplement: string,
     category: string,
     name: string,
+    ruby: string,
     type: string,
     skill: string,
     procure: string | null,
@@ -215,6 +239,11 @@ export type Connection = {
     rel_faqs?: Faq[],
     rel_infos?: Info[],
     favorited_by?: User[],
+    supplement_order: number;
+    category_order: number;
+    type_order: number;
+    cost_order: number;
+    additional_order: number;
 };
 
 export type General = {
@@ -223,6 +252,7 @@ export type General = {
     supplement: string,
     category: string,
     name: string,
+    ruby: string,
     type: string,
     procure: string | null,
     stock: string | null,
@@ -244,6 +274,11 @@ export type General = {
     rel_faqs?: Faq[],
     rel_infos?: Info[],
     favorited_by?: User[],
+    supplement_order: number;
+    category_order: number;
+    type_order: number;
+    cost_order: number;
+    additional_order: number;
 };
 
 export type Dlois = {
@@ -273,6 +308,11 @@ export type Dlois = {
     rel_faqs?: Faq[],
     rel_infos?: Info[],
     favorited_by?: User[],
+    supplement_order: number,
+    type_order: number,
+    restrict_order: number,
+    no: string,
+    additional_order: number,
 };
 
 export type Elois = {
@@ -294,6 +334,10 @@ export type Elois = {
     rel_faqs?: Faq[],
     rel_infos?: Info[],
     favorited_by?: User[],
+    supplement_order: number,
+    urge_order: number,
+    type_order: number,
+    additional_order: number,
 };
 
 export type Work = {
@@ -382,7 +426,10 @@ export type PowerResponse = {
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
     favorited_by?: UserResponse[];
+    supplement_order: number;
+    category_order: number;
     type_restrict_order: number;
+    additional_order: number;
 };
 
 export type WeaponResponse = {
@@ -427,8 +474,11 @@ export type WeaponResponse = {
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
     favorited_by?: UserResponse[];
+    supplement_order: number;
+    category_order: number;
     type_order: number;
     cost_order: number;
+    additional_order: number;
 };
 
 export type ArmorResponse = {
@@ -469,8 +519,11 @@ export type ArmorResponse = {
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
     favorited_by?: UserResponse[];
+    supplement_order: number;
+    category_order: number;
     type_order: number;
     cost_order: number;
+    additional_order: number;
 };
 
 export type VehicleResponse = {
@@ -512,7 +565,11 @@ export type VehicleResponse = {
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
     favorited_by?: UserResponse[];
+    supplement_order: number;
+    category_order: number;
+    type_order: number;
     cost_order: number;
+    additional_order: number;
 };
 
 export type ConnectionResponse = {
@@ -546,7 +603,11 @@ export type ConnectionResponse = {
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
     favorited_by?: UserResponse[];
+    supplement_order: number;
+    category_order: number;
+    type_order: number;
     cost_order: number;
+    additional_order: number;
 };
 
 export type GeneralResponse = {
@@ -580,14 +641,16 @@ export type GeneralResponse = {
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
     favorited_by?: UserResponse[];
+    supplement_order: number;
+    category_order: number;
     type_order: number;
     cost_order: number;
+    additional_order: number;
 };
 
 export type DloisResponse = {
     id: string;
     supplement: string;
-    no: string;
     type: string;
     name: string;
     ruby: string;
@@ -613,8 +676,11 @@ export type DloisResponse = {
     flavor_summary: string;
     effect_summary: string;
     rec_effect_summary: string | null;
-    type_order: number;
-    restrict_order: number;
+    supplement_order: number,
+    type_order: number,
+    restrict_order: number,
+    no: string,
+    additional_order: number,
 };
 
 export type EloisResponse = {
@@ -637,8 +703,10 @@ export type EloisResponse = {
     rel_faqs?: FaqResponse[];
     rel_infos?: InfoResponse[];
     favorited_by?: UserResponse[];
-    type_order: number;
+    supplement_order: number;
     urge_order: number;
+    type_order: number;
+    additional_order: number;
 };
 
 export type WorkResponse = {

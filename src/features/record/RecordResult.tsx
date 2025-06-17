@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import RecordCard from "@/components/RecordCard";
 import CardList from "@/components/CardList";
 import { CardRecordKindMap } from "@/types/types";
+import { sortPowers, sortItems, sortDlois, sortElois } from '@/utils/sort';
 
 export default function RecordResult<K extends keyof CardRecordKindMap>({
     kind,
@@ -73,10 +74,10 @@ export default function RecordResult<K extends keyof CardRecordKindMap>({
         <div>
             <div className="mb-4 lg:mb-8"><RecordCard record={record} category details/></div>
             {otherVers && otherVers.length>0 && <CardList title="別バージョン" records={otherVers} category />}
-            {relPowers && relPowers.length>0 && <CardList title="関連エフェクト" records={relPowers} category />}
-            {relItems && relItems.length>0 && <CardList title="関連アイテム" records={relItems} category />}
-            {relDlois && relDlois.length>0 && <CardList title="関連Dロイス" records={relDlois} category />}
-            {relElois && relElois.length>0 && <CardList title="関連Eロイス" records={relElois} category />}
+            {relPowers && relPowers.length>0 && <CardList title="関連エフェクト" records={sortPowers(relPowers)} category />}
+            {relItems && relItems.length>0 && <CardList title="関連アイテム" records={sortItems(relItems)} category />}
+            {relDlois && relDlois.length>0 && <CardList title="関連Dロイス" records={sortDlois(relDlois)} category />}
+            {relElois && relElois.length>0 && <CardList title="関連Eロイス" records={sortElois(relElois)} category />}
         </div>
     );
 }
