@@ -18,10 +18,14 @@ export function categorizeRecords(
     }
 
     // カテゴリごとにレコードをまとめた新しい配列を作成
-    const resultCategories: Category[] = categories.map(category => ({
-        ...category,
-        records: recordsByCategoryName.get(category.name) || [],
-    }));
+    const resultCategories: Category[] = categories.map(category => {
+        const records = recordsByCategoryName.get(category.name) || [];
+        return {
+            ...category,
+            count: records.length,
+            records: records,
+        };
+    });
 
     // レコード数が0のカテゴリは除外
     const filteredCategories = resultCategories.filter(category => category.records && category.records.length > 0);
