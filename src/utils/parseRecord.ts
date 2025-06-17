@@ -112,8 +112,8 @@ export function parseArmor (response: ArmorResponse): Armor {
 }
 
 export function parseVehicle (response: VehicleResponse): Vehicle {
-    const { id, supplement, category, name, ruby, type, skill, atk, initiative, armor, dash, procure, stock, exp, rec, flavor, effect, price, rec_effect, supplement_order, category_order, type_order, cost_order, additional_order } = response;
-    const vehicle_base: Vehicle = { kind:"vehicle", id, supplement, category, name, ruby, type, skill, atk, initiative, armor, dash, procure, stock, exp, rec, flavor, effect, price, rec_effect, supplement_order, category_order, type_order, cost_order, additional_order };
+    const { id, supplement, category, name, ruby, type, skill, atk, initiative, armor, dash, procure, stock, exp, rec, flavor, effect, price, rec_effect, supplement_order, category_order, cost_order, additional_order } = response;
+    const vehicle_base: Vehicle = { kind:"vehicle", id, supplement, category, name, ruby, type, skill, atk, initiative, armor, dash, procure, stock, exp, rec, flavor, effect, price, rec_effect, supplement_order, category_order, cost_order, additional_order };
     const other_vers: Vehicle[] = ("other_vers" in response && response.other_vers) ? response.other_vers.map((res: VehicleResponse) => parseVehicle(res)) : [];
     const rel_powers: Power[] = ("rel_powers" in response && response.rel_powers) ? response.rel_powers.map((res: PowerResponse) => parsePower(res)) : [];
     const rel_weapons: Weapon[] = ("rel_weapons" in response && response.rel_weapons) ? response.rel_weapons.map((res: WeaponResponse) => parseWeapon(res)) : [];
@@ -142,8 +142,8 @@ export function parseVehicle (response: VehicleResponse): Vehicle {
 }
 
 export function parseConnection (response: ConnectionResponse): Connection {
-    const { id, supplement, category, name, ruby, type, skill, procure, stock, exp, rec, flavor, effect, price, rec_effect, supplement_order, category_order, type_order, cost_order, additional_order } = response;
-    const connection_base: Connection = { kind:"connection", id, supplement, category, name, ruby, type, skill, procure, stock, exp, rec, flavor, effect, price, rec_effect, supplement_order, category_order, type_order, cost_order, additional_order };
+    const { id, supplement, category, name, ruby, type, skill, procure, stock, exp, rec, flavor, effect, price, rec_effect, supplement_order, category_order, cost_order, additional_order } = response;
+    const connection_base: Connection = { kind:"connection", id, supplement, category, name, ruby, type, skill, procure, stock, exp, rec, flavor, effect, price, rec_effect, supplement_order, category_order, cost_order, additional_order };
     const other_vers: Connection[] = ("other_vers" in response && response.other_vers) ? response.other_vers.map((res: ConnectionResponse) => parseConnection(res)) : [];
     const rel_powers: Power[] = ("rel_powers" in response && response.rel_powers) ? response.rel_powers.map((res: PowerResponse) => parsePower(res)) : [];
     const rel_weapons: Weapon[] = ("rel_weapons" in response && response.rel_weapons) ? response.rel_weapons.map((res: WeaponResponse) => parseWeapon(res)) : [];

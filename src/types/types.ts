@@ -206,7 +206,6 @@ export type Vehicle = {
     favorited_by?: User[],
     supplement_order: number;
     category_order: number;
-    type_order: number;
     cost_order: number;
     additional_order: number;
 };
@@ -241,7 +240,6 @@ export type Connection = {
     favorited_by?: User[],
     supplement_order: number;
     category_order: number;
-    type_order: number;
     cost_order: number;
     additional_order: number;
 };
@@ -567,7 +565,6 @@ export type VehicleResponse = {
     favorited_by?: UserResponse[];
     supplement_order: number;
     category_order: number;
-    type_order: number;
     cost_order: number;
     additional_order: number;
 };
@@ -605,7 +602,6 @@ export type ConnectionResponse = {
     favorited_by?: UserResponse[];
     supplement_order: number;
     category_order: number;
-    type_order: number;
     cost_order: number;
     additional_order: number;
 };

@@ -19,7 +19,7 @@ export function sortItems(
     return [...items].sort((a, b) => {
         if (a.supplement_order !== b.supplement_order) {return a.supplement_order - b.supplement_order}
         if (a.category_order !== b.category_order) {return a.category_order - b.category_order}
-        if (a.type_order !== b.type_order) {return a.type_order - b.type_order}
+        if ("type_order" in a && "type_order" in b && (a.type_order !== b.type_order)) {return a.type_order - b.type_order}
         if (a.cost_order !== b.cost_order) {return a.cost_order - b.cost_order}
         if (a.additional_order !== b.additional_order) {return a.additional_order - b.additional_order}
         if (a.ruby !== b.ruby) {return a.ruby.localeCompare(b.ruby)}
