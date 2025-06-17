@@ -25,7 +25,6 @@ export async function GET(
         if (name !== null) {whereConditions.push({name: {contains: name}});}
         if (stats.length > 0) {whereConditions.push({OR: stats.map(stat => ({stat: stat}))});}
         if (skills.length > 0) {whereConditions.push({OR: skills.map(skill => ({skills: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))});}
-        console.log('API Route: Search Power - whereConditions:', whereConditions);
 
         // D1データベースのバインディングを取得
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

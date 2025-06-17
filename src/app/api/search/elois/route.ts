@@ -53,7 +53,6 @@ export async function GET(
         if (urges.length > 0) {whereConditions.push({OR: urges.map(urge => ({urge: urge}))});}
         if (restricts.length > 0) {whereConditions.push({OR: restricts.map(restrict => ({restrict: {contains: restrict}}))});}
         if (effect !== null) {whereConditions.push({effect: {contains: effect}});}
-        console.log('API Route: Search Power - whereConditions:', whereConditions);
 
         // D1データベースのバインディングを取得
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

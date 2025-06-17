@@ -110,7 +110,6 @@ export default function SearchResults<K extends keyof TypeMap> ({
 
     // 初期ロード時（または検索条件変更時）にページネーション情報を取得
     useEffect(() => {
-      console.log('[useEffect] Initial load or searchParams changed');
       // kind がカードリストを表示する対象の場合のみページネーション情報を取得
       if (isCardListKind) {
         fetchPaginationInfo();
@@ -139,15 +138,12 @@ export default function SearchResults<K extends keyof TypeMap> ({
 
     // スクロール処理
     useLayoutEffect(() => {
-      console.log('[useLayoutEffect] Triggered. scrollToCategoryId:', scrollToCategoryId, 'dataForCurrentPage length:', categoriesForCurrentPage.length);
       if (scrollToCategoryId && Object.keys(categoriesForCurrentPage).length > 0) {
         const targetId = `category-anchor-${scrollToCategoryId}`;
         const element = document.getElementById(targetId);
-        console.log(`[useLayoutEffect] Attempting to find element with ID: ${targetId}`, element);
         if (element) {
           const elementPosition = element.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.pageYOffset;
-          console.log(`[useLayoutEffect] Scrolling to offsetPosition: ${offsetPosition}`);
           window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
           setScrollToCategoryId(null); // スクロール後はリセット
         } else {
@@ -157,17 +153,13 @@ export default function SearchResults<K extends keyof TypeMap> ({
     }, [categoriesForCurrentPage, scrollToCategoryId]);
 
     const handleNavigate = useCallback((pageNumber: number, categoryIdToScroll: string | null = null) => {
-      console.log(`[handleNavigate START] pageNumber: ${pageNumber}, categoryIdToScroll: ${categoryIdToScroll}, current activePage: ${activePage}`);
       setScrollToCategoryId(categoryIdToScroll); // スクロール対象を更新
       if (pageNumber !== activePage) {
-        console.log(`[handleNavigate] Different page, setting activePage to: ${pageNumber}`);
         setActivePage(pageNumber);
       } else {
-        console.log('[handleNavigate] Same page, no activePage change.');
         if (categoryIdToScroll) { // 同ページで特定のIDにスクロールしたい場合
           const element = document.getElementById(`category-anchor-${categoryIdToScroll}`);
           if (element) {
-            console.log(`[handleNavigate] Element for same-page scroll FOUND. Attempting immediate scroll.`);
             const headerOffset = 80;
             const elementPosition = element.getBoundingClientRect().top;
             const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
@@ -267,7 +259,6 @@ function SearchResultsTable ({
   }: {
     records: TableRecord[],
   }) {
-    console.log('[SearchResultsTable] Rendering with records:', records);
     return (
       <Card>
         <div className="grid grid-cols-12 gap-2">

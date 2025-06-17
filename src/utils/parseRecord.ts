@@ -36,7 +36,6 @@ export function parsePower (response: PowerResponse): Power {
             favorited_by
         };
     } catch (error) {
-        console.log("[parsePower] Error parsing response:", response);
         console.error("[parsePower] Error:", error);
         throw error;
     }

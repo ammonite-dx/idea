@@ -28,7 +28,6 @@ export async function performGuildCheckAndSaveMetadata(
         const oauthAccessTokens = oauthTokensResponse.data;
 
         if (!oauthAccessTokens || oauthAccessTokens.length === 0 || !oauthAccessTokens[0]?.token) {
-            console.log(`Discord OAuth token not found for user: ${userId}. User might not have connected Discord or token is invalid. Metadata will reflect non-member status.`);
             // トークンがない場合はギルドメンバーではないとみなし、その状態でメタデータを更新
             await client.users.updateUserMetadata(userId, {
                 publicMetadata: {

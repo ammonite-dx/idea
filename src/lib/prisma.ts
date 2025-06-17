@@ -21,14 +21,6 @@ export function getPrismaClient(d1Binding: D1Database): PrismaClient {
         { emit: 'event', level: 'error' }
       ]
     });
-    prisma.$on('query', (e) => {
-      console.log('------------------------------------')
-      console.log('Prisma Query:', e.query)
-      console.log('Params:', e.params)
-      console.log('Duration:', e.duration + 'ms')
-      console.log('Timestamp:', e.timestamp)
-      console.log('------------------------------------')
-    })
     return prisma;
   } else {
     if (!global.prisma) {

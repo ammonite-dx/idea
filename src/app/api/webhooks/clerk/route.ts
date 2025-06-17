@@ -77,11 +77,9 @@ export async function POST(req: Request) {
                     id: id,
                 },
             });
-            console.log(`User created in D1 with ID: ${id}`);
 
             // ステップ2: Discordギルドチェックとメタデータ更新を実行
             const guildCheckResult = await performGuildCheckAndSaveMetadata(id);
-            console.log(`Guild check result for ${id}: ${guildCheckResult.message} (Member: ${guildCheckResult.isMember}, Status: ${guildCheckResult.status})`);
             if (guildCheckResult.error) {
                 console.warn(`Guild check for user ${id} encountered an issue: ${guildCheckResult.error} - ${guildCheckResult.details || guildCheckResult.message}`);
             }
@@ -91,7 +89,6 @@ export async function POST(req: Request) {
                 console.warn(`User ${id} already exists in D1. Attempting guild check.`);
                 try {
                     const guildCheckResult = await performGuildCheckAndSaveMetadata(id);
-                    console.log(`Guild check result for existing user ${id}: ${guildCheckResult.message}`);
                     if (guildCheckResult.error) {
                         console.warn(`Guild check for existing user ${id} encountered an issue: ${guildCheckResult.error} - ${guildCheckResult.details || guildCheckResult.message}`);
                     }
