@@ -21,15 +21,7 @@ export async function GET(
         // 検索条件の作成
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const whereConditions: any[] = [];
-        if (supplements.length > 0) {
-            whereConditions.push({OR: supplements.map(supplement => ({supplement: supplement}))});
-            whereConditions.push({OR: [
-                {update_supplement: null},
-                {NOT: supplements.map(supplement => ({update_supplement: {contains: supplement}}))}
-            ]})
-        } else {
-            whereConditions.push({update_supplement: null});
-        }
+        if (supplements.length > 0) {whereConditions.push({OR: supplements.map(supplement => ({supplement: supplement}))});}
         if (name !== null) {whereConditions.push({name: {contains: name}});}
         if (stats.length > 0) {whereConditions.push({OR: stats.map(stat => ({stat: stat}))});}
         if (skills.length > 0) {whereConditions.push({OR: skills.map(skill => ({skills: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))});}
