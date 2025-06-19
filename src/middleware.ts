@@ -25,25 +25,8 @@ export default clerkMiddleware(async (auth, req) => {
   const authResult = await auth();
   const { userId, sessionClaims } = authResult;
   if (!userId) {
-    // 未認証の場合、Discord認証に直接リダイレクトする
-    const discordSignInUrl = new URL('/sign-in/oauth_discord', req.url); // ClerkのOAuthエンドポイントを指定
-
-    // 環境変数からClerkのFrontend APIのドメインを取得
-    const clerkFrontendApi = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
-    if (clerkFrontendApi) {
-      discordSignInUrl.hostname = new URL(clerkFrontendApi).hostname;
-    } else {
-      // 環境変数が設定されていない場合のエラーハンドリング
-      console.error("NEXT_PUBLIC_CLERK_FRONTEND_API is not set.");
-      // ここではフォールバックとして/sign-inにリダイレクトするか、エラーページにリダイレクトする
-      const fallbackSignInUrl = new URL(process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || '/sign-in', req.url);
-      return NextResponse.redirect(fallbackSignInUrl);
-    }
-    
-    // 認証完了後に戻ってくるURLを指定
-    discordSignInUrl.searchParams.set('redirect_url', req.url);
-    
-    return NextResponse.redirect(discordSignInUrl);
+    const signInUrl = new URL('/sign-in', req.url);
+    return NextResponse.redirect(signInUrl);
   }
 
   const publicMetadata = sessionClaims?.public_metadata as PublicMetaData | undefined;
