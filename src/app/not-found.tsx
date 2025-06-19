@@ -1,5 +1,4 @@
-import { SignedOut, SignInButton } from '@clerk/nextjs';
-export const runtime = 'edge'; // この行を追加
+export const runtime = 'edge';
 
 export default function NotFound() {
   return (
