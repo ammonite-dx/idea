@@ -86,28 +86,28 @@ export async function GET(
             whereConditions.push({OR: [{AND: [{procure_int: {lte: parseInt(procure)}}, {stock_int: {lte: parseInt(stock)}}]}, {exp_int: {lte: parseInt(exp)}}]});
         }
         if (effect !== null) {whereConditions.push({OR: [{effect: {contains: effect}}, {rec_effect: {contains: effect}}]});}
-        if (itemType === 'weapon') {
+        if (itemType === '武器') {
             if (weaponTypes.length > 0) {whereConditions.push({OR: weaponTypes.map(type => ({type: {contains: type}}))});}
             if (weaponSkills.length > 0) {whereConditions.push({OR: weaponSkills.map(skill => ({skill: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))});}
             if (weaponAcc !== null) {whereConditions.push({OR: [{acc_int: null}, {acc_int: {gte: parseInt(weaponAcc)}}]});}
             if (weaponAtk !== null) {whereConditions.push({OR: [{atk_int: null}, {atk_int: {gte: parseInt(weaponAtk)}}]});}
             if (weaponGuard !== null) {whereConditions.push({OR: [{guard_int: null}, {guard_int: {gte: parseInt(weaponGuard)}}]});}
             if (weaponRng !== null) {whereConditions.push({OR: [{rng_int: null}, {rng_int: {gte: parseInt(weaponRng)}}]});}
-        } else if (itemType === 'armor') {
+        } else if (itemType === '防具') {
             if (armorTypes.length > 0) {whereConditions.push({OR: armorTypes.map(type => (type === "防具" ? { type: { not: { contains: "補助" } } } : { type: { contains: "補助" } }))});}
             if (armorDodge !== null) {whereConditions.push({OR: [{dodge_int: null}, {dodge_int: {gte: parseInt(armorDodge)}}]});}
             if (armorInitiative !== null) {whereConditions.push({OR: [{initiative_int: null}, {initiative_int: {gte: parseInt(armorInitiative)}}]});}
             if (armorArmor !== null) {whereConditions.push({OR: [{armor_int: null}, {armor_int: {gte: parseInt(armorArmor)}}]});}
-        } else if (itemType === 'vehicle') {
+        } else if (itemType === 'ヴィークル') {
             if (vehicleTypes.length > 0) {whereConditions.push({OR: vehicleTypes.map(type => ({type: {contains: type}}))});}
             if (vehicleSkills.length > 0) {whereConditions.push({OR: vehicleSkills.map(skill => ({skill: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))});}
             if (vehicleAtk !== null) {whereConditions.push({OR: [{atk_int: null}, {atk_int: {gte: parseInt(vehicleAtk)}}]});}
             if (vehicleInitiative !== null) {whereConditions.push({OR: [{initiative_int: null}, {initiative_int: {gte: parseInt(vehicleInitiative)}}]});}
             if (vehicleArmor !== null) {whereConditions.push({OR: [{armor_int: null}, {armor_int: {gte: parseInt(vehicleArmor)}}]});}
             if (VehicleDash !== null) {whereConditions.push({OR: [{dash_int: null}, {dash_int: {gte: parseInt(VehicleDash)}}]});}
-        } else if (itemType === 'connection') {
+        } else if (itemType === 'コネ') {
             if (connectionSkills.length > 0) {whereConditions.push({OR: connectionSkills.map(skill => ({skill: {contains: skill.replace("〈","").replace("〉","").replace(":","")}}))});}
-        } else if (itemType === 'general') {
+        } else if (itemType === '一般アイテム') {
             if (generalTypes.length > 0) {whereConditions.push({OR: generalTypes.map(type => ({type: {contains: type}}))});}
         }
 
