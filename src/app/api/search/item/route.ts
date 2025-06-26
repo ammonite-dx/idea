@@ -123,7 +123,7 @@ export async function GET(
         if (action === 'getInfo') {
             // ページネーションの情報取得
             let resultCategories: string[] = []
-            if (itemType === '指定なし' || itemType === '武器') {resultCategories = resultCategories.concat((await prisma.weapon.findMany({where: {AND: itemType === '指定なし' ? [...whereConditions, {refed_armor: null}] : whereConditions}, select: {category: true}})).map(weapon => weapon.category));}
+            if (itemType === '指定なし' || itemType === '武器') {resultCategories = resultCategories.concat((await prisma.weapon.findMany({where: {AND: itemType === '指定なし' ? [...whereConditions, {refed_armor: null}, {refed_general: null}] : whereConditions}, select: {category: true}})).map(weapon => weapon.category));}
             if (itemType === '指定なし' || itemType === '防具') {resultCategories = resultCategories.concat((await prisma.armor.findMany({where: {AND: whereConditions}, select: {category: true}})).map(armor => armor.category));}
             if (itemType === '指定なし' || itemType === 'ヴィークル') {resultCategories = resultCategories.concat((await prisma.vehicle.findMany({where: {AND: whereConditions}, select: {category: true}})).map(vehicle => vehicle.category));}
             if (itemType === '指定なし' || itemType === 'コネ') {resultCategories = resultCategories.concat((await prisma.connection.findMany({where: {AND: whereConditions}, select: {category: true}})).map(connection => connection.category));}
@@ -142,7 +142,7 @@ export async function GET(
                 while (moreDataToFetch) {
                     const batch: WeaponResponse[] = await prisma.weapon.findMany({
                         where: {
-                            AND: itemType === '指定なし' ? [...whereConditions, {refed_armor: null}] : whereConditions,
+                            AND: itemType === '指定なし' ? [...whereConditions, {refed_armor: null}, {refed_general: null}] : whereConditions,
                         },
                         include: {
                             refed_power: true,
