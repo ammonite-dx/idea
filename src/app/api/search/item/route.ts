@@ -123,7 +123,7 @@ export async function GET(
         if (action === 'getInfo') {
             // ページネーションの情報取得
             let resultCategories: string[] = []
-            if (itemType === '指定なし' || itemType === '武器') {resultCategories = resultCategories.concat((await prisma.weapon.findMany({where: {AND: whereConditions}, select: {category: true}})).map(weapon => weapon.category));}
+            if (itemType === '指定なし' || itemType === '武器') {resultCategories = resultCategories.concat((await prisma.weapon.findMany({where: {AND: itemType === '指定なし' ? [...whereConditions, {refed_armor: null}] : whereConditions}, select: {category: true}})).map(weapon => weapon.category));}
             if (itemType === '指定なし' || itemType === '防具') {resultCategories = resultCategories.concat((await prisma.armor.findMany({where: {AND: whereConditions}, select: {category: true}})).map(armor => armor.category));}
             if (itemType === '指定なし' || itemType === 'ヴィークル') {resultCategories = resultCategories.concat((await prisma.vehicle.findMany({where: {AND: whereConditions}, select: {category: true}})).map(vehicle => vehicle.category));}
             if (itemType === '指定なし' || itemType === 'コネ') {resultCategories = resultCategories.concat((await prisma.connection.findMany({where: {AND: whereConditions}, select: {category: true}})).map(connection => connection.category));}
@@ -135,14 +135,14 @@ export async function GET(
         } else if (action === 'getPage') {
             // ページ定義に基づいて、該当するカテゴリのレコードを取得
             const records: Item[] = [];
-            if (itemType === '指定なし' || itemType === '武器') {
+            if (itemType === '武器' || itemType === '指定なし') {
                 let responses: WeaponResponse[] = [];
                 let currentSkip = 0;
                 let moreDataToFetch = true;
                 while (moreDataToFetch) {
                     const batch: WeaponResponse[] = await prisma.weapon.findMany({
                         where: {
-                            AND: whereConditions,
+                            AND: itemType === '指定なし' ? [...whereConditions, {refed_armor: null}] : whereConditions,
                         },
                         include: {
                             refed_power: true,
