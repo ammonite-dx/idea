@@ -123,12 +123,12 @@ export default function SearchResults<K extends keyof TypeMap> ({
       }
     }, [kind, fetchPaginationInfo, fetchTableRecords, isCardListKind, isTableKind]);
 
-    // ページネーション情報変更時・アクティブページ変更時に該当ページのデータを取得
+    // ページ定義変更時・アクティブページ変更時に該当ページのデータを取得
     useEffect(() => {
-      if (isCardListKind && activePage > 0 && totalPages > 0) {
+      if (isCardListKind && activePage > 0 && totalPages > 0 && pageDefinitions.length > 0) {
         fetchPageData(activePage);
       }
-    }, [activePage, totalPages, fetchPageData, isCardListKind]);
+    }, [activePage, totalPages, fetchPageData, isCardListKind, pageDefinitions.length]);
 
     // スクロール処理
     useLayoutEffect(() => {
