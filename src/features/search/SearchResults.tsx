@@ -80,9 +80,13 @@ export default function SearchResults<K extends keyof TypeMap> ({
             setIsLoading(false);
         }
 
-      } catch (e: any) {
+      } catch (e: unknown) {
+        if (e instanceof Error && e.name === 'AbortError') return;
+        
         console.error("fetchPaginationInfo failed:", e);
-        setError(e.message || "ページ情報の取得に失敗しました。");
+        const errorMessage = e instanceof Error ? e.message : "ページ情報の取得に失敗しました。";
+        setError(errorMessage);
+        
         setTotalPages(0);
         setIsPaginationReady(false);
         setIsLoading(false);
@@ -114,9 +118,12 @@ export default function SearchResults<K extends keyof TypeMap> ({
         
         setCategoriesForCurrentPage(data.dataForPage || []);
         
-      } catch (e: any) {
+      } catch (e: unknown) {
+        if (e instanceof Error && e.name === 'AbortError') return;
+
         console.error("fetchPageData failed:", e);
-        setError(e.message || "ページデータの取得に失敗しました。");
+        const errorMessage = e instanceof Error ? e.message : "ページデータの取得に失敗しました。";
+        setError(errorMessage);
         setCategoriesForCurrentPage([]);
       } finally {
         // ★重要: ここで初めてローディングを解除
@@ -134,9 +141,12 @@ export default function SearchResults<K extends keyof TypeMap> ({
         if (!response.ok) throw new Error('Failed to fetch table records');
         const records: TableRecord[] = (await response.json()).records;
         setTableRecords(records || []);
-      } catch (e: any) {
+      } catch (e: unknown) {
+        if (e instanceof Error && e.name === 'AbortError') return;
+
         console.error("fetchTableRecords failed:", e);
-        setError(e.message || "データの取得に失敗しました。");
+        const errorMessage = e instanceof Error ? e.message : "データの取得に失敗しました。";
+        setError(errorMessage);
       } finally {
         setIsLoading(false);
       }
