@@ -32,6 +32,8 @@ export default function SearchResults<K extends keyof TypeMap> ({
     const [error, setError] = useState<string | null>(null);
     const [tableRecords, setTableRecords] = useState<TableRecord[]>([]);
 
+    console.log(`[Render] isLoading:${isLoading}, totalPages:${totalPages}, defs:${pageDefinitions.length}, cats:${categoriesForCurrentPage.length}, activePage:${activePage}`);
+
     // apiに渡すクエリ文字列を生成
     const params = new URLSearchParams();
     Object.entries(searchParams).forEach(([key, value]) => {
@@ -69,7 +71,9 @@ export default function SearchResults<K extends keyof TypeMap> ({
     const fetchPageData = useCallback(async (page: number) => {
       setIsLoading(true); // ページデータ取得中のローディング
       setError(null);
-      const categories = pageDefinitions.find(def => def.page === page)?.categories || [];
+      const def = pageDefinitions.find(def => def.page === page)
+      console.log(`[fetchPageData] Definition search result for page ${page}:`, def ? 'Found' : 'NOT FOUND');
+      const categories = def?.categories || [];
       const paramsForPage = new URLSearchParams(params.toString()); // 既存の検索パラメータをコピー
       for (const category of categories) paramsForPage.append('category', category.name); // カテゴリ名をクエリに追加
       try {
@@ -125,7 +129,12 @@ export default function SearchResults<K extends keyof TypeMap> ({
 
     // ページ定義変更時・アクティブページ変更時に該当ページのデータを取得
     useEffect(() => {
-      if (isCardListKind && activePage > 0 && totalPages > 0 && pageDefinitions.length > 0) {
+      const shouldRun = isCardListKind && activePage > 0 && totalPages > 0;
+      console.log(`[useEffect:DataFetch] Check. Run? ${shouldRun} (isCard:${isCardListKind}, active:${activePage}, total:${totalPages}, defs:${pageDefinitions.length})`);
+      if (shouldRun) {
+        if (pageDefinitions.length === 0) {
+          console.warn('[useEffect:DataFetch] totalPages > 0 but pageDefinitions is empty!');
+        }
         fetchPageData(activePage);
       }
     }, [activePage, totalPages, fetchPageData, isCardListKind, pageDefinitions.length]);
@@ -182,6 +191,10 @@ export default function SearchResults<K extends keyof TypeMap> ({
             <div className="base-text m-4">条件に一致するデータがありません。</div>
           </section>
         );
+      }
+      const isErrorState = !isLoading && categoriesForCurrentPage.length === 0 && totalPages > 0;
+      if (isErrorState) {
+          console.error('★ [Render] "NO DATA" MESSAGE SHOWN!', { isLoading, categoriesLen: categoriesForCurrentPage.length, totalPages });
       }
       return (
         <section>
