@@ -104,7 +104,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
     }, [kind, JSON.stringify(searchParams)]);
 
     // 初期ロード時・検索条件変更時にページネーション情報を取得
-    useEffect(() => {
+    useLayoutEffect(() => {
       // リセット
       setTotalPages(0);
       setPageDefinitions([]);
