@@ -44,15 +44,16 @@ export default function SearchResults<K extends keyof TypeMap> ({
 
     // 総ページ数と目次データを取得する関数
     const fetchPaginationInfo = useCallback(async () => {
-      setIsLoading(true); // 全体ローディング
-      setError(null);
       try {
         const response = await fetch(`/api/search/${kind}?action=getInfo&${params.toString()}`);
         if (!response.ok) throw new Error('Failed to fetch pagination info');
         const data = await response.json();
 
-        setTotalPages(data.totalPages || 0);
+        const newTotalPages = data.totalPages || 0;
+        setTotalPages(newTotalPages);
         setPageDefinitions(data.pageDefinitions || []);
+        if (newTotalPages === 0) setIsLoading(false); // データがない場合はローディング解除
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         console.error("fetchPaginationInfo failed:", e);
@@ -60,16 +61,12 @@ export default function SearchResults<K extends keyof TypeMap> ({
         setTotalPages(0);
         setPageDefinitions([]);
         setCategoriesForCurrentPage([]);
+        setIsLoading(false);
       }
     }, [kind, JSON.stringify(searchParams)]);
 
     // 特定のページのデータを取得する関数
     const fetchPageData = useCallback(async (page: number) => {
-      if (page === 0 || totalPages === 0) {
-        setCategoriesForCurrentPage([]);
-        setIsLoading(false); // ここでローディング解除
-        return;
-      }
       setIsLoading(true); // ページデータ取得中のローディング
       setError(null);
       const categories = pageDefinitions.find(def => def.page === page)?.categories || [];
@@ -88,12 +85,10 @@ export default function SearchResults<K extends keyof TypeMap> ({
       } finally {
         setIsLoading(false); // ページデータ取得完了またはエラーでローディング解除
       }
-    }, [kind, JSON.stringify(searchParams), totalPages]);
+    }, [kind, JSON.stringify(searchParams), totalPages, pageDefinitions]);
 
     // テーブルレコード用のデータ取得 (全件取得)
     const fetchTableRecords = useCallback(async () => {
-      setIsLoading(true);
-      setError(null);
       try {
         const response = await fetch(`/api/search/${kind}?${params.toString()}`);
         if (!response.ok) throw new Error('Failed to fetch table records');
@@ -108,33 +103,32 @@ export default function SearchResults<K extends keyof TypeMap> ({
       }
     }, [kind, JSON.stringify(searchParams)]);
 
-    // 初期ロード時（または検索条件変更時）にページネーション情報を取得
+    // 初期ロード時・検索条件変更時にページネーション情報を取得
     useEffect(() => {
-      // kind がカードリストを表示する対象の場合のみページネーション情報を取得
+      // リセット
+      setTotalPages(0);
+      setPageDefinitions([]);
+      setCategoriesForCurrentPage([]);
+      setTableRecords([]);
+      setActivePage(1);
+      setError(null);
+      setIsLoading(true);
+
       if (isCardListKind) {
-        fetchPaginationInfo();
-        if (totalPages > 0) {
-          fetchPageData(1); // 初回は1ページ目のデータを取得
-        } else {
-          setCategoriesForCurrentPage([]); // ページがない場合は空の配列をセット
-        }
+        fetchPaginationInfo(); // kindがカードリストを表示する対象の場合のみページネーション情報を取得
       } else if (isTableKind) {
-        fetchTableRecords();
-        setTotalPages(0); // テーブル表示の場合はページネーション関連をリセット
-        setPageDefinitions([]);
-        setCategoriesForCurrentPage([]);
+        fetchTableRecords(); // kindがテーブル表示対象の場合は全件取得
       } else {
         setIsLoading(false);
       }
-    }, [kind, fetchPaginationInfo, JSON.stringify(searchParams)]); // searchParams はfetchPaginationInfo内で使われるので注意
+    }, [kind, fetchPaginationInfo, fetchTableRecords, isCardListKind, isTableKind]);
 
-    // アクティブページ変更時に該当ページのデータを取得
+    // ページネーション情報変更時・アクティブページ変更時に該当ページのデータを取得
     useEffect(() => {
-      // kind がカードリスト対象 かつ activePage が有効な場合
       if (isCardListKind && activePage > 0 && totalPages > 0) {
         fetchPageData(activePage);
       }
-    }, [activePage, totalPages, fetchPageData, kind]);
+    }, [activePage, totalPages, fetchPageData, isCardListKind]);
 
     // スクロール処理
     useLayoutEffect(() => {
@@ -205,7 +199,7 @@ export default function SearchResults<K extends keyof TypeMap> ({
         </section>
       );
     } else if (isTableKind) {
-      if (!tableRecords || tableRecords.length === 0 && !isLoading) {
+      if ((!tableRecords || tableRecords.length === 0) && !isLoading) {
         return (
           <section>
             <h2 className="headline-text font-bold">検索結果</h2>
