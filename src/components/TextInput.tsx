@@ -31,8 +31,8 @@ export default function TextInput ({control, name, label, isNumber=false, suffix
                         {isNumber &&
                             <>
                                 <div className='absolute right-7 top-1 w-px h-[calc(100%-8px)] items-center bg-white'/>
-                                <button className="absolute right-1.5 top-0 h-1/2 w-5 items-center justify-center" onClick = {(e) => changeValue(e, field, 1)}><ChevronUp className='h-full'/></button>
-                                <button className="absolute right-1.5 top-1/2 h-1/2 w-5 items-center justify-center" onClick = {(e) => changeValue(e, field, -1)}><ChevronDown className='h-full'/></button>
+                                <button type="button" className="absolute right-1.5 top-0 h-1/2 w-5 items-center justify-center" onClick = {(e) => changeValue(e, field, 1)}><ChevronUp className='h-full'/></button>
+                                <button type="button" className="absolute right-1.5 top-1/2 h-1/2 w-5 items-center justify-center" onClick = {(e) => changeValue(e, field, -1)}><ChevronDown className='h-full'/></button>
                             </>
                         }
                     </div>
